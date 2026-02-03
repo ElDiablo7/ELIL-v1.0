@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GRACE-X TITAN™ + SENTINEL™</title>
+  <link rel="stylesheet" href="./assets/css/titan.css">
+</head>
+<body>
+  <!-- Security Modal -->
+  <div id="security-modal" class="security-modal">
+    <div class="modal-content">
+      <h1>RESTRICTED SYSTEM</h1>
+      <p>Unauthorised access is prohibited.</p>
+      <p>This environment is monitored.</p>
+      <p><strong>We are aware of your presence.</strong></p>
+      <div class="modal-buttons">
+        <button id="modal-acknowledge" class="modal-btn acknowledge">Acknowledge</button>
+        <button id="modal-exit" class="modal-btn exit">Exit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Left Panel - Router -->
+    <div class="left-panel">
+      <div class="mode-toggle">
+        <label>MODE</label>
+        <div class="mode-buttons">
+          <button id="mode-sentinel" class="mode-btn active">SENTINEL</button>
+          <button id="mode-titan" class="mode-btn locked">TITAN</button>
+        </div>
+      </div>
+
+      <ul class="nav-tabs">
+        <li class="nav-tab active" data-tab="overview">Overview</li>
+        <li class="nav-tab" data-tab="threat-scan">Threat Scan</li>
+        <li class="nav-tab" data-tab="integrity">System Integrity</li>
+        <li class="nav-tab" data-tab="compliance">Compliance</li>
+        <li class="nav-tab" data-tab="decision-stress">Decision Stress</li>
+        <li class="nav-tab" data-tab="red-team">Red Team</li>
+        <li class="nav-tab" data-tab="logs">Logs</li>
+        <li class="nav-tab" data-tab="policy">Policy & Permissions</li>
+        <li class="nav-tab" data-tab="training">Training Index</li>
+      </ul>
+    </div>
+
+    <!-- Center Panel - Console -->
+    <div class="center-panel">
+      <div class="command-box">
+        <input 
+          type="text" 
+          id="command-input" 
+          class="command-input" 
+          placeholder="Enter command..."
+          disabled
+        >
+        <button id="route-btn" class="route-btn" disabled>Route via Sentinel</button>
+      </div>
+
+      <div class="lockdown-switch">
+        <label>EMERGENCY LOCKDOWN</label>
+        <div id="lockdown-toggle" class="lockdown-toggle"></div>
+      </div>
+
+      <div id="output-console" class="output-console">
+        <div class="output-card">
+          <div class="card-header">
+            <span class="card-title">System Initialized</span>
+          </div>
+          <div class="card-content">
+            <p>GRACE-X TITAN™ + SENTINEL™ Security Overlay</p>
+            <p>Awaiting authentication...</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="demo-commands" class="demo-commands">
+        <!-- Demo commands will be inserted here by app.js -->
+      </div>
+
+      <!-- Tab Content Areas -->
+      <div id="tab-overview" class="tab-content" style="display: none;"></div>
+      <div id="tab-threat-scan" class="tab-content" style="display: none;"></div>
+      <div id="tab-integrity" class="tab-content" style="display: none;"></div>
+      <div id="tab-compliance" class="tab-content" style="display: none;"></div>
+      <div id="tab-decision-stress" class="tab-content" style="display: none;"></div>
+      <div id="tab-red-team" class="tab-content" style="display: none;"></div>
+      <div id="tab-logs" class="tab-content" style="display: none;">
+        <div id="logs-tab-content" class="output-console"></div>
+        <div style="margin-top: 10px;">
+          <button id="export-logs-btn" class="demo-btn">Export Logs</button>
+          <button id="audit-export-btn" class="demo-btn">Audit Export</button>
+        </div>
+      </div>
+      <div id="tab-policy" class="tab-content" style="display: none;"></div>
+      <div id="tab-training" class="tab-content" style="display: none;"></div>
+    </div>
+
+    <!-- Right Panel - Status -->
+    <div class="right-panel">
+      <div class="presence-banner">
+        <h2>WE ARE AWARE OF YOUR PRESENCE</h2>
+      </div>
+
+      <div id="posture-indicator" class="posture-indicator posture-green">
+        <div class="posture-badge posture-green">GREEN</div>
+      </div>
+
+      <div class="status-section">
+        <h3>Current Status</h3>
+        <div class="status-item">
+          <span>Posture:</span>
+          <strong id="current-posture">GREEN</strong>
+        </div>
+        <div class="status-item">
+          <span>Role:</span>
+          <strong id="current-role">VIEWER</strong>
+        </div>
+        <div class="status-item">
+          <span>Policy Pack:</span>
+          <strong id="current-policy">None</strong>
+        </div>
+        <div class="status-item">
+          <span>Authenticated:</span>
+          <strong id="auth-status">No</strong>
+        </div>
+        <div class="status-item">
+          <span>Lockdown:</span>
+          <strong id="lockdown-status">Inactive</strong>
+        </div>
+      </div>
+
+      <div class="status-section">
+        <h3>Policy Pack</h3>
+        <select id="policy-pack-select" style="width: 100%; padding: 8px; background: var(--steel-dark); border: 1px solid var(--silver-dim); color: var(--text-primary);">
+          <option value="">Select Policy Pack</option>
+        </select>
+      </div>
+
+      <div class="status-section">
+        <h3>Last 10 Events</h3>
+        <div id="recent-events" class="events-list">
+          <!-- Events will be rendered here by logs.js -->
+        </div>
+      </div>
+
+      <div class="status-section">
+        <h3>Integrity Flags</h3>
+        <div id="integrity-flags">
+          <div class="status-item">
+            <span>Log Chain:</span>
+            <strong id="log-chain-status">Verified</strong>
+          </div>
+          <div class="status-item">
+            <span>Policy:</span>
+            <strong id="policy-status">Loaded</strong>
+          </div>
+          <div class="status-item">
+            <span>System:</span>
+            <strong id="system-status">Operational</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts - Load in correct order -->
+  <script src="./assets/js/utils.js"></script>
+  <script src="./assets/js/logs.js"></script>
+  <script src="./assets/js/policy.js"></script>
+  <script src="./assets/js/titan.js"></script>
+  <script src="./assets/js/sentinel.js"></script>
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>

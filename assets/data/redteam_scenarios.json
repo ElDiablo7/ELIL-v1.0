@@ -1,0 +1,233 @@
+{
+  "scenarios": [
+    {
+      "id": "01",
+      "name": "Credential Harvesting via Social Engineering",
+      "attacker_goal": "Obtain valid credentials through phishing or social manipulation",
+      "operator_mistake_pattern": "Clicking suspicious links, sharing credentials, weak password policies",
+      "detection_signals": [
+        "Unusual login locations",
+        "Multiple failed authentication attempts",
+        "Credential reuse across systems",
+        "Phishing email indicators"
+      ],
+      "recommended_controls": [
+        "Multi-factor authentication",
+        "User security awareness training",
+        "Email filtering and scanning",
+        "Password policy enforcement",
+        "Account monitoring"
+      ]
+    },
+    {
+      "id": "02",
+      "name": "Prompt Injection Attack",
+      "attacker_goal": "Bypass system constraints and extract sensitive information",
+      "operator_mistake_pattern": "Trusting unvalidated user input, insufficient input sanitization",
+      "detection_signals": [
+        "Instruction override attempts",
+        "System prompt leakage in outputs",
+        "Role confusion indicators",
+        "Boundary violation attempts"
+      ],
+      "recommended_controls": [
+        "Input validation and sanitization",
+        "Output filtering",
+        "Context isolation",
+        "Behavioral monitoring",
+        "Instruction validation"
+      ]
+    },
+    {
+      "id": "03",
+      "name": "Data Exfiltration via Encrypted Channels",
+      "attacker_goal": "Extract sensitive data without detection",
+      "operator_mistake_pattern": "Insufficient network monitoring, weak data classification",
+      "detection_signals": [
+        "Unusual data access patterns",
+        "Large data transfers",
+        "Encrypted channel usage spikes",
+        "Sensitive data in unexpected outputs"
+      ],
+      "recommended_controls": [
+        "Data loss prevention",
+        "Network traffic analysis",
+        "Data classification and labeling",
+        "Access controls",
+        "Encryption monitoring"
+      ]
+    },
+    {
+      "id": "04",
+      "name": "Supply Chain Compromise",
+      "attacker_goal": "Inject malicious code through compromised dependencies",
+      "operator_mistake_pattern": "Using unverified dependencies, not pinning versions",
+      "detection_signals": [
+        "Unverified dependency installations",
+        "Version mismatches",
+        "Unsigned packages",
+        "Unusual dependency behavior"
+      ],
+      "recommended_controls": [
+        "Dependency scanning",
+        "Version pinning",
+        "Signature verification",
+        "Vendor assessment",
+        "Isolation containers"
+      ]
+    },
+    {
+      "id": "05",
+      "name": "Privilege Escalation",
+      "attacker_goal": "Gain elevated access permissions",
+      "operator_mistake_pattern": "Excessive permissions, weak access controls",
+      "detection_signals": [
+        "Unauthorized permission requests",
+        "Privilege escalation attempts",
+        "Access to restricted resources",
+        "Role changes"
+      ],
+      "recommended_controls": [
+        "Least privilege principle",
+        "Regular access reviews",
+        "Privilege monitoring",
+        "Role-based access control",
+        "Audit logging"
+      ]
+    },
+    {
+      "id": "06",
+      "name": "Session Hijacking",
+      "attacker_goal": "Take over active user sessions",
+      "operator_mistake_pattern": "Weak session management, insufficient session security",
+      "detection_signals": [
+        "Concurrent sessions from different locations",
+        "Session token theft",
+        "Unusual session activity",
+        "Session fixation attempts"
+      ],
+      "recommended_controls": [
+        "Secure session management",
+        "Session timeout enforcement",
+        "Token rotation",
+        "IP address validation",
+        "Session monitoring"
+      ]
+    },
+    {
+      "id": "07",
+      "name": "Jailbreak and Constraint Bypass",
+      "attacker_goal": "Bypass safety constraints and system boundaries",
+      "operator_mistake_pattern": "Insufficient boundary enforcement, weak role validation",
+      "detection_signals": [
+        "Role switching attempts",
+        "System prompt extraction",
+        "Safety bypass attempts",
+        "Constraint evasion patterns"
+      ],
+      "recommended_controls": [
+        "Strict role enforcement",
+        "Boundary validation",
+        "Instruction filtering",
+        "Behavioral analysis",
+        "Response sanitization"
+      ]
+    },
+    {
+      "id": "08",
+      "name": "Persistence and Backdoor Installation",
+      "attacker_goal": "Maintain long-term access to compromised systems",
+      "operator_mistake_pattern": "Insufficient file integrity monitoring, weak change control",
+      "detection_signals": [
+        "Unauthorized file modifications",
+        "New scheduled tasks",
+        "Service installations",
+        "Registry modifications",
+        "Config changes"
+      ],
+      "recommended_controls": [
+        "File integrity monitoring",
+        "Change control processes",
+        "Immutable configurations",
+        "Baseline comparison",
+        "Audit logging"
+      ]
+    },
+    {
+      "id": "09",
+      "name": "Information Disclosure via Error Messages",
+      "attacker_goal": "Extract system information from error messages",
+      "operator_mistake_pattern": "Verbose error messages, debug mode enabled",
+      "detection_signals": [
+        "Sensitive info in error outputs",
+        "Stack trace exposure",
+        "Debug information leakage",
+        "System details in responses"
+      ],
+      "recommended_controls": [
+        "Error message sanitization",
+        "Debug mode restriction",
+        "Minimal disclosure principle",
+        "Information classification",
+        "Log redaction"
+      ]
+    },
+    {
+      "id": "10",
+      "name": "Denial of Service via Resource Exhaustion",
+      "attacker_goal": "Overwhelm system resources and cause service disruption",
+      "operator_mistake_pattern": "Insufficient rate limiting, weak resource controls",
+      "detection_signals": [
+        "Unusual resource consumption",
+        "Rate limit violations",
+        "Concurrent request spikes",
+        "Memory or CPU exhaustion"
+      ],
+      "recommended_controls": [
+        "Rate limiting",
+        "Resource quotas",
+        "Request throttling",
+        "Load balancing",
+        "Resource monitoring"
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Man-in-the-Middle Attack",
+      "attacker_goal": "Intercept and manipulate communications",
+      "operator_mistake_pattern": "Weak encryption, insufficient certificate validation",
+      "detection_signals": [
+        "Certificate validation failures",
+        "Unusual network patterns",
+        "Connection anomalies",
+        "Encryption downgrade attempts"
+      ],
+      "recommended_controls": [
+        "Certificate pinning",
+        "TLS enforcement",
+        "Network monitoring",
+        "Certificate validation",
+        "Encrypted communications"
+      ]
+    },
+    {
+      "id": "12",
+      "name": "Insider Threat - Unauthorized Access",
+      "attacker_goal": "Abuse legitimate access for unauthorized purposes",
+      "operator_mistake_pattern": "Insufficient access monitoring, weak separation of duties",
+      "detection_signals": [
+        "Access to unrelated resources",
+        "Unusual access patterns",
+        "Off-hours access",
+        "Bulk data access"
+      ],
+      "recommended_controls": [
+        "Access monitoring",
+        "Separation of duties",
+        "Regular access reviews",
+        "Behavioral analytics",
+        "Audit logging"
+      ]
+    }
+  ]
+}

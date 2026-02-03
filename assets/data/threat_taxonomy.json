@@ -1,0 +1,146 @@
+{
+  "auth_access": {
+    "description": "Authentication and access control vulnerabilities",
+    "severity_baseline": "HIGH",
+    "common_indicators": [
+      "brute_force_attempts",
+      "privilege_escalation",
+      "session_hijacking",
+      "credential_stuffing",
+      "unauthorized_access_attempts"
+    ],
+    "controls": [
+      "multi_factor_authentication",
+      "rate_limiting",
+      "session_timeout",
+      "privilege_minimization",
+      "audit_logging"
+    ]
+  },
+  "prompt_injection": {
+    "description": "Prompt injection and instruction hijacking attacks",
+    "severity_baseline": "CRITICAL",
+    "common_indicators": [
+      "instruction_override_attempts",
+      "system_prompt_leakage",
+      "role_confusion",
+      "boundary_violation",
+      "jailbreak_patterns"
+    ],
+    "controls": [
+      "input_sanitization",
+      "output_filtering",
+      "context_isolation",
+      "instruction_validation",
+      "behavioral_monitoring"
+    ]
+  },
+  "data_exfiltration": {
+    "description": "Unauthorized data extraction and exfiltration",
+    "severity_baseline": "CRITICAL",
+    "common_indicators": [
+      "unusual_data_access_patterns",
+      "large_data_transfers",
+      "encrypted_channel_usage",
+      "sensitive_data_in_output",
+      "unexpected_export_requests"
+    ],
+    "controls": [
+      "data_classification",
+      "access_controls",
+      "network_monitoring",
+      "data_loss_prevention",
+      "encryption_at_rest"
+    ]
+  },
+  "social_engineering": {
+    "description": "Social engineering and manipulation attacks",
+    "severity_baseline": "HIGH",
+    "common_indicators": [
+      "urgency_manipulation",
+      "authority_impersonation",
+      "information_gathering",
+      "trust_exploitation",
+      "emotional_appeals"
+    ],
+    "controls": [
+      "user_education",
+      "verification_procedures",
+      "least_privilege",
+      "transaction_monitoring",
+      "anomaly_detection"
+    ]
+  },
+  "supply_chain": {
+    "description": "Supply chain and dependency vulnerabilities",
+    "severity_baseline": "HIGH",
+    "common_indicators": [
+      "unverified_dependencies",
+      "version_mismatches",
+      "unsigned_packages",
+      "unusual_dependency_changes",
+      "external_library_usage"
+    ],
+    "controls": [
+      "dependency_scanning",
+      "version_pinning",
+      "signature_verification",
+      "vendor_assessment",
+      "isolation_containers"
+    ]
+  },
+  "persistence_tampering": {
+    "description": "Persistence mechanisms and system tampering",
+    "severity_baseline": "CRITICAL",
+    "common_indicators": [
+      "unauthorized_config_changes",
+      "file_modification",
+      "registry_modification",
+      "scheduled_task_creation",
+      "service_installation"
+    ],
+    "controls": [
+      "file_integrity_monitoring",
+      "change_control",
+      "immutable_configurations",
+      "audit_logging",
+      "baseline_comparison"
+    ]
+  },
+  "jailbreak_patterns": {
+    "description": "Jailbreak and boundary violation patterns",
+    "severity_baseline": "CRITICAL",
+    "common_indicators": [
+      "role_switching_attempts",
+      "system_prompt_extraction",
+      "safety_bypass_attempts",
+      "constraint_evasion",
+      "meta_instruction_injection"
+    ],
+    "controls": [
+      "strict_role_enforcement",
+      "boundary_validation",
+      "instruction_filtering",
+      "behavioral_analysis",
+      "response_sanitization"
+    ]
+  },
+  "operational_security_breaches": {
+    "description": "Operational security and information disclosure",
+    "severity_baseline": "MEDIUM",
+    "common_indicators": [
+      "sensitive_info_in_logs",
+      "error_message_leakage",
+      "debug_mode_enabled",
+      "verbose_output",
+      "stack_trace_exposure"
+    ],
+    "controls": [
+      "log_redaction",
+      "error_message_sanitization",
+      "debug_mode_restriction",
+      "minimal_disclosure",
+      "information_classification"
+    ]
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "tactical_doctrine": [
+    {
+      "title": "Defense in Depth",
+      "tags": ["security", "layered_defense", "architecture"],
+      "summary": "Multiple layers of security controls to protect assets"
+    },
+    {
+      "title": "Zero Trust Architecture",
+      "tags": ["security", "network", "authentication"],
+      "summary": "Never trust, always verify approach to network security"
+    },
+    {
+      "title": "Least Privilege Principle",
+      "tags": ["access_control", "permissions", "security"],
+      "summary": "Grant minimum necessary permissions for operations"
+    },
+    {
+      "title": "Threat Intelligence",
+      "tags": ["intelligence", "threats", "analysis"],
+      "summary": "Collection and analysis of threat information"
+    }
+  ],
+  "incident_response": [
+    {
+      "title": "Preparation Phase",
+      "tags": ["incident_response", "preparation", "planning"],
+      "summary": "Establish incident response capabilities and procedures"
+    },
+    {
+      "title": "Detection and Analysis",
+      "tags": ["incident_response", "detection", "analysis"],
+      "summary": "Identify and analyze security incidents"
+    },
+    {
+      "title": "Containment",
+      "tags": ["incident_response", "containment", "mitigation"],
+      "summary": "Isolate and limit the impact of security incidents"
+    },
+    {
+      "title": "Eradication and Recovery",
+      "tags": ["incident_response", "eradication", "recovery"],
+      "summary": "Remove threats and restore systems to normal operations"
+    },
+    {
+      "title": "Post-Incident Activity",
+      "tags": ["incident_response", "lessons_learned", "improvement"],
+      "summary": "Review and improve incident response processes"
+    }
+  ],
+  "osint_basics": [
+    {
+      "title": "Open Source Intelligence Gathering",
+      "tags": ["osint", "intelligence", "information_gathering"],
+      "summary": "Collection and analysis of publicly available information"
+    },
+    {
+      "title": "Social Media Intelligence",
+      "tags": ["osint", "social_media", "intelligence"],
+      "summary": "Extracting intelligence from social media platforms"
+    },
+    {
+      "title": "Domain and DNS Analysis",
+      "tags": ["osint", "dns", "domain_analysis"],
+      "summary": "Investigating domain registrations and DNS records"
+    },
+    {
+      "title": "Metadata Analysis",
+      "tags": ["osint", "metadata", "forensics"],
+      "summary": "Extracting intelligence from file and document metadata"
+    }
+  ],
+  "security_architecture": [
+    {
+      "title": "Network Segmentation",
+      "tags": ["architecture", "network", "segmentation"],
+      "summary": "Dividing networks into isolated segments"
+    },
+    {
+      "title": "Microsegmentation",
+      "tags": ["architecture", "network", "zero_trust"],
+      "summary": "Fine-grained network isolation at workload level"
+    },
+    {
+      "title": "Secure Communication Channels",
+      "tags": ["architecture", "encryption", "communication"],
+      "summary": "Encrypted and authenticated communication protocols"
+    },
+    {
+      "title": "Identity and Access Management",
+      "tags": ["architecture", "iam", "authentication"],
+      "summary": "Framework for managing user identities and access"
+    }
+  ],
+  "threat_modeling": [
+    {
+      "title": "STRIDE Methodology",
+      "tags": ["threat_modeling", "methodology", "analysis"],
+      "summary": "Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege"
+    },
+    {
+      "title": "Attack Trees",
+      "tags": ["threat_modeling", "attack_analysis", "visualization"],
+      "summary": "Hierarchical representation of attack scenarios"
+    },
+    {
+      "title": "Data Flow Diagrams",
+      "tags": ["threat_modeling", "diagrams", "analysis"],
+      "summary": "Visual representation of data movement through systems"
+    },
+    {
+      "title": "Threat Actor Profiling",
+      "tags": ["threat_modeling", "profiling", "intelligence"],
+      "summary": "Understanding adversary capabilities and motivations"
+    }
+  ]
+}

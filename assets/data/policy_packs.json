@@ -1,0 +1,127 @@
+{
+  "baseline_internal": {
+    "name": "Baseline Internal",
+    "description": "Standard internal security policy for general operations",
+    "allowed_actions": [
+      "threat_scan",
+      "system_integrity_check",
+      "compliance_check",
+      "view_logs",
+      "policy_view"
+    ],
+    "restricted_actions": [
+      "direct_titan_access",
+      "policy_modification",
+      "log_deletion",
+      "system_config_change"
+    ],
+    "redaction_rules": {
+      "PUBLIC": [],
+      "INTERNAL": ["sensitive_paths", "internal_ips"],
+      "SECRET": ["all_paths", "all_ips", "user_identifiers", "system_details"],
+      "TITAN_INTERNAL_ONLY": ["full_details"]
+    },
+    "escalation_rules": {
+      "high_risk": "immediate_admin_notification",
+      "integrity_breach": "lockdown_and_audit",
+      "policy_violation": "log_and_alert"
+    },
+    "two_person_rule": {
+      "enabled": false,
+      "actions": []
+    },
+    "posture_thresholds": {
+      "GREEN": 0,
+      "AMBER": 30,
+      "RED": 60,
+      "BLACK": 90
+    }
+  },
+  "gov_secure": {
+    "name": "Government Secure",
+    "description": "Enhanced security policy for government-level operations",
+    "allowed_actions": [
+      "threat_scan",
+      "system_integrity_check",
+      "compliance_check",
+      "decision_stress_test",
+      "red_team_scenario",
+      "view_logs",
+      "policy_view"
+    ],
+    "restricted_actions": [
+      "direct_titan_access",
+      "policy_modification",
+      "log_deletion",
+      "system_config_change",
+      "audit_export"
+    ],
+    "redaction_rules": {
+      "PUBLIC": ["all_details"],
+      "INTERNAL": ["sensitive_paths", "internal_ips", "user_identifiers"],
+      "SECRET": ["all_paths", "all_ips", "all_identifiers", "system_details", "findings"],
+      "TITAN_INTERNAL_ONLY": ["full_details"]
+    },
+    "escalation_rules": {
+      "high_risk": "immediate_lockdown_and_audit",
+      "integrity_breach": "lockdown_audit_and_escalate",
+      "policy_violation": "log_alert_and_escalate",
+      "any_anomaly": "log_and_review"
+    },
+    "two_person_rule": {
+      "enabled": true,
+      "actions": [
+        "policy_modification",
+        "lockdown_override",
+        "audit_export",
+        "system_config_change"
+      ]
+    },
+    "posture_thresholds": {
+      "GREEN": 0,
+      "AMBER": 20,
+      "RED": 40,
+      "BLACK": 70
+    }
+  },
+  "kids_guardian_overlay": {
+    "name": "Kids Guardian Overlay",
+    "description": "Restrictive policy overlay for child safety (locked by default)",
+    "allowed_actions": [
+      "threat_scan",
+      "compliance_check",
+      "view_logs"
+    ],
+    "restricted_actions": [
+      "direct_titan_access",
+      "policy_modification",
+      "log_deletion",
+      "system_config_change",
+      "decision_stress_test",
+      "red_team_scenario",
+      "system_integrity_check",
+      "audit_export"
+    ],
+    "redaction_rules": {
+      "PUBLIC": ["all_details"],
+      "INTERNAL": ["all_details"],
+      "SECRET": ["all_details"],
+      "TITAN_INTERNAL_ONLY": ["full_details"]
+    },
+    "escalation_rules": {
+      "any_risk": "immediate_parental_notification",
+      "policy_violation": "lockdown_and_notify"
+    },
+    "two_person_rule": {
+      "enabled": true,
+      "actions": ["all"]
+    },
+    "posture_thresholds": {
+      "GREEN": 0,
+      "AMBER": 10,
+      "RED": 20,
+      "BLACK": 30
+    },
+    "locked": true
+  }
+}
