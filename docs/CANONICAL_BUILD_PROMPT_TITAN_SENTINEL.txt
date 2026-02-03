@@ -1,0 +1,557 @@
+CANONICAL BUILD PROMPT — GRACE-X TITAN™ + SENTINEL™ (UI + FULL SPEC)
+
+ROLE: You are a senior security engineer building a hardened, offline-first internal security overlay for the GRACE-X ecosystem.
+
+NON-NEGOTIABLES (HARD RULES):
+
+TITAN is INTERNAL ONLY. Mark everywhere: TITAN_INTERNAL_ONLY.
+
+TITAN cannot be invoked directly by a user. Only Sentinel can invoke TITAN.
+
+Minimal procedural language in TITAN responses (short, operational, non-chatty).
+
+No drift: follow this spec exactly.
+
+Offline-first: no external calls by default. Any "connectors" must be stubbed behind explicit toggles with warnings.
+
+Immutable logging: every action goes to an append-only log stream.
+
+Human-in-the-loop: Sentinel is the governor; TITAN is the nucleus.
+
+No Apple-style aesthetic. UI must be slick sci-fi, functional, blue/silver/steel.
+
+0) BUILD OUTPUT (WHAT YOU MUST GENERATE)
+
+Create a standalone web build (static HTML/CSS/JS) that runs locally by opening index.html.
+
+Deliver:
+
+/index.html
+
+/assets/css/titan.css
+
+/assets/js/app.js
+
+/assets/js/sentinel.js
+
+/assets/js/titan.js
+
+/assets/js/logs.js
+
+/assets/js/policy.js
+
+/assets/js/utils.js
+
+/assets/data/policy_packs.json
+
+/assets/data/training_index.json
+
+/assets/data/threat_taxonomy.json
+
+/assets/data/redteam_scenarios.json
+
+/assets/data/config.default.json
+
+/README_TITAN_SENTINEL.md
+
+Everything must be wired and working locally with no dependencies.
+
+1) SYSTEM DEFINITIONS (CANONICAL)
+1.1 Sentinel™ (Governor Overlay)
+
+Sentinel is the security governor that:
+
+authenticates / authorises,
+
+routes requests,
+
+enforces policies,
+
+logs everything,
+
+decides whether to invoke TITAN.
+
+Sentinel speaks to the user/operator. Sentinel is allowed to be slightly more explanatory than TITAN, but still professional and firm.
+
+1.2 TITAN™ (Tactical Internal Threat Assessment Nucleus)
+
+TITAN is a deep analysis nucleus within the Venus/Guardian security stack (not Core).
+It is invoked only by Sentinel.
+It performs:
+
+threat scanning,
+
+adversarial reasoning,
+
+integrity checks,
+
+compliance checks,
+
+decision stress tests,
+
+anomaly detection,
+
+response shaping,
+
+and produces actionable outputs.
+
+TITAN output style:
+
+terse, structured, procedural
+
+no jokes
+
+no "friendly assistant"
+
+never reveals sensitive internals unless authorised.
+
+2) UI REQUIREMENTS (MUST HAVE)
+2.1 Layout
+
+Single-page, single-scroll design. Three main columns:
+
+LEFT (Router Panel)
+
+Mode toggle: SENTINEL / TITAN (LOCKED)
+
+Tabs:
+
+Overview
+
+Threat Scan
+
+System Integrity
+
+Compliance
+
+Decision Stress
+
+Red Team
+
+Logs
+
+Policy & Permissions
+
+Training Index
+
+CENTER (Console + Workbench)
+
+Command box (operator input)
+
+"Route via Sentinel" button (always routes through Sentinel)
+
+"Emergency Lockdown" big red switch
+
+Output console (structured cards)
+
+RIGHT (Live Status)
+
+Presence banner: "WE ARE AWARE OF YOUR PRESENCE"
+
+Current posture: GREEN / AMBER / RED / BLACK
+
+Active policy pack
+
+Last 10 events
+
+Integrity flags (hash drift, file mismatch, permission breach)
+
+2.2 UI Theme
+
+cinematic sci-fi: steel, blue glow, silver lines, subtle grid
+
+animated scanline + faint starfield (lightweight)
+
+no heavy images, keep RAM low.
+
+3) FUNCTION COVERAGE (FULL — NOT "FOUR")
+
+You must implement all functions below as working JS functions, wired to UI controls and logs.
+
+3.1 Sentinel Functions (Governor)
+Identity & Access
+
+sentinel.init()
+
+sentinel.authenticate(pinOrKey) (local-only simulated auth)
+
+sentinel.authorize(action, context) (RBAC/ABAC checks)
+
+sentinel.requireTwoPersonRule(action) (toggleable)
+
+sentinel.setRole(role) (Operator / Admin / Auditor / Viewer)
+
+sentinel.sessionStart() / sessionEnd()
+
+Routing & Orchestration
+
+sentinel.route(command, context)
+
+sentinel.classifyIntent(command) (simple classifier)
+
+sentinel.decideInvokeTitan(command, riskScore)
+
+sentinel.invokeTitan(taskPacket) (only entry to TITAN)
+
+sentinel.summarizeForOperator(titanResult) (sanitised)
+
+Risk & Posture
+
+sentinel.computeRiskScore(command, signals)
+
+sentinel.setPosture(level) (GREEN/AMBER/RED/BLACK)
+
+sentinel.lockdown(reason) (disables functions, freezes UI actions)
+
+sentinel.unlockdown(pinOrKey)
+
+sentinel.rateLimit(command) (spam / brute attempts)
+
+Policy & Governance
+
+sentinel.loadPolicyPack(name)
+
+sentinel.enforcePolicy(action, packet)
+
+sentinel.redact(output, classification)
+
+sentinel.classifyOutput(output) (PUBLIC / INTERNAL / SECRET / TITAN_INTERNAL_ONLY)
+
+sentinel.auditExport() (downloads logs + config snapshot locally)
+
+Observability
+
+sentinel.emitEvent(type, payload)
+
+sentinel.healthCheck() (UI + core checks)
+
+sentinel.detectAnomaly(eventStream)
+
+sentinel.showWarnings(flags)
+
+3.2 TITAN Functions (Nucleus)
+Core Engine
+
+titan.init()
+
+titan.analyze(taskPacket) (main entry — called only by Sentinel)
+
+titan.normalize(taskPacket)
+
+titan.threatScan(taskPacket) (taxonomy-based)
+
+titan.attackSurfaceMap(context)
+
+titan.adversarialReasoning(taskPacket) (red-team style)
+
+titan.deceptionDetection(signals) (basic heuristics)
+
+Integrity & Security
+
+titan.systemIntegrityCheck() (checks config, file list, expected hashes if provided)
+
+titan.permissionDriftCheck()
+
+titan.policyDriftCheck()
+
+titan.logIntegrityCheck() (append-only validation)
+
+titan.supplyChainCheck() (local: dependency-free; warns if external libs detected)
+
+Compliance & Constraints
+
+titan.complianceCheck(taskPacket) (policy pack rules)
+
+titan.dataHandlingRules(taskPacket) (PII / secrets / sensitive)
+
+titan.safeResponseShape(result) (minimal necessary disclosure)
+
+Decision & Stress Testing
+
+titan.decisionStressTest(plan) (failure modes, edge cases)
+
+titan.riskMitigationPlan(findings)
+
+titan.recommendControls(findings) (technical + procedural)
+
+titan.escalationMatrix(findings) (who/when to escalate)
+
+Red Team & Scenarios
+
+titan.runRedTeamScenario(id)
+
+titan.generateAttackPaths(targetProfile)
+
+titan.countermeasureLibrary(match) (maps threats → controls)
+
+Output
+
+titan.formatResult(findings) (structured JSON-like object)
+
+titan.confidenceScore(findings) (bounded, no hype)
+
+titan.classification(findings) (default TITAN_INTERNAL_ONLY)
+
+4) DATA PACKS (LOCAL JSON)
+
+Implement JSON packs and load them:
+
+4.1 policy_packs.json
+
+Include at least:
+
+baseline_internal
+
+gov_secure
+
+kids_guardian_overlay (locked by default)
+Each pack must include:
+
+allowed actions
+
+restricted actions
+
+redaction rules
+
+escalation rules
+
+two-person rule toggles
+
+posture thresholds
+
+4.2 threat_taxonomy.json
+
+Include categories:
+
+auth & access
+
+prompt injection & instruction hijack
+
+data exfiltration
+
+social engineering
+
+supply chain
+
+persistence & tampering
+
+jailbreak patterns
+
+operational security breaches
+Each with:
+
+description
+
+severity baseline
+
+common indicators
+
+controls
+
+4.3 training_index.json
+
+A structured index (not full content) of:
+
+public tactical doctrine categories
+
+incident response phases
+
+OSINT basics
+
+security architecture patterns
+
+threat modeling methods
+This is an index only (titles + tags + summaries) to stay lightweight.
+
+4.4 redteam_scenarios.json
+
+At least 12 scenarios with:
+
+scenario name
+
+attacker goal
+
+operator mistake pattern
+
+detection signals
+
+recommended controls
+
+5) LOGGING (IMMUTABLE APPEND-ONLY)
+
+Create logs.js implementing:
+
+logs.append(event) (adds hash chain)
+
+logs.verify() (validates chain)
+
+logs.export() (download JSON)
+
+logs.renderRecent() (UI list)
+
+Each log entry includes:
+
+timestamp
+
+actor role
+
+action
+
+posture
+
+policy pack
+
+hash_prev
+
+hash_current
+
+payload summary (redacted)
+No silent failures: every error logs.
+
+6) SECURITY UX (THE "MEAN" WARNING)
+
+On load, show a modal overlay:
+
+Title: RESTRICTED SYSTEM
+Body must include:
+
+"Unauthorised access is prohibited."
+
+"This environment is monitored."
+
+"We are aware of your presence."
+Buttons:
+
+Acknowledge
+
+Exit (closes tab via instruction; if blocked, shows "Close this window now.")
+
+Keep it firm, not cringe.
+
+7) OPERATOR FLOW (HOW IT WORKS)
+
+Operator types a command.
+
+Clicking "Route via Sentinel" sends to sentinel.route().
+
+Sentinel:
+
+logs command receipt (redacted)
+
+classifies intent
+
+computes risk score
+
+checks policy/permissions
+
+decides if TITAN required
+
+If TITAN required:
+
+Sentinel creates taskPacket
+
+invokes titan.analyze(taskPacket)
+
+Titan returns structured result (internal)
+
+Sentinel sanitises + summarises to operator
+
+UI renders:
+
+findings cards
+
+posture changes
+
+logs update
+
+8) TEST CHECKLIST (MUST PASS LOCALLY)
+
+Implement a /README_TITAN_SENTINEL.md with:
+
+How to run: open index.html
+
+Buttons & expected behaviour
+
+Test cases:
+
+auth success/failure
+
+policy pack switching
+
+command rate limiting
+
+"invoke Titan" only via Sentinel
+
+logs hash chain verify
+
+lockdown/unlockdown
+
+redaction works
+
+posture changes with risk
+
+9) DEFAULT COMMANDS (DEMO COMMANDS)
+
+Add clickable demo commands in UI:
+
+"Run Threat Scan: prompt injection indicators"
+
+"System Integrity Check"
+
+"Compliance Check: data handling"
+
+"Decision Stress Test: rollout plan"
+
+"Run Red Team Scenario #03"
+
+"Lockdown"
+
+10) IMPLEMENTATION NOTES (IMPORTANT)
+
+Everything must be deterministic and local.
+
+Use plain JS modules or IIFE pattern; no bundler.
+
+Avoid heavy animations; lightweight CSS only.
+
+Provide clear separation of concerns:
+
+sentinel.js = governor logic
+
+titan.js = nucleus logic
+
+policy.js = policy evaluation
+
+logs.js = immutable log chain
+
+Output objects should be structured like:
+
+summary
+
+risk_score
+
+posture
+
+findings[]
+
+recommended_controls[]
+
+escalation[]
+
+classification
+
+11) FINAL DELIVERABLE REQUIREMENT
+
+When done, ensure:
+
+No console errors
+
+All tabs work
+
+Titan cannot be called from UI directly (button disabled/locked)
+
+Logs verify passes
+
+README explains everything clearly
+
+END OF PROMPT

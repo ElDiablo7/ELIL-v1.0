@@ -15,6 +15,7 @@ const App = (function() {
     await Policy.init();
     Sentinel.init();
     Titan.init();
+    if (typeof Verification !== 'undefined') Verification.init();
 
     // Setup UI
     setupSecurityModal();
