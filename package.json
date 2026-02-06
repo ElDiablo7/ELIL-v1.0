@@ -2,9 +2,8 @@
   "name": "elil-v1.0",
   "version": "1.0.0",
   "private": true,
-  "description": "ELIL Project Security Suite - GRACE-X TITAN + SENTINEL",
   "scripts": {
-    "build": "echo 'Static site - no build required'",
+    "build": "echo 'Static site - no build'",
     "start": "npx serve -s . -l ${PORT:-3000}"
   }
 }
