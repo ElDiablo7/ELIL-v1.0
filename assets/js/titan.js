@@ -5,7 +5,7 @@
  * Terse, structured, procedural output - no chatty responses
  */
 
-const Titan = (function() {
+const Titan = (function () {
   'use strict';
 
   let initialized = false;
@@ -22,13 +22,21 @@ const Titan = (function() {
 
   // Load threat taxonomy
   async function loadThreatTaxonomy() {
+    const DEFAULT_TAXONOMY = {
+      "auth_access": { "description": "Authentication and access control vulnerabilities", "severity_baseline": "HIGH", "common_indicators": ["brute_force_attempts", "privilege_escalation"], "controls": ["multi_factor_authentication", "rate_limiting"] },
+      "prompt_injection": { "description": "Prompt injection and instruction hijacking attacks", "severity_baseline": "CRITICAL", "common_indicators": ["instruction_override_attempts", "system_prompt_leakage"], "controls": ["input_sanitization", "output_filtering"] }
+    };
+
     try {
       const response = await fetch('./assets/data/threat_taxonomy.json');
       if (response.ok) {
         threatTaxonomy = await response.json();
+      } else {
+        threatTaxonomy = DEFAULT_TAXONOMY;
       }
     } catch (e) {
-      console.error('Failed to load threat taxonomy');
+      console.warn('Network request failed for threat taxonomy. Using embedded fallback.');
+      threatTaxonomy = DEFAULT_TAXONOMY;
     }
   }
 
@@ -609,8 +617,8 @@ const Titan = (function() {
     const controls = [];
 
     for (const [category, data] of Object.entries(threatTaxonomy)) {
-      if (match.toLowerCase().includes(category.toLowerCase()) || 
-          data.description.toLowerCase().includes(match.toLowerCase())) {
+      if (match.toLowerCase().includes(category.toLowerCase()) ||
+        data.description.toLowerCase().includes(match.toLowerCase())) {
         controls.push(...(data.controls || []));
       }
     }

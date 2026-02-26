@@ -4,7 +4,7 @@
  * Only Sentinel can invoke TITAN
  */
 
-const Sentinel = (function() {
+const Sentinel = (function () {
   'use strict';
 
   let initialized = false;
@@ -44,17 +44,28 @@ const Sentinel = (function() {
 
   // Load configuration
   async function loadConfig() {
+    const DEFAULT_FALLBACK_CONFIG = {
+      system: { name: "GRACE-X TITAN + SENTINEL", version: "1.0.0", mode: "SENTINEL", titan_locked: true },
+      authentication: { default_pin: "0000", max_attempts: 3, lockout_duration: 300, session_timeout: 3600 },
+      logging: { enabled: true, max_entries: 10000, export_format: "json", hash_algorithm: "sha256" },
+      policy: { default_pack: "baseline_internal", auto_load: true },
+      posture: { initial: "GREEN", update_on_risk: true },
+      rate_limiting: { enabled: true, max_requests_per_minute: 60, max_requests_per_hour: 1000 },
+      titan: { auto_invoke_threshold: 50, require_authorization: true, classification_default: "TITAN_INTERNAL_ONLY" },
+      ui: { theme: "sci_fi", animations_enabled: true, scanline_enabled: true, starfield_enabled: true },
+      offline_mode: { enabled: true, external_connectors_stubbed: true, warn_on_external_attempt: true }
+    };
+
     try {
       const response = await fetch('./assets/data/config.default.json');
       if (response.ok) {
         config = await response.json();
+      } else {
+        config = DEFAULT_FALLBACK_CONFIG;
       }
     } catch (e) {
-      console.error('Failed to load config, using defaults');
-      config = {
-        authentication: { default_pin: '0000', max_attempts: 3, lockout_duration: 300 },
-        rate_limiting: { enabled: true, max_requests_per_minute: 60 }
-      };
+      console.warn('Network request failed (possibly file:// protocol). Using embedded fallback config.');
+      config = DEFAULT_FALLBACK_CONFIG;
     }
   }
 
@@ -254,7 +265,7 @@ const Sentinel = (function() {
 
   function classifyIntent(command) {
     const cmd = command.toLowerCase();
-    
+
     if (cmd.includes('threat') || cmd.includes('scan')) return 'THREAT_SCAN';
     if (cmd.includes('integrity') || cmd.includes('check')) return 'INTEGRITY_CHECK';
     if (cmd.includes('compliance')) return 'COMPLIANCE_CHECK';
@@ -263,21 +274,21 @@ const Sentinel = (function() {
     if (cmd.includes('lockdown')) return 'LOCKDOWN';
     if (cmd.includes('policy') || cmd.includes('permission')) return 'POLICY_VIEW';
     if (cmd.includes('log') || cmd.includes('audit')) return 'LOG_VIEW';
-    
+
     return 'GENERAL_QUERY';
   }
 
   function decideInvokeTitan(command, riskScore) {
     const threshold = config?.titan?.auto_invoke_threshold || 50;
-    
+
     // Always invoke TITAN for high-risk operations
     if (riskScore >= threshold) return true;
-    
+
     // Invoke TITAN for specific intents
     const intent = classifyIntent(command);
     const titanIntents = ['THREAT_SCAN', 'INTEGRITY_CHECK', 'COMPLIANCE_CHECK', 'DECISION_STRESS_TEST', 'RED_TEAM_SCENARIO'];
     if (titanIntents.includes(intent)) return true;
-    
+
     return false;
   }
 
@@ -561,7 +572,7 @@ const Sentinel = (function() {
   function detectAnomaly(eventStream) {
     // Simple anomaly detection
     const recentEvents = Logs.getRecent(50);
-    
+
     // Check for rapid posture changes
     let postureChanges = 0;
     for (let i = 1; i < recentEvents.length; i++) {
@@ -584,7 +595,7 @@ const Sentinel = (function() {
 
   function showWarnings(flags) {
     const warnings = [];
-    
+
     if (flags?.lockdown_active) {
       warnings.push({ level: 'CRITICAL', message: `System in lockdown: ${lockdownReason}` });
     }

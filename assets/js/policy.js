@@ -3,7 +3,7 @@
  * Policy pack loading, evaluation, redaction, classification, enforcement
  */
 
-const Policy = (function() {
+const Policy = (function () {
   'use strict';
 
   let currentPolicyPack = null;
@@ -13,14 +13,34 @@ const Policy = (function() {
 
   // Load policy packs from JSON
   async function loadPolicyPacks() {
+    const DEFAULT_FALLBACK_POLICY = {
+      "baseline_internal": {
+        "name": "Baseline Internal",
+        "description": "Standard internal security policy for general operations",
+        "allowed_actions": ["threat_scan", "system_integrity_check", "compliance_check", "view_logs", "policy_view"],
+        "restricted_actions": ["direct_titan_access", "policy_modification", "log_deletion", "system_config_change"],
+        "redaction_rules": { "PUBLIC": [], "INTERNAL": ["sensitive_paths", "internal_ips"], "SECRET": ["all_paths", "all_ips", "user_identifiers", "system_details"], "TITAN_INTERNAL_ONLY": ["full_details"] },
+        "posture_thresholds": { "GREEN": 0, "AMBER": 30, "RED": 60, "BLACK": 90 }
+      },
+      "gov_secure": {
+        "name": "Government Secure",
+        "description": "Enhanced security policy for government-level operations",
+        "allowed_actions": ["threat_scan", "system_integrity_check", "compliance_check", "decision_stress_test", "red_team_scenario", "view_logs", "policy_view"],
+        "restricted_actions": ["direct_titan_access", "policy_modification", "log_deletion", "system_config_change", "audit_export"],
+        "two_person_rule": { "enabled": true, "actions": ["policy_modification", "lockdown_override", "audit_export", "system_config_change"] },
+        "posture_thresholds": { "GREEN": 0, "AMBER": 20, "RED": 40, "BLACK": 70 }
+      }
+    };
+
     try {
       const response = await fetch('./assets/data/policy_packs.json');
       if (!response.ok) throw new Error('Failed to load policy packs');
       policyPacks = await response.json();
       return true;
     } catch (e) {
-      console.error('Error loading policy packs:', e);
-      return false;
+      console.warn('Network request failed for policy packs. Using embedded fallback.');
+      policyPacks = DEFAULT_FALLBACK_POLICY;
+      return true;
     }
   }
 
@@ -32,7 +52,7 @@ const Policy = (function() {
     }
 
     const pack = policyPacks[name];
-    
+
     // Check if locked
     if (pack.locked) {
       console.warn(`Policy pack '${name}' is locked`);
@@ -192,7 +212,7 @@ const Policy = (function() {
 
     // Simple heuristics for classification
     const outputStr = JSON.stringify(output).toLowerCase();
-    
+
     // Check for sensitive indicators
     const sensitivePatterns = {
       'TITAN_INTERNAL_ONLY': [

@@ -3,7 +3,7 @@
  * UI orchestration, event handlers, tab navigation, command routing
  */
 
-const App = (function() {
+const App = (function () {
   'use strict';
 
   let currentTab = 'overview';
@@ -11,11 +11,17 @@ const App = (function() {
 
   // Initialize application
   async function init() {
-    // Initialize modules
-    await Policy.init();
-    Sentinel.init();
-    Titan.init();
-    if (typeof Verification !== 'undefined') Verification.init();
+    console.log('Initializing TITAN + SENTINEL Security Suite...');
+
+    // Initialize modules in sequence to prevent race conditions
+    try {
+      await Policy.init();
+      await Sentinel.init();
+      await Titan.init();
+      if (typeof Verification !== 'undefined') Verification.init();
+    } catch (e) {
+      console.error('Module initialization failed:', e);
+    }
 
     // Setup UI
     setupSecurityModal();
@@ -42,7 +48,9 @@ const App = (function() {
       acknowledgeBtn.addEventListener('click', () => {
         hideSecurityModal();
         // Prompt for authentication
-        promptAuthentication();
+        setTimeout(() => {
+          promptAuthentication();
+        }, 300); // Small delay for visual transition
       });
     }
 
@@ -51,7 +59,7 @@ const App = (function() {
         // Try to close window
         window.close();
         // If that fails, show message
-        alert('Close this window now.');
+        alert('Access denied. Please close this browser tab.');
       });
     }
   }
@@ -71,21 +79,39 @@ const App = (function() {
   }
 
   function promptAuthentication() {
-    const pin = prompt('Enter authentication PIN:');
-    if (pin) {
-      const result = Sentinel.authenticate(pin);
-      if (result.success) {
-        authenticated = true;
-        Sentinel.sessionStart();
-        updateUI();
-        updateStatusPanel();
-        addOutputCard({
-          title: 'Authentication Successful',
-          content: `Role: ${result.role}`,
-          posture: 'GREEN'
-        });
+    const pin = prompt('SECURITY ACCESS REQUIRED\nPlease enter your authentication PIN:');
+
+    if (pin === null) {
+      // User cancelled
+      alert('Authentication cancelled. Access to console restricted.');
+      showSecurityModal();
+      return;
+    }
+
+    if (pin === '') {
+      alert('PIN cannot be empty.');
+      promptAuthentication();
+      return;
+    }
+
+    const result = Sentinel.authenticate(pin);
+    if (result.success) {
+      authenticated = true;
+      Sentinel.sessionStart();
+      updateUI();
+      updateStatusPanel();
+      addOutputCard({
+        title: 'Authentication Successful',
+        content: `Operator session established. Role: ${result.role}`,
+        posture: 'GREEN'
+      });
+    } else {
+      const remaining = result.attempts_remaining !== undefined ? ` (${result.attempts_remaining} attempts remaining)` : '';
+      alert((result.reason || 'Authentication failed') + remaining);
+      if (result.reason !== 'Maximum authentication attempts exceeded') {
+        promptAuthentication();
       } else {
-        alert(result.reason || 'Authentication failed');
+        showSecurityModal();
       }
     }
   }
@@ -167,7 +193,7 @@ const App = (function() {
     // Show/hide tab content
     const outputConsole = document.getElementById('output-console');
     const tabContents = document.querySelectorAll('.tab-content');
-    
+
     // Hide all tab-specific content areas
     tabContents.forEach(content => {
       content.style.display = 'none';
