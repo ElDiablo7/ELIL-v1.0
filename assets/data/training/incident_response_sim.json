@@ -1,0 +1,46 @@
+{
+  "title": "Incident Response: Phishing Breach",
+  "success_message": "Excellent performance. You maintained system integrity while properly isolating the threat.",
+  "steps": [
+    {
+      "scenario": "A high-privileged user reports a suspicious email attachment was opened and their desktop is behaving erratically. TITAN detects anomalous outbound traffic to an unknown IP.",
+      "options": [
+        {
+          "text": "Immediately activate system-wide BLACK lockdown.",
+          "score": 5,
+          "outcome": "Lockdown successful, but business operations are severely disrupted."
+        },
+        {
+          "text": "Isolate the infected endpoint and initiate a targeted threat scan.",
+          "score": 10,
+          "outcome": "Threat isolated. TITAN begins analysis of the payload."
+        },
+        {
+          "text": "Monitor the connection to gather intelligence on the threat actor.",
+          "score": 2,
+          "outcome": "Data leakage detected. Risk score elevated to CRITICAL."
+        }
+      ]
+    },
+    {
+      "scenario": "Analysis reveals a new variant of the 'CINDER' trojan. It is attempting to move laterally to the domain controller.",
+      "options": [
+        {
+          "text": "Reset all user credentials across the domain.",
+          "score": 7,
+          "outcome": "Spread halted, but helpdesk is overwhelmed."
+        },
+        {
+          "text": "Enable 'Strict' Policy filtering and block the C2 IP range.",
+          "score": 10,
+          "outcome": "Lateral movement prevented. Command and control severed."
+        },
+        {
+          "text": "Attempt to decrypt the malicious payload during execution.",
+          "score": -5,
+          "outcome": "Failure. The trojan detects analysis and initiates self-destruct, wiping local logs."
+        }
+      ]
+    }
+  ]
+}

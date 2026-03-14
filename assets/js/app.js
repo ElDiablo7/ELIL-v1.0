@@ -18,6 +18,7 @@ const App = (function () {
       await Policy.init();
       await Sentinel.init();
       await Titan.init();
+      await Training.init();
       if (typeof Verification !== 'undefined') Verification.init();
     } catch (e) {
       console.error('Module initialization failed:', e);
@@ -269,7 +270,7 @@ const App = (function () {
         showPolicyInfo();
         break;
       case 'training':
-        showTrainingIndex();
+        Training.render();
         break;
     }
   }

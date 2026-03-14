@@ -1,0 +1,4 @@
+{
+  "title": "Defense in Depth",
+  "content": "# Strategic Layering of Controls\n\nDefense in Depth is a security strategy that utilizes multiple layers of independent security controls to protect an organization's assets.\n\n## The Onion Model\nSecurity is like an onion: if one layer is breached, another stands in the way of the adversary.\n\n## Core Principles\n- **Diversity:** Use different types of controls (technical, administrative, physical).\n- **Redundancy:** If one control fails (e.g., Firewall), another is there to catch the threat (e.g., IDS).\n- **Visibility:** Monitoring must penetrate all layers.\n\n## Tactical Application\nIn the TITAN suite, we apply this by:\n1. **Network Layer:** Firewall & VPN (Sentinel Core)\n2. **Endpoint Layer:** Sentinel Agent with local posture check\n3. **Application Layer:** TITAN Behavioral Analysis\n4. **Data Layer:** Encryption at Rest & Policy Filtering"
+}
