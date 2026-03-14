@@ -33,6 +33,14 @@
       "title": "Incident Response: Phishing Breach",
       "tags": ["incident_response", "simulation", "tactical"],
       "summary": "Respond to a simulated phishing breach and maintain system integrity."
+    },
+    {
+      "module_id": "state_actor_defense",
+      "type": "SIMULATION",
+      "difficulty": "HARD",
+      "title": "Tactical Trial: State-Actor Defense",
+      "tags": ["state_actor", "simulation", "defense", "advanced"],
+      "summary": "Defend against a multi-vector campaign from a sophisticated state-sponsored adversary."
     }
   ],
   "osint_basics": [

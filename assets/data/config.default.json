@@ -18,7 +18,7 @@
     "hash_algorithm": "sha256"
   },
   "policy": {
-    "default_pack": "baseline_internal",
+    "default_pack": "gov_secure",
     "auto_load": true
   },
   "posture": {
@@ -27,13 +27,13 @@
   },
   "rate_limiting": {
     "enabled": true,
-    "max_requests_per_minute": 60,
-    "max_requests_per_hour": 1000
+    "max_requests_per_minute": 20,
+    "max_requests_per_hour": 500
   },
   "titan": {
-    "auto_invoke_threshold": 50,
-    "require_authorization": false,
-    "classification_default": "TITAN_INTERNAL_ONLY"
+    "auto_invoke_threshold": 30,
+    "require_authorization": true,
+    "classification_default": "TOP_SECRET"
   },
   "ui": {
     "theme": "sci_fi",

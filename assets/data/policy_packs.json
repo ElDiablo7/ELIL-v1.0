@@ -74,14 +74,16 @@
         "policy_modification",
         "lockdown_override",
         "audit_export",
-        "system_config_change"
+        "system_config_change",
+        "sensitive_data_access",
+        "direct_titan_access"
       ]
     },
     "posture_thresholds": {
       "GREEN": 0,
-      "AMBER": 20,
-      "RED": 40,
-      "BLACK": 70
+      "AMBER": 15,
+      "RED": 35,
+      "BLACK": 65
     }
   },
   "kids_guardian_overlay": {

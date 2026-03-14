@@ -748,7 +748,42 @@ body::after {
   font-style: italic;
 }
 
-/* Help Trigger Button in Right Panel */
+/* Government Classification UI */
+.government-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--red);
+  color: white;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding: 4px 0;
+  z-index: 10000;
+  box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+  pointer-events: none;
+}
+
+/* Adjust top padding for content if needed */
+body {
+  padding-top: 20px;
+}
+
+.warning-text {
+  color: var(--red) !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 15px 0;
+  font-size: 12px;
+  line-height: 1.4;
+  border: 1px dashed var(--red);
+  padding: 10px;
+  background: rgba(255, 51, 102, 0.05);
+}
 .help-trigger {
   width: 100%;
   margin-top: 15px;

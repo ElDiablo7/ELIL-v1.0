@@ -1,0 +1,46 @@
+{
+  "title": "Tactical Trial: State-Actor Defense",
+  "success_message": "Strategic victory. You successfully repelled a multi-vector state-sponsored campaign while maintaining continuity of operations.",
+  "steps": [
+    {
+      "scenario": "Sentinel detects a synchronized 'Low-and-Slow' brute force across multiple edge routers. Concurrent signals from TITAN indicate a zero-day exploit attempt on the policy engine's cryptographic module.",
+      "options": [
+        {
+          "text": "Rotate all edge cryptographic keys and immediately elevate posture to RED.",
+          "score": 10,
+          "outcome": "Brute force defeated. Attackers lose access as TITAN isolates the zero-day payload."
+        },
+        {
+          "text": "Deploy a decoy 'Internal' network segment to capture attacker tools.",
+          "score": 8,
+          "outcome": "Intelligence gathered, but attackers gain temporary foothold on legacy subsystems."
+        },
+        {
+          "text": "Block all inbound traffic from suspected ASNs and maintain AMBER posture.",
+          "score": 5,
+          "outcome": "Traffic blocked, but attackers switch to non-listed proxy nodes and resume the zero-day attack."
+        }
+      ]
+    },
+    {
+      "scenario": "The adversary pivots to a 'supply chain' attack, impersonating a vendor authorized under the Two-Person Rule. They request an emergency policy modification.",
+      "options": [
+        {
+          "text": "Strictly enforce the Two-Person cryptographic verification and ignore the urgency.",
+          "score": 10,
+          "outcome": "Attack neutralized. The adversary cannot provide the second valid signature."
+        },
+        {
+          "text": "Bypass one signature due to 'Operational Emergency' as declared by the vendor.",
+          "score": -10,
+          "outcome": "CATASTROPHIC FAILURE. Adversary modifies the policy pack to allow direct TITAN access. System compromised."
+        },
+        {
+          "text": "Temporarily lock the policy engine and initiate a full vendor audit.",
+          "score": 7,
+          "outcome": "Attack delayed, but vendor connectivity is severed during a critical period."
+        }
+      ]
+    }
+  ]
+}
