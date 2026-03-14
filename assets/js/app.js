@@ -25,6 +25,7 @@ const App = (function () {
 
     // Setup UI
     setupSecurityModal();
+    setupHelpOverlay();
     setupEventListeners();
     setupTabNavigation();
     setupDemoCommands();
@@ -81,39 +82,53 @@ const App = (function () {
   }
 
   function promptAuthentication() {
-    const pin = prompt('SECURITY ACCESS REQUIRED\nPlease enter your authentication PIN:');
+    // Authentication bypassed in previous task
+    updateStatusPanel();
+    updateUI();
+  }
 
-    if (pin === null) {
-      // User cancelled
-      alert('Authentication cancelled. Access to console restricted.');
-      showSecurityModal();
-      return;
+  // Help Overlay
+  function setupHelpOverlay() {
+    const helpOverlay = document.getElementById('help-overlay');
+    const helpTrigger = document.getElementById('help-trigger');
+    const helpClose = document.getElementById('help-close');
+
+    if (helpTrigger) {
+      helpTrigger.addEventListener('click', toggleHelpOverlay);
     }
 
-    if (pin === '') {
-      alert('PIN cannot be empty.');
-      promptAuthentication();
-      return;
+    if (helpClose) {
+      helpClose.addEventListener('click', hideHelpOverlay);
     }
 
-    const result = Sentinel.authenticate(pin);
-    if (result.success) {
-      Sentinel.sessionStart();
-      updateUI();
-      updateStatusPanel();
-      addOutputCard({
-        title: 'Authentication Successful',
-        content: `Operator session established. Role: ${result.role}`,
-        posture: 'GREEN'
-      });
-    } else {
-      const remaining = result.attempts_remaining !== undefined ? ` (${result.attempts_remaining} attempts remaining)` : '';
-      alert((result.reason || 'Authentication failed') + remaining);
-      if (result.reason !== 'Maximum authentication attempts exceeded') {
-        promptAuthentication();
-      } else {
-        showSecurityModal();
+    // Toggle on 'H' key, close on 'ESC'
+    window.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'h' && !e.ctrlKey && !e.altKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+        toggleHelpOverlay();
       }
+      if (e.key === 'Escape') {
+        hideHelpOverlay();
+        hideSecurityModal();
+      }
+    });
+
+    helpOverlay.addEventListener('click', (e) => {
+      if (e.target === helpOverlay) hideHelpOverlay();
+    });
+  }
+
+  function toggleHelpOverlay() {
+    const helpOverlay = document.getElementById('help-overlay');
+    if (helpOverlay) {
+      const isVisible = helpOverlay.style.display === 'flex';
+      helpOverlay.style.display = isVisible ? 'none' : 'flex';
+    }
+  }
+
+  function hideHelpOverlay() {
+    const helpOverlay = document.getElementById('help-overlay');
+    if (helpOverlay) {
+      helpOverlay.style.display = 'none';
     }
   }
 

@@ -81,21 +81,21 @@
       </div>
 
       <!-- Tab Content Areas -->
-      <div id="tab-overview" class="tab-content" style="display: none;"></div>
-      <div id="tab-threat-scan" class="tab-content" style="display: none;"></div>
-      <div id="tab-integrity" class="tab-content" style="display: none;"></div>
-      <div id="tab-compliance" class="tab-content" style="display: none;"></div>
-      <div id="tab-decision-stress" class="tab-content" style="display: none;"></div>
-      <div id="tab-red-team" class="tab-content" style="display: none;"></div>
-      <div id="tab-logs" class="tab-content" style="display: none;">
+      <div id="tab-overview" class="tab-content hidden"></div>
+      <div id="tab-threat-scan" class="tab-content hidden"></div>
+      <div id="tab-integrity" class="tab-content hidden"></div>
+      <div id="tab-compliance" class="tab-content hidden"></div>
+      <div id="tab-decision-stress" class="tab-content hidden"></div>
+      <div id="tab-red-team" class="tab-content hidden"></div>
+      <div id="tab-logs" class="tab-content hidden">
         <div id="logs-tab-content" class="output-console"></div>
-        <div style="margin-top: 10px;">
+        <div class="logs-controls">
           <button id="export-logs-btn" class="demo-btn">Export Logs</button>
           <button id="audit-export-btn" class="demo-btn">Audit Export</button>
         </div>
       </div>
-      <div id="tab-policy" class="tab-content" style="display: none;"></div>
-      <div id="tab-training" class="tab-content" style="display: none;"></div>
+      <div id="tab-policy" class="tab-content hidden"></div>
+      <div id="tab-training" class="tab-content hidden"></div>
     </div>
 
     <!-- Right Panel - Status -->
@@ -134,7 +134,7 @@
 
       <div class="status-section">
         <h3>Policy Pack</h3>
-        <select id="policy-pack-select" style="width: 100%; padding: 8px; background: var(--steel-dark); border: 1px solid var(--silver-dim); color: var(--text-primary);">
+        <select id="policy-pack-select" title="Select Policy Pack" class="policy-select">
           <option value="">Select Policy Pack</option>
         </select>
       </div>
@@ -161,6 +161,51 @@
             <span>System:</span>
             <strong id="system-status">Operational</strong>
           </div>
+        </div>
+      </div>
+
+      <button id="help-trigger" class="help-trigger">SYSTEM HELP [H]</button>
+    </div>
+  </div>
+
+  <!-- Help Overlay -->
+  <div id="help-overlay" class="help-overlay">
+    <div class="help-content">
+      <button id="help-close" class="help-close">CLOSE [ESC]</button>
+      <h2>SYSTEM OPERATIONAL GUIDE</h2>
+      <div class="help-grid">
+        <div class="help-section-item">
+          <h4>Navigation</h4>
+          <ul>
+            <li><b>Tabs:</b> Use left panel to navigate system modules.</li>
+            <li><b>Shortcut [H]:</b> Toggle this help guide.</li>
+            <li><b>Shortcut [ESC]:</b> Close overlays/modals.</li>
+          </ul>
+        </div>
+        <div class="help-section-item">
+          <h4>Commands</h4>
+          <ul>
+            <li><b>Threat Scan:</b> scan [target] for injection/risk.</li>
+            <li><b>Integrity:</b> check system health and log chains.</li>
+            <li><b>Compliance:</b> verify data handling rules.</li>
+          </ul>
+        </div>
+        <div class="help-section-item">
+          <h4>Postures</h4>
+          <ul>
+            <li><b>GREEN:</b> Nominal operations.</li>
+            <li><b>AMBER:</b> Elevated monitoring.</li>
+            <li><b>RED:</b> Critical threat detected.</li>
+            <li><b>BLACK:</b> Total system lockdown.</li>
+          </ul>
+        </div>
+        <div class="help-section-item">
+          <h4>Troubleshooting</h4>
+          <ul>
+            <li><b>Locked Tabs:</b> Internal-only modules (TITAN).</li>
+            <li><b>Auth Required:</b> Logged in as OPERATOR/ADMIN.</li>
+            <li><b>Lockdown:</b> Requires system override key.</li>
+          </ul>
         </div>
       </div>
     </div>
