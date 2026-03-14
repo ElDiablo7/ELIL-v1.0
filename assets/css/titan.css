@@ -982,7 +982,7 @@ body {
   width: 100vw;
   height: 100vh;
   background: var(--bg-dark);
-  z-index: 10000;
+  z-index: 10005;
   display: flex;
   flex-direction: column;
   opacity: 0;
@@ -1099,17 +1099,27 @@ body {
 }
 
 /* Node Positioning */
-.node-titan { top: 20%; left: 50%; transform: translateX(-50%); }
-.node-sentinel { top: 60%; left: 30%; transform: translateX(-50%); }
-.node-training { top: 60%; left: 70%; transform: translateX(-50%); }
-.node-grace { top: 80%; left: 50%; transform: translateX(-50%); }
+.node-titan { top: 20%; left: 50%; transform: translate(-50%, -50%); }
+.node-sentinel { top: 60%; left: 30%; transform: translate(-50%, -50%); }
+.node-training { top: 60%; left: 70%; transform: translate(-50%, -50%); }
+.node-grace { top: 80%; left: 50%; transform: translate(-50%, -50%); }
 
-/* Connections */
-.map-connection {
+/* Connections via Responsive SVG */
+.map-connections-svg {
   position: absolute;
-  background: var(--steel-light);
-  opacity: 0.2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 1;
+  pointer-events: none;
+}
+
+.map-connections-svg line {
+  stroke: var(--blue-glow);
+  stroke-width: 2px;
+  stroke-opacity: 0.3;
+  filter: drop-shadow(0 0 5px var(--blue-glow));
 }
 
 /* CHATBOX AREA */

@@ -96,8 +96,11 @@ const TitanMap = (function () {
 
       switch (activeModule) {
         case 'TITAN':
-          if (window.Titan) response = await window.Titan.analyzeBehavior({ action: command });
-          addChatMessage('TITAN', typeof response === 'string' ? response : (response.analysis || 'Behavior logged. No threat detected.'));
+          if (window.Titan) {
+             const res = window.Titan.analyze({ action: command, context: 'Command Center Direct Input' });
+             response = (res && res.summary) ? `${res.summary} [Risk: ${res.risk_score || 0}]` : 'Behavior logged. No threat detected.';
+          }
+          addChatMessage('TITAN', response);
           break;
         case 'SENTINEL':
           if (window.Sentinel) {
