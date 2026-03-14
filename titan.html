@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TITAN OS // COMMAND CENTER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/titan.css">
+  <link rel="stylesheet" href="./assets/css/titan_os.css">
+</head>
+<body class="titan-os-body">
+  
+  <header class="os-header">
+    <div class="os-brand">TITAN OS // TACTICAL INTELLIGENCE NODE</div>
+    <div class="os-status">UPLINK SECURE // ENLIL MAIN_NET</div>
+  </header>
+
+  <div class="os-grid">
+    
+    <!-- Left Column: Agent Roster -->
+    <section class="os-panel agent-roster">
+      <div class="panel-header">ACTIVE AGENT ROSTER</div>
+      <div class="agent-list" id="agent-list">
+        <!-- Agents generated via JS -->
+      </div>
+    </section>
+
+    <!-- Middle Column: Tools (Browser & Terminal) -->
+    <section class="os-panel center-tools">
+      <div class="tool-container internet-uplink">
+        <div class="panel-header flex-header">
+          <span>INTERNET UPLINK</span>
+          <div class="browser-controls">
+            <input type="text" id="browser-url" placeholder="https://..." value="https://example.com" />
+            <button id="browser-go">GO</button>
+          </div>
+        </div>
+        <div class="iframe-wrapper">
+          <iframe id="titan-browser" src="https://example.com" frameborder="0" sandbox="allow-scripts allow-same-origin" title="TITAN Internet Browser"></iframe>
+        </div>
+      </div>
+
+      <div class="tool-container local-terminal">
+        <div class="panel-header">LOCAL HOST TERMINAL // C:\ENLIL\NODE</div>
+        <div class="terminal-output" id="terminal-output">
+          <div class="term-line system">ENLIL Local Host Shell v2.1.0 initialized.</div>
+          <div class="term-line system">Type 'help' for available commands.</div>
+        </div>
+        <div class="terminal-input-wrapper">
+          <span class="prompt">C:\&gt;</span>
+          <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" title="Terminal Command Input" placeholder="Type a command..." />
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Agent Chat/Command Interface -->
+    <section class="os-panel agent-chat">
+      <div class="panel-header flex-header">
+        <span id="chat-active-agent">Direct Channel: SELECT AGENT</span>
+        <span class="status-indicator online"></span>
+      </div>
+      <div class="chatbox-messages" id="os-chat-messages">
+        <div class="chat-message system">Secure channel established. Select an Agent from the roster to begin.</div>
+      </div>
+      <div class="chatbox-input-area">
+        <input type="text" id="os-chat-input" placeholder="Enter message or 'Task: [directive]'..." disabled>
+        <button id="os-chat-send" class="chat-send-btn" disabled>SEND</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="assets/js/titan_os.js"></script>
+</body>
+</html>

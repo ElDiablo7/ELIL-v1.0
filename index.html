@@ -21,63 +21,6 @@
     </div>
   </div>
 
-  <!-- TITAN Command Center Overlay -->
-  <div id="titan-command-center" class="titan-cc-overlay">
-    <div class="titan-cc-header">
-      <h2>TITAN COMMAND CENTER // ACTIVE SYSTEM TOPOLOGY</h2>
-      <button class="cc-close-btn" id="titan-cc-close">CLOSE [X]</button>
-    </div>
-    
-    <div class="titan-cc-body">
-      <!-- Live Map -->
-      <div class="titan-cc-map">
-        <div class="grid-background"></div>
-        <svg class="map-connections-svg">
-          <line x1="50%" y1="20%" x2="30%" y2="60%" />
-          <line x1="50%" y1="20%" x2="70%" y2="60%" />
-          <line x1="30%" y1="60%" x2="70%" y2="60%" />
-          <line x1="30%" y1="60%" x2="50%" y2="80%" />
-          <line x1="70%" y1="60%" x2="50%" y2="80%" />
-        </svg>
-        
-        <div class="map-node node-titan active" data-target="TITAN" title="TITAN Cognitive Engine">
-          <div class="node-core"></div>
-          <span class="node-label">TITAN</span>
-        </div>
-        
-        <div class="map-node node-sentinel" data-target="SENTINEL" title="SENTINEL Defense Router">
-          <div class="node-core"></div>
-          <span class="node-label">SENTINEL</span>
-        </div>
-        
-        <div class="map-node node-training" data-target="TRAINING" title="TRAINING Scenario Engine">
-          <div class="node-core"></div>
-          <span class="node-label">TRAINING</span>
-        </div>
-        
-        <div class="map-node node-grace" data-target="GRACE" title="GRACE Voice Protocol">
-          <div class="node-core"></div>
-          <span class="node-label">GRACE</span>
-        </div>
-      </div>
-
-      <!-- Module Chatbox -->
-      <div class="titan-cc-chatbox">
-        <div class="chatbox-header">
-          <h3 id="chat-active-module">Uplink: TITAN</h3>
-          <span class="chat-status active">ONLINE</span>
-        </div>
-        <div class="chatbox-messages" id="chat-messages">
-          <div class="chat-message system">Secure channel established. Select a node to initiate direct handshake.</div>
-        </div>
-        <div class="chatbox-input-area">
-          <input type="text" id="chat-input" placeholder="Enter command or 'Task: [directive]'...">
-          <button id="chat-send" class="chat-send-btn">SEND</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Main Container -->
   <div class="container">
     <!-- Left Panel - Router -->
@@ -297,7 +240,6 @@
   <script src="assets/js/grace_x_voice.js"></script>
   <script src="assets/js/logs.js"></script>
   <script src="assets/js/verification.js"></script>
-  <script src="assets/js/titan_map.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>

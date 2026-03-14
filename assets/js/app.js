@@ -159,8 +159,13 @@ const App = (function () {
       lockdownToggle.addEventListener('click', handleLockdownToggle);
     }
 
-    // Mode toggle handling is now in titan_map.js
-
+    // Mode toggle handling
+    const titanBtn = document.getElementById('mode-titan');
+    if (titanBtn) {
+      titanBtn.addEventListener('click', () => {
+        window.open('titan.html', '_blank', 'width=1400,height=900,menubar=no,toolbar=no');
+      });
+    }
     // Event emitters
     Utils.EventEmitter.on('sentinel:posture_changed', (data) => {
       updateStatusPanel();
