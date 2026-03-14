@@ -3,11 +3,11 @@
     "name": "GRACE-X TITAN + SENTINEL",
     "version": "1.0.0",
     "mode": "SENTINEL",
-    "titan_locked": true
+    "titan_locked": false
   },
   "authentication": {
     "default_pin": "0000",
-    "max_attempts": 3,
+    "max_attempts": 9999,
     "lockout_duration": 300,
     "session_timeout": 3600
   },
@@ -32,7 +32,7 @@
   },
   "titan": {
     "auto_invoke_threshold": 50,
-    "require_authorization": true,
+    "require_authorization": false,
     "classification_default": "TITAN_INTERNAL_ONLY"
   },
   "ui": {

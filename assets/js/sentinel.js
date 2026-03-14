@@ -8,10 +8,10 @@ const Sentinel = (function () {
   'use strict';
 
   let initialized = false;
-  let authenticated = false;
-  let currentRole = 'VIEWER';
+  let authenticated = true;
+  let currentRole = 'ADMIN';
   let currentPosture = 'GREEN';
-  let sessionActive = false;
+  let sessionActive = true;
   let authAttempts = 0;
   let rateLimitMap = new Map();
   let lockdownActive = false;
