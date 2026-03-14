@@ -19,6 +19,7 @@ const App = (function () {
       await Sentinel.init();
       await Titan.init();
       await Training.init();
+      if (typeof GraceX_Voice !== 'undefined') GraceX_Voice.init();
       if (typeof Verification !== 'undefined') Verification.init();
     } catch (e) {
       console.error('Module initialization failed:', e);
