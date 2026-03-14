@@ -285,16 +285,39 @@ const App = (function () {
     console.innerHTML = `
       <div class="output-card posture-${health.posture.toLowerCase()}">
         <div class="card-header">
-          <span class="card-title">System Overview</span>
+          <span class="card-title">System Status: ${health.posture}</span>
         </div>
         <div class="card-content">
-          <p><strong>Status:</strong> ${health.initialized ? 'Initialized' : 'Not Initialized'}</p>
-          <p><strong>Authenticated:</strong> ${health.authenticated ? 'Yes' : 'No'}</p>
-          <p><strong>Posture:</strong> <span class="posture-badge posture-${health.posture.toLowerCase()}">${health.posture}</span></p>
-          <p><strong>Role:</strong> ${health.role}</p>
-          <p><strong>Policy Pack:</strong> ${health.policy_pack_loaded ? 'Loaded' : 'Not Loaded'}</p>
-          <p><strong>Log Chain Verified:</strong> ${health.log_chain_verified ? 'Yes' : 'No'}</p>
-          <p><strong>Total Log Entries:</strong> ${stats.total_entries}</p>
+          <p><strong>Sentinel Integrity:</strong> ${health.log_chain_verified ? 'VERIFIED' : 'FAILED'}</p>
+          <p><strong>Titan Pulse:</strong> ${health.initialized ? 'ACTIVE' : 'OFFLINE'}</p>
+          <p><strong>Policy Layer:</strong> ${health.policy_pack_loaded ? 'SECURE' : 'UNPROTECTED'}</p>
+        </div>
+      </div>
+
+      <div class="training-grid">
+        <div class="training-card">
+          <div class="training-card-header"><span class="training-type">SENTINEL</span></div>
+          <div class="training-card-title">Active Defense</div>
+          <div class="training-card-summary">Enforces Zero-Trust routing and real-time posture management with automated lockdown capabilities.</div>
+        </div>
+        <div class="training-card">
+          <div class="training-card-header"><span class="training-type">TITAN</span></div>
+          <div class="training-card-title">Tactical Analysis</div>
+          <div class="training-card-summary">Deep behavioral analysis, red-team simulations, and decision stress-testing for complex environments.</div>
+        </div>
+        <div class="training-card">
+          <div class="training-card-header"><span class="training-type">TRAINING</span></div>
+          <div class="training-card-title">Operator Readiness</div>
+          <div class="training-card-summary">Integrated tactical simulations and core security doctrine modules to sharpen defensive responses.</div>
+        </div>
+      </div>
+
+      <div class="output-card" style="margin-top: 20px;">
+        <div class="card-header"><span class="card-title">Operational Statistics</span></div>
+        <div class="card-content">
+          <p><strong>Total Event Entries:</strong> ${stats.total_entries}</p>
+          <p><strong>Core Version:</strong> ${health.version || '1.0.0-PRO'}</p>
+          <p><strong>Session State:</strong> ${health.authenticated ? 'AUTHENTICATED [ADMIN]' : 'RESTRICTED'}</p>
         </div>
       </div>
     `;

@@ -1,0 +1,4 @@
+{
+  "title": "Zero Concept Architecture",
+  "content": "# Trust is a Vulnerability\n\nZero Trust is a security framework based on the principle of 'Never Trust, Always Verify'. It assumes that the network is always compromised and that threats can come from anywhere.\n\n## Core Tenets\n- **Continuous Verification:** Authenticate and authorize every access request continuously.\n- **Least Privilege:** Limit user access with Just-In-Time (JIT) and Just-Enough-Administration (JEA).\n- **Assume Breach:** Minimize blast radius and segment access.\n\n## Implementation in Sentinel\nOur Sentinel engine implements Zero Trust by:\n- Monitoring endpoint posture every 60 seconds.\n- Enforcing policy pack rules on every command route.\n- Requiring two-person rule for sensitive policy changes (when enabled)."
+}
