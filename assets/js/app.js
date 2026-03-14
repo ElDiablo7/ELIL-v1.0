@@ -159,12 +159,7 @@ const App = (function () {
       lockdownToggle.addEventListener('click', handleLockdownToggle);
     }
 
-    // Mode toggle (TITAN should be locked)
-    const titanModeBtn = document.getElementById('mode-titan');
-    if (titanModeBtn) {
-      titanModeBtn.classList.add('locked');
-      titanModeBtn.title = 'TITAN_INTERNAL_ONLY - Cannot be invoked directly';
-    }
+    // Mode toggle handling is now in titan_map.js
 
     // Event emitters
     Utils.EventEmitter.on('sentinel:posture_changed', (data) => {
