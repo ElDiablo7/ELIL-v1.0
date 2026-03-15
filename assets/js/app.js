@@ -250,19 +250,19 @@ const App = (function () {
         showOverview();
         break;
       case 'threat-scan':
-        // Content loaded on demand
+        showThreatScan();
         break;
       case 'integrity':
-        // Content loaded on demand
+        showIntegrity();
         break;
       case 'compliance':
-        // Content loaded on demand
+        showCompliance();
         break;
       case 'decision-stress':
-        // Content loaded on demand
+        showDecisionStress();
         break;
       case 'red-team':
-        // Content loaded on demand
+        showRedTeam();
         break;
       case 'logs':
         updateLogsDisplay();
@@ -386,6 +386,143 @@ const App = (function () {
     } catch (e) {
       console.innerHTML = '<div class="output-card"><div class="card-content">Failed to load training index</div></div>';
     }
+  }
+
+  function showThreatScan() {
+    const console = document.getElementById('output-console');
+    if (!console) return;
+
+    console.innerHTML = `
+      <div class="output-card">
+        <div class="card-header"><span class="card-title">Threat Scan Module</span></div>
+        <div class="card-content">
+          <p>Scan system inputs and external connections for malicious patterns, including prompt injections and taxonomy-defined threats.</p>
+          <div style="margin-top: 15px;">
+            <input type="text" id="threat-scan-input" class="command-input" placeholder="Target parameter or simulation payload..." style="width: 70%; margin-right: 10px;">
+            <button id="run-threat-scan-btn" class="route-btn" style="display:inline-block;">Run Scan</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('run-threat-scan-btn')?.addEventListener('click', () => {
+      const input = document.getElementById('threat-scan-input').value;
+      const cmdInput = document.getElementById('command-input');
+      if (cmdInput) {
+        cmdInput.value = `threat scan ${input}`;
+        handleRouteCommand();
+      }
+    });
+  }
+
+  function showIntegrity() {
+    const console = document.getElementById('output-console');
+    if (!console) return;
+
+    console.innerHTML = `
+      <div class="output-card">
+        <div class="card-header"><span class="card-title">System Integrity Monitor</span></div>
+        <div class="card-content">
+          <p>Verify immutable log chains, check policy configuration drift, and assess supply chain dependencies.</p>
+          <div style="margin-top: 15px;">
+            <button id="run-integrity-btn" class="route-btn" style="display:inline-block;">Run Integrity Check</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('run-integrity-btn')?.addEventListener('click', () => {
+      const cmdInput = document.getElementById('command-input');
+      if (cmdInput) {
+        cmdInput.value = 'system integrity check';
+        handleRouteCommand();
+      }
+    });
+  }
+
+  function showCompliance() {
+    const console = document.getElementById('output-console');
+    if (!console) return;
+
+    console.innerHTML = `
+      <div class="output-card">
+        <div class="card-header"><span class="card-title">Compliance Verification</span></div>
+        <div class="card-content">
+          <p>Evaluate actions against the active Policy Pack and scan for sensitive data handling violations.</p>
+          <div style="margin-top: 15px;">
+            <input type="text" id="compliance-input" class="command-input" placeholder="Enter action or data string to verify..." style="width: 70%; margin-right: 10px;">
+            <button id="run-compliance-btn" class="route-btn" style="display:inline-block;">Verify Compliance</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('run-compliance-btn')?.addEventListener('click', () => {
+      const input = document.getElementById('compliance-input').value;
+      const cmdInput = document.getElementById('command-input');
+      if (cmdInput) {
+        cmdInput.value = `compliance check ${input}`;
+        handleRouteCommand();
+      }
+    });
+  }
+
+  function showDecisionStress() {
+    const console = document.getElementById('output-console');
+    if (!console) return;
+
+    console.innerHTML = `
+      <div class="output-card">
+        <div class="card-header"><span class="card-title">Decision Stress Test Engine</span></div>
+        <div class="card-content">
+          <p>Simulate failure modes, edge cases, and adversarial scenarios against a proposed operational plan.</p>
+          <div style="margin-top: 15px;">
+            <input type="text" id="stress-input" class="command-input" placeholder="Summarize plan to stress test..." style="width: 70%; margin-right: 10px;">
+            <button id="run-stress-btn" class="route-btn" style="display:inline-block;">Initiate Stress Test</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('run-stress-btn')?.addEventListener('click', () => {
+      const input = document.getElementById('stress-input').value;
+      const cmdInput = document.getElementById('command-input');
+      if (cmdInput) {
+        cmdInput.value = `decision stress test ${input}`;
+        handleRouteCommand();
+      }
+    });
+  }
+
+  function showRedTeam() {
+    const console = document.getElementById('output-console');
+    if (!console) return;
+
+    console.innerHTML = `
+      <div class="output-card">
+        <div class="card-header"><span class="card-title">Red Team Simulations</span></div>
+        <div class="card-content">
+          <p>Execute advanced adversarial scenarios to map attack paths and test system countermeasures.</p>
+          <div style="margin-top: 15px;">
+            <select id="redteam-scenario-select" class="policy-select" style="width: 70%; margin-right: 10px;">
+              <option value="auth_bypass">Authentication Bypass</option>
+              <option value="data_exfil">Data Exfiltration</option>
+              <option value="03" selected>Scenario #03 (Demo)</option>
+            </select>
+            <button id="run-redteam-btn" class="route-btn" style="display:inline-block;">Deploy Red Team</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('run-redteam-btn')?.addEventListener('click', () => {
+      const input = document.getElementById('redteam-scenario-select').value;
+      const cmdInput = document.getElementById('command-input');
+      if (cmdInput) {
+        cmdInput.value = `red team scenario ${input}`;
+        handleRouteCommand();
+      }
+    });
   }
 
   // Command Routing

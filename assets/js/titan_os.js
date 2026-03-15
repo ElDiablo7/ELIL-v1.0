@@ -132,6 +132,34 @@ const TitanOS = (function () {
           printToTerminal('  netstat  - Display active network connections');
           printToTerminal('  ping     - Verify external connectivity');
           printToTerminal('  clear    - Clear terminal window');
+          printToTerminal('  status   - Display TITAN engine status');
+          printToTerminal('  logs     - Show recent audit events');
+          break;
+        case 'status':
+          const sApp = (window.opener && window.opener.Sentinel) ? window.opener.Sentinel : null;
+          if (sApp) {
+              const h = sApp.healthCheck();
+              printToTerminal(`TITAN ENGINE: ${h.initialized ? 'ONLINE' : 'OFFLINE'}`);
+              printToTerminal(`SENTINEL POSTURE: ${h.posture}`);
+              printToTerminal(`LOG CHAIN: ${h.log_chain_verified ? 'VERIFIED' : 'FAILED'}`);
+          } else {
+              printToTerminal('TITAN ENGINE CONNECTION FAILED', 'error');
+          }
+          break;
+        case 'logs':
+          const logsApp = (window.opener && window.opener.Logs) ? window.opener.Logs : null;
+          if (logsApp) {
+              const recent = logsApp.getRecent(5);
+              if (recent.length === 0) {
+                  printToTerminal('No recent logs found.');
+              } else {
+                  recent.forEach(log => {
+                      printToTerminal(`[${log.action}] Posture: ${log.posture} | Rank: ${log.classification}`);
+                  });
+              }
+          } else {
+              printToTerminal('LOGS SUBSYSTEM CONNECTION FAILED', 'error');
+          }
           break;
         case 'dir':
           printToTerminal(' Volume in drive C is ENLIL_CORE');
@@ -191,15 +219,44 @@ const TitanOS = (function () {
       const agent = agentRoster.find(a => a.id === activeAgentId);
       const agentName = agent ? agent.name : 'Unknown Agent';
       
+      const titanApp = (window.opener && window.opener.Titan) ? window.opener.Titan : (typeof Titan !== 'undefined' ? Titan : null);
+      
       let response = '';
-      if (msg.toLowerCase().startsWith('task:')) {
-        response = `Task accepted. Integrating '${msg.substring(5).trim()}' into operational queue.`;
+      let isHtml = false;
+      if (titanApp) {
+          const taskPacket = {
+              command: msg,
+              intent: 'GENERAL_QUERY',
+              risk_score: 50,
+              context: { agent: agentName },
+              actor_role: 'TITAN_OPERATOR'
+          };
+          const result = titanApp.analyze(taskPacket);
+          response = `<strong>Analysis Complete. Risk Score: ${result.risk_score} [${result.posture}]</strong><br>`;
+          if (result.findings && result.findings.length > 0) {
+              response += '<em>Findings:</em><ul>';
+              result.findings.slice(0, 3).forEach(f => {
+                  response += `<li>${f.type}: ${f.description}</li>`;
+              });
+              response += '</ul>';
+          } else {
+              if (msg.toLowerCase().startsWith('task:')) {
+                  response += `<br>Task accepted by ${agentName}. Integrating into operational queue.`;
+              } else {
+                  response += `<br>Message processed by ${agentName}. No critical anomalies detected in inputs.`;
+              }
+          }
+          isHtml = true;
       } else {
-        response = `Message received. Analyzing parameters... (Simulation Mode: Active)`;
+          if (msg.toLowerCase().startsWith('task:')) {
+            response = `Task accepted. Integrating '${msg.substring(5).trim()}' into operational queue.`;
+          } else {
+            response = `Message received by ${agentName}. Analyzing parameters... (Engine Offline)`;
+          }
       }
 
-      addChatMessage(agentName, response);
-    }, 1200);
+      addChatMessage(agentName, response, isHtml);
+    }, 800);
   }
 
   function simulateProcessing() {
@@ -214,7 +271,7 @@ const TitanOS = (function () {
     scrollToBottom();
   }
 
-  function addChatMessage(sender, text) {
+  function addChatMessage(sender, text, isHtml = false) {
     const messages = document.getElementById('os-chat-messages');
     if (!messages) return;
 
@@ -224,7 +281,8 @@ const TitanOS = (function () {
     const div = document.createElement('div');
     div.className = `chat-message ${sender === 'user' ? 'user' : (sender === 'system' ? 'system' : 'agent')}`;
     
-    div.innerHTML = `<strong>${sender.toUpperCase()}:</strong> <span>${escapeHtml(text)}</span>`;
+    const content = isHtml ? text : escapeHtml(text);
+    div.innerHTML = `<strong>${sender.toUpperCase()}:</strong> <span>${content}</span>`;
     
     messages.appendChild(div);
     scrollToBottom();
