@@ -19,6 +19,9 @@ const TitanOS = (function () {
 
   function init() {
     console.log('[TITAN OS] Initializing...');
+    if (!window.opener && typeof Sentinel !== 'undefined' && Sentinel.init) {
+        Sentinel.init().catch(console.error);
+    }
     buildAgentRoster();
     setupBrowser();
     setupTerminal();
@@ -136,7 +139,7 @@ const TitanOS = (function () {
           printToTerminal('  logs     - Show recent audit events');
           break;
         case 'status':
-          const sApp = (window.opener && window.opener.Sentinel) ? window.opener.Sentinel : null;
+          const sApp = (window.opener && window.opener.Sentinel) ? window.opener.Sentinel : (typeof Sentinel !== 'undefined' ? Sentinel : null);
           if (sApp) {
               const h = sApp.healthCheck();
               printToTerminal(`TITAN ENGINE: ${h.initialized ? 'ONLINE' : 'OFFLINE'}`);
@@ -147,7 +150,7 @@ const TitanOS = (function () {
           }
           break;
         case 'logs':
-          const logsApp = (window.opener && window.opener.Logs) ? window.opener.Logs : null;
+          const logsApp = (window.opener && window.opener.Logs) ? window.opener.Logs : (typeof Logs !== 'undefined' ? Logs : null);
           if (logsApp) {
               const recent = logsApp.getRecent(5);
               if (recent.length === 0) {
@@ -186,7 +189,29 @@ const TitanOS = (function () {
           if (output) output.innerHTML = '';
           break;
         default:
-          printToTerminal(`'${cmd}' is not recognized as an internal or external command.`, 'error');
+          const defaultSApp = (window.opener && window.opener.Sentinel) ? window.opener.Sentinel : (typeof Sentinel !== 'undefined' ? Sentinel : null);
+          const defaultTApp = (window.opener && window.opener.Titan) ? window.opener.Titan : (typeof Titan !== 'undefined' ? Titan : null);
+          
+          if (defaultSApp && defaultTApp) {
+             const intent = defaultSApp.classifyIntent(cmd);
+             const riskScore = defaultSApp.computeRiskScore(cmd, { intent });
+             const taskPacket = {
+                 command: cmd,
+                 intent: intent,
+                 risk_score: riskScore,
+                 context: { source: 'local_terminal' },
+                 actor_role: 'TITAN_OPERATOR'
+             };
+             const result = defaultTApp.analyze(taskPacket);
+             if (result.findings && result.findings.length > 0) {
+                 printToTerminal(`Analysis Complete. Risk: ${result.risk_score} [${result.posture}]`);
+                 result.findings.slice(0,3).forEach(f => printToTerminal(`  - [${f.severity}] ${f.description}`, 'error'));
+             } else {
+                 printToTerminal(result.summary);
+             }
+          } else {
+             printToTerminal(`'${cmd}' is not recognized as an internal or external command.`, 'error');
+          }
       }
     }, 400); // Simulate processing time
   }
@@ -220,14 +245,21 @@ const TitanOS = (function () {
       const agentName = agent ? agent.name : 'Unknown Agent';
       
       const titanApp = (window.opener && window.opener.Titan) ? window.opener.Titan : (typeof Titan !== 'undefined' ? Titan : null);
+      const sentinelApp = (window.opener && window.opener.Sentinel) ? window.opener.Sentinel : (typeof Sentinel !== 'undefined' ? Sentinel : null);
       
       let response = '';
       let isHtml = false;
       if (titanApp) {
+          let intent = 'GENERAL_QUERY';
+          let riskScore = 50;
+          if (sentinelApp) {
+              intent = sentinelApp.classifyIntent(msg);
+              riskScore = sentinelApp.computeRiskScore(msg, { intent, context: { agent: agentName } });
+          }
           const taskPacket = {
               command: msg,
-              intent: 'GENERAL_QUERY',
-              risk_score: 50,
+              intent: intent,
+              risk_score: riskScore,
               context: { agent: agentName },
               actor_role: 'TITAN_OPERATOR'
           };
