@@ -86,8 +86,8 @@ const TitanOS = (function () {
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
         url = 'https://' + url;
       }
-      iframe.src = url;
-      addChatMessage('system', `Internet Uplink routing to: ${url}`);
+      addChatMessage('system', `Requesting Core approval for Internet Uplink routing to: ${url}`);
+      CoreAccess.requestIframeAccess(iframe, url);
     };
 
     btn.addEventListener('click', loadUrl);

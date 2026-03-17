@@ -124,6 +124,15 @@ const Sentinel = (function () {
       return { authorized: false, reason: 'System is in lockdown' };
     }
 
+    // Explicit Core Access block for external routing
+    if (action === 'EXTERNAL_ACCESS') {
+      // For now, external access is strictly forbidden unless overridden in context
+      if (context.url === 'https://example.com' || context.override === 'CORE_APPROVED') {
+         return { authorized: true };
+      }
+      return { authorized: false, reason: 'External routing prohibited by core policy. Target unverified.' };
+    }
+
     // Check policy
     const policyCheck = Policy.evaluatePolicy(action, context);
     if (!policyCheck.allowed) {
