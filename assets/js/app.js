@@ -301,7 +301,7 @@ const App = (function () {
 
       <div class="output-card posture-${health.posture.toLowerCase()}">
         <div class="card-header">
-          <span class="card-title">System Status: ${health.posture}</span>
+          <span class="card-title">System Status: ${getPostureEmoji(health.posture)} ${health.posture}</span>
         </div>
         <div class="card-content">
           <p><strong>Sentinel Integrity:</strong> ${health.log_chain_verified ? 'VERIFIED' : 'FAILED'}</p>
@@ -737,11 +737,18 @@ const App = (function () {
     }
   }
 
+  function getPostureEmoji(posture) {
+    if (posture === 'BLACK') return '⚫';
+    if (posture === 'RED') return '🔴';
+    if (posture === 'AMBER') return '🟡';
+    return '🟢';
+  }
+
   function updatePostureIndicator(posture) {
     const indicator = document.getElementById('posture-indicator');
     if (indicator) {
       indicator.className = `posture-indicator posture-${posture.toLowerCase()}`;
-      indicator.innerHTML = `<div class="posture-badge posture-${posture.toLowerCase()}">${posture}</div>`;
+      indicator.innerHTML = `<div class="posture-badge posture-${posture.toLowerCase()}">${getPostureEmoji(posture)} ${posture}</div>`;
     }
   }
 

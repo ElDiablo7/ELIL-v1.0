@@ -142,11 +142,12 @@ const TitanOS = (function () {
           const sApp = (window.opener && window.opener.Sentinel) ? window.opener.Sentinel : (typeof Sentinel !== 'undefined' ? Sentinel : null);
           if (sApp) {
               const h = sApp.healthCheck();
+              let emoji = h.posture === 'BLACK' ? '⚫' : (h.posture === 'RED' ? '🔴' : (h.posture === 'AMBER' ? '🟡' : '🟢'));
               printToTerminal(`TITAN ENGINE: ${h.initialized ? 'ONLINE' : 'OFFLINE'}`);
-              printToTerminal(`SENTINEL POSTURE: ${h.posture}`);
+              printToTerminal(`SENTINEL POSTURE: ${emoji} ${h.posture}`);
               printToTerminal(`LOG CHAIN: ${h.log_chain_verified ? 'VERIFIED' : 'FAILED'}`);
           } else {
-              printToTerminal('TITAN ENGINE CONNECTION FAILED', 'error');
+              printToTerminal('TITAN ENGINE CONNECTION FAILED (CORE OFFLINE OR RESTRICTED BY BROWSER POLICY)', 'error');
           }
           break;
         case 'logs':
@@ -264,7 +265,8 @@ const TitanOS = (function () {
               actor_role: 'TITAN_OPERATOR'
           };
           const result = titanApp.analyze(taskPacket);
-          response = `<strong>Analysis Complete. Risk Score: ${result.risk_score} [${result.posture}]</strong><br>`;
+          let emoji = result.posture === 'BLACK' ? '⚫' : (result.posture === 'RED' ? '🔴' : (result.posture === 'AMBER' ? '🟡' : '🟢'));
+          response = `<strong>Analysis Complete. Risk Score: ${result.risk_score} [${emoji} ${result.posture}]</strong><br>`;
           if (result.findings && result.findings.length > 0) {
               response += '<em>Findings:</em><ul>';
               result.findings.slice(0, 3).forEach(f => {
@@ -283,7 +285,7 @@ const TitanOS = (function () {
           if (msg.toLowerCase().startsWith('task:')) {
             response = `Task accepted. Integrating '${msg.substring(5).trim()}' into operational queue.`;
           } else {
-            response = `Message received by ${agentName}. Analyzing parameters... (Engine Offline)`;
+            response = `Message received by ${agentName}. Analyzing parameters... (Engine Offline / Disconnected)`;
           }
       }
 
