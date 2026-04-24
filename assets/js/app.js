@@ -13,16 +13,35 @@ const App = (function () {
   async function init() {
     console.log('Initializing ENLIL\u2122 TITAN\u2122 + SENTINEL\u2122 Security Console...');
 
-    // Initialize modules in sequence to prevent race conditions
-    try {
-      await Policy.init();
-      await Sentinel.init();
-      await Titan.init();
-      await Training.init();
-      if (typeof GraceX_Voice !== 'undefined') GraceX_Voice.init();
-      if (typeof Verification !== 'undefined') Verification.init();
-    } catch (e) {
-      console.error('Module initialization failed:', e);
+    // Initialize modules in sequence with defensive guards
+    const moduleStatus = {};
+    const modules = [
+      { name: 'Policy', fn: () => typeof Policy !== 'undefined' && Policy.init() },
+      { name: 'Sentinel', fn: () => typeof Sentinel !== 'undefined' && Sentinel.init() },
+      { name: 'Titan', fn: () => typeof Titan !== 'undefined' && Titan.init() },
+      { name: 'Training', fn: () => typeof Training !== 'undefined' && Training.init() },
+      { name: 'GraceX_Voice', fn: () => typeof GraceX_Voice !== 'undefined' && GraceX_Voice.init() },
+      { name: 'Verification', fn: () => typeof Verification !== 'undefined' && Verification.init() }
+    ];
+
+    for (const mod of modules) {
+      try {
+        await mod.fn();
+        moduleStatus[mod.name] = 'OK';
+      } catch (e) {
+        console.error(`Module ${mod.name} initialization failed:`, e);
+        moduleStatus[mod.name] = 'FAILED';
+        // Log to audit if Logs is available
+        if (typeof Logs !== 'undefined') {
+          Logs.append({
+            actor_role: 'SYSTEM',
+            action: 'MODULE_INIT_FAILED',
+            posture: 'AMBER',
+            payload: { module: mod.name, error: e.message },
+            classification: 'INTERNAL'
+          });
+        }
+      }
     }
 
     // Setup UI
@@ -32,6 +51,7 @@ const App = (function () {
     setupTabNavigation();
     setupDemoCommands();
     setupEventHandlers();
+    setupErrorOverlay();
 
     // Update UI
     updateStatusPanel();
@@ -41,6 +61,19 @@ const App = (function () {
     // showSecurityModal();
     authenticated = true;
     updateUI();
+
+    // Log boot event
+    if (typeof Logs !== 'undefined') {
+      Logs.append({
+        actor_role: 'SYSTEM',
+        action: 'APP_BOOT',
+        posture: 'GREEN',
+        payload: { modules: moduleStatus, mode: 'demo-local' },
+        classification: 'INTERNAL'
+      });
+    }
+
+    console.log('ENLIL\u2122 initialized. Module status:', moduleStatus);
   }
 
   // Security Modal
@@ -588,28 +621,80 @@ const App = (function () {
     const command = commandInput.value.trim();
     if (!command) return;
 
+    // Handle special commands first
+    const cmdLower = command.toLowerCase();
+    if (cmdLower === 'export audit' || cmdLower === 'export logs') {
+      switchTab('logs');
+      setTimeout(() => {
+        const exportBtn = document.getElementById('export-logs-btn');
+        if (exportBtn) exportBtn.click();
+      }, 300);
+      commandInput.value = '';
+      return;
+    }
+    if (cmdLower === 'open titan' || cmdLower === 'titan') {
+      window.open('titan.html', '_blank', 'width=1400,height=900,menubar=no,toolbar=no');
+      commandInput.value = '';
+      return;
+    }
+    if (cmdLower === 'help') {
+      toggleHelpOverlay();
+      commandInput.value = '';
+      return;
+    }
+
     // Route via Sentinel
-    const result = Sentinel.route(command, {});
+    try {
+      const result = Sentinel.route(command, {});
 
-    if (result.success) {
-      addOutputCard({
-        title: `Command Routed via ${result.routed_via}`,
-        content: result.summary || result.response || 'Command processed',
-        posture: result.posture || Sentinel.getCurrentPosture(),
-        risk_score: result.risk_score,
-        findings: result.findings
-      });
+      if (result.success) {
+        // Handle TITAN results (summary is an object from summarizeForOperator)
+        let displayContent = '';
+        let findings = result.findings || [];
+        let recommendedControls = result.recommended_controls || [];
 
-      // Update posture if changed
-      if (result.posture && result.posture !== Sentinel.getCurrentPosture()) {
-        Sentinel.setPosture(result.posture);
+        if (result.summary && typeof result.summary === 'object') {
+          displayContent = result.summary.summary || 'Analysis complete';
+          findings = result.summary.findings || findings;
+          recommendedControls = result.summary.recommended_controls || recommendedControls;
+          if (result.summary.posture) {
+            Sentinel.setPosture(result.summary.posture);
+          }
+        } else {
+          displayContent = result.summary || result.response || 'Command processed';
+        }
+
+        addOutputCard({
+          title: `Command Routed via ${result.routed_via}`,
+          content: displayContent,
+          posture: result.posture || Sentinel.getCurrentPosture(),
+          risk_score: result.risk_score,
+          findings: findings,
+          recommended_controls: recommendedControls
+        });
+      } else {
+        addOutputCard({
+          title: 'Command Rejected',
+          content: result.reason || 'Unknown error',
+          posture: 'RED'
+        });
       }
-    } else {
+    } catch (e) {
+      console.error('Command routing error:', e);
       addOutputCard({
-        title: 'Command Rejected',
-        content: result.reason || 'Unknown error',
-        posture: 'RED'
+        title: 'Routing Error',
+        content: `An error occurred while processing: ${e.message}. The system remains operational.`,
+        posture: 'AMBER'
       });
+      if (typeof Logs !== 'undefined') {
+        Logs.append({
+          actor_role: 'SYSTEM',
+          action: 'COMMAND_ERROR',
+          posture: 'AMBER',
+          payload: { command: command.substring(0, 50), error: e.message },
+          classification: 'INTERNAL'
+        });
+      }
     }
 
     // Clear input
@@ -914,6 +999,52 @@ const App = (function () {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  // Error Overlay System (Phase 3)
+  function setupErrorOverlay() {
+    // Catch unhandled errors and show user-friendly overlay
+    window.addEventListener('error', (e) => {
+      console.error('Unhandled error:', e.error);
+      showErrorOverlay(e.message, e.filename);
+      if (typeof Logs !== 'undefined') {
+        Logs.append({
+          actor_role: 'SYSTEM',
+          action: 'UNHANDLED_ERROR',
+          posture: Sentinel?.getCurrentPosture?.() || 'AMBER',
+          payload: { message: e.message, file: e.filename },
+          classification: 'INTERNAL'
+        });
+      }
+    });
+  }
+
+  function showErrorOverlay(message, source) {
+    // Only show for real errors, not warnings
+    if (!message) return;
+    let overlay = document.getElementById('error-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'error-overlay';
+      overlay.className = 'error-overlay';
+      overlay.innerHTML = `
+        <div class="error-overlay-content">
+          <div class="error-overlay-header">
+            <span>⚠ System Notice</span>
+            <button class="error-overlay-close" onclick="document.getElementById('error-overlay').style.display='none'">DISMISS</button>
+          </div>
+          <div class="error-overlay-body">
+            <p class="error-overlay-msg"></p>
+            <p class="error-overlay-note">The system remains operational. This has been logged to the audit chain.</p>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+    }
+    overlay.querySelector('.error-overlay-msg').textContent = message;
+    overlay.style.display = 'flex';
+    // Auto-dismiss after 8 seconds
+    setTimeout(() => { if (overlay) overlay.style.display = 'none'; }, 8000);
   }
 
   // Public API
