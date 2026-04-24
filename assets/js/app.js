@@ -922,7 +922,8 @@ const App = (function () {
     switchTab,
     addOutputCard,
     updateStatusPanel,
-    updateLogsDisplay
+    updateLogsDisplay,
+    runDemo
   };
 })();
 
