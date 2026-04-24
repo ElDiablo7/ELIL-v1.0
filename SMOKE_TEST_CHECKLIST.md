@@ -21,8 +21,9 @@ Check each item. Mark ✅ PASS, ⚠️ PARTIAL, or ❌ FAIL.
 | 1.2 | Security modal appears (if DEMO_MODE=false) | Modal with Acknowledge/Exit buttons | |
 | 1.3 | Auto-auth works (if DEMO_MODE=true) | No modal, console loads directly | |
 | 1.4 | Government banner visible at top | "ENLIL™ SECURITY CONSOLE // RESTRICTED ACCESS" | |
-| 1.5 | Legal footer visible at bottom | Copyright + trademark line | |
-| 1.6 | No console errors (F12 → Console) | Zero errors on clean load | |
+| 1.5 | Legal footer visible at bottom | Copyright + 5 trademarked entities | |
+| 1.6 | 5 Mode buttons visible in sidebar | GUARDIAN, FORGE, VENUS, TITAN, SENTINEL | |
+| 1.7 | No console errors (F12 → Console) | Zero errors on clean load | |
 
 ---
 
@@ -136,7 +137,9 @@ Check each item. Mark ✅ PASS, ⚠️ PARTIAL, or ❌ FAIL.
 |---|------|----------|--------|
 | 11.1 | Click TITAN mode button | New window opens with titan.html | |
 | 11.2 | TITAN page renders | Dashboard with header, shell, grid | |
-| 11.3 | Legal footer on TITAN page | Same copyright/trademark text | |
+| 11.3 | Legal footer on TITAN page | Same copyright/5-trademark text | |
+| 11.4 | TITAN Agent Roster | 5 Agents (GUARDIAN, FORGE, VENUS, TITAN, SENTINEL) | |
+| 11.5 | Select Agent works | Agent name/role updates correctly | |
 
 ---
 

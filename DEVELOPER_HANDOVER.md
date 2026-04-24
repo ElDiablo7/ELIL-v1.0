@@ -191,4 +191,4 @@ Any Action
 ---
 
 **Copyright © Zachary Charles Anthony Crockett. All rights reserved.**  
-GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™ are claimed trademarks.
+GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™, GUARDIAN™, FORGE™, VENUS™ are claimed trademarks.

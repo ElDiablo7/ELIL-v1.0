@@ -208,3 +208,27 @@
 | `USER_MANUAL.md` | Operator manual |
 | `DEVELOPER_HANDOVER.md` | Developer technical reference |
 | `FINAL_AUDIT_REPORT.md` | Project completion audit |
+| `FINAL_STATUS.md` | Final project status summary |
+| `SMOKE_TEST_CHECKLIST.md` | Post-patch verification checklist |
+
+---
+
+## Phase 11 — Core Entity Integration & Branding ✅
+
+- [x] Implemented core 5-module architecture: **GUARDIAN, FORGE, VENUS, TITAN, SENTINEL**
+- [x] Updated `assets/js/titan_os.js` agent roster with new names and roles
+- [x] Updated `index.html` mode selector with all 5 core modules
+- [x] Updated `assets/css/titan.css` to handle 5-button mode layout (flex-wrap)
+- [x] Updated all legal footers to include new trademark claims
+- [x] Updated `app.js` Operator Guide to define all 5 entities
+- [x] Wired new mode buttons in `app.js` with access-denied feedback
+- [x] Updated all documentation (`README.md`, `USER_MANUAL.md`, etc.) for entity consistency
+
+### Files Modified
+| File | Change |
+|------|--------|
+| `assets/js/titan_os.js` | Updated agent names/roles/ids and sequence |
+| `index.html` | Updated mode buttons and sequence |
+| `assets/js/app.js` | Updated Operator Guide and wired locked buttons |
+| `assets/css/titan.css` | Mode buttons wrap and grid styling |
+| `*.md` | Comprehensive branding and trademark sweep |

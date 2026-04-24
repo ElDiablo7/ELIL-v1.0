@@ -221,6 +221,31 @@ const App = (function () {
       });
     }
 
+    // New Mode Buttons (Locked)
+    const lockedButtons = ['mode-guardian', 'mode-forge', 'mode-venus'];
+    lockedButtons.forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const moduleName = id.split('-')[1].toUpperCase();
+          addOutputCard({
+            title: `ACCESS DENIED: ${moduleName}\u2122`,
+            content: `Internal module ${moduleName}\u2122 is currently RESTRICTED. This operation requires Level 5 Clearance or a hardware-encrypted override key.`,
+            posture: 'AMBER'
+          });
+          if (typeof Logs !== 'undefined') {
+            Logs.append({
+              actor_role: 'OPERATOR',
+              action: 'UNAUTHORIZED_MODULE_ACCESS',
+              posture: 'AMBER',
+              payload: { module: moduleName },
+              classification: 'INTERNAL'
+            });
+          }
+        });
+      }
+    });
+
     // Mobile nav toggle
     const mobileNavToggle = document.getElementById('mobile-nav-toggle');
     const leftPanel = document.querySelector('.left-panel');
@@ -387,14 +412,35 @@ const App = (function () {
               <div class="guide-item-icon" style="color: var(--blue-glow)">🛡</div>
               <div>
                 <strong>SENTINEL™</strong> — The Governor<br>
-                <span class="guide-desc">Routes all commands, enforces policies, manages access control, handles lockdowns, and maintains the audit log chain.</span>
+                <span class="guide-desc">Governance overlay. Enforces policy, manages access, and maintains the immutable audit log chain.</span>
               </div>
             </div>
             <div class="guide-item">
               <div class="guide-item-icon" style="color: var(--amber)">🧠</div>
               <div>
-                <strong>TITAN™</strong> — The Analyst<br>
-                <span class="guide-desc">Performs threat analysis, decision stress-testing, red team simulations, and deep behavioral assessment. Internal-only — invoked via SENTINEL.</span>
+                <strong>TITAN™</strong> — The Nucleus<br>
+                <span class="guide-desc">Tactical analysis engine. Performs deep behavioral assessment and adversarial reasoning.</span>
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-item-icon" style="color: var(--green)">🔒</div>
+              <div>
+                <strong>GUARDIAN™</strong> — The Shield<br>
+                <span class="guide-desc">Defensive perimeter oversight and vulnerability shielding for core logic.</span>
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-item-icon" style="color: var(--silver)">⚒</div>
+              <div>
+                <strong>FORGE™</strong> — The Smith<br>
+                <span class="guide-desc">Logic synthesis and core structural integrity for autonomous operations.</span>
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-item-icon" style="color: var(--blue-bright)">🛰</div>
+              <div>
+                <strong>VENUS™</strong> — The Scout<br>
+                <span class="guide-desc">External intelligence gathering and reconnaissance of foreign instruction vectors.</span>
               </div>
             </div>
           </div>

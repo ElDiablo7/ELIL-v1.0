@@ -26,6 +26,8 @@
 | `MANIFEST.md` | This file — project inventory |
 | `TEST_REPORT_PHASE_3.md` | Phase 3-5 test results |
 | `FINAL_AUDIT_REPORT.md` | Project completion audit |
+| `FINAL_STATUS.md` | Project completion summary |
+| `SMOKE_TEST_CHECKLIST.md` | Post-patch verification checklist |
 | `AUDIT_LOG_PHASE_0.md` | Baseline issues (Phase 0) |
 | `README_TITAN_SENTINEL.md` | Legacy technical README |
 

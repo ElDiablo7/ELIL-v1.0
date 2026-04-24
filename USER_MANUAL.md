@@ -10,10 +10,12 @@
 
 ENLIL™ is a **prototype security-governance console** that demonstrates how AI systems can be monitored, constrained, and audited in real time. It runs entirely in your browser — no backend server, no cloud connection, no data leaves your machine.
 
-It has two AI engines:
-
-- **SENTINEL™** — The shield. Manages security posture, routes commands through policy checks, and enforces constraints like lockdown.
-- **TITAN™** — The brain. Performs deep threat analysis, stress testing, and red-team simulations when SENTINEL detects elevated risk.
+It has five integrated AI modules:
+- **SENTINEL™** — The Governor. Manages posture, routes all commands, and enforces policy.
+- **TITAN™** — The Nucleus. Performs deep threat analysis and tactical reasoning.
+- **GUARDIAN™** — The Shield. Oversees defensive perimeters and logic shielding.
+- **FORGE™** — The Smith. Maintains logic synthesis and core structural integrity.
+- **VENUS™** — The Scout. Reconnaissance of external intelligence and instruction vectors.
 
 ---
 
@@ -132,8 +134,7 @@ At the top of the Overview panel, colored badges show current system state:
 | 🟡 **Demo Mode Active** | Running in demo mode, not production |
 | 🔵 **Local Audit Storage** | Logs stored in browser, not server |
 | 🔵 **Backend Hardening Pending** | No production backend yet |
-| 🟢 **TITAN™ Online** | TITAN threat engine is loaded |
-| 🟢 **SENTINEL™ Governor Active** | SENTINEL policy governor is running |
+| 🟢 **Online** | Core Module is Online (SENTINEL, TITAN, GUARDIAN, FORGE, or VENUS) |
 
 ---
 
@@ -177,4 +178,4 @@ For production deployment requirements, see `SECURITY_NOTES.md` and `BACKEND_HAR
 ---
 
 **Copyright © Zachary Charles Anthony Crockett. All rights reserved.**  
-GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™ are claimed trademarks.
+GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™, GUARDIAN™, FORGE™, VENUS™ are claimed trademarks.

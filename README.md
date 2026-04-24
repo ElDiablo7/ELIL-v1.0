@@ -8,9 +8,13 @@
 
 ENLIL™ is a prototype **security-governance console** for AI systems. It demonstrates real-time threat assessment, policy enforcement, audit logging, and operator oversight — all running locally in your browser with zero backend dependencies.
 
-**SENTINEL™** is the active defense engine — routing commands through policy checks, managing security posture, and enforcing lockdown protocols.
+The core architecture consists of five integrated modules:
 
-**TITAN™** is the tactical intelligence engine — performing deep threat scans, adversarial reasoning, compliance checks, red-team simulations, and decision stress tests.
+- **SENTINEL™** — The Governor: Manages posture, routes all commands, and enforces policy.
+- **TITAN™** — The Nucleus: Performs deep threat analysis and tactical reasoning.
+- **GUARDIAN™** — The Shield: Oversees defensive perimeters and logic shielding.
+- **FORGE™** — The Smith: Maintains logic synthesis and core structural integrity.
+- **VENUS™** — The Scout: Reconnaissance of external intelligence and instruction vectors.
 
 ---
 
@@ -120,6 +124,6 @@ See `BACKEND_HARDENING_PLAN.md` for the production roadmap:
 
 **Copyright © Zachary Charles Anthony Crockett. All rights reserved.**
 
-GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™, The Eye™ and related module names are claimed trademarks of Zachary Charles Anthony Crockett.
+GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™, GUARDIAN™, FORGE™, VENUS™, The Eye™ and related module names are claimed trademarks of Zachary Charles Anthony Crockett.
 
 Unauthorized reproduction, distribution, or deployment of this system without express written consent is prohibited.
