@@ -10,11 +10,11 @@ const TitanOS = (function () {
 
   // Define the roster of autonomous TITAN Agents
   const agentRoster = [
-    { id: 'titan-core', name: 'TITAN Core', role: 'Strategic Overseer', status: 'ONLINE' },
-    { id: 'agent-recon', name: 'Agent RECON', role: 'External Intelligence Gathering', status: 'ONLINE' },
-    { id: 'agent-nexus', name: 'Agent NEXUS', role: 'Data Correlation & Linking', status: 'ONLINE' },
-    { id: 'agent-shield', name: 'Agent SHIELD', role: 'Vulnerability Assessment', status: 'ONLINE' },
-    { id: 'agent-grace', name: 'Agent GRACE', role: 'Vocal Communications Protocol', status: 'ONLINE' }
+    { id: 'guardian', name: 'GUARDIAN', role: 'Defensive Perimeter & Shielding', status: 'ONLINE' },
+    { id: 'forge', name: 'FORGE', role: 'Logic Construction & Core Synthesis', status: 'ONLINE' },
+    { id: 'venus', name: 'VENUS', role: 'External Intelligence & Recon', status: 'ONLINE' },
+    { id: 'titan', name: 'TITAN', role: 'Strategic Nucleus & Threat Analysis', status: 'ONLINE' },
+    { id: 'sentinel', name: 'SENTINEL', role: 'Governance Overlay & Policy Enforcement', status: 'ONLINE' }
   ];
 
   function init() {
