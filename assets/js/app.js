@@ -277,28 +277,102 @@ const App = (function () {
   }
 
   function showOverview() {
-    const console = document.getElementById('output-console');
-    if (!console) return;
+    const consoleEl = document.getElementById('output-console');
+    if (!consoleEl) return;
 
     const health = Sentinel.healthCheck();
     const stats = Logs.getStats();
 
-    console.innerHTML = `
-      <div class="output-card" style="border-left: 4px solid var(--blue-glow);">
+    consoleEl.innerHTML = `
+      <!-- Status Badges Bar -->
+      <div class="status-badges-bar">
+        <span class="status-badge badge-demo">◉ Demo Mode Active</span>
+        <span class="status-badge badge-local">◉ Local Audit Storage</span>
+        <span class="status-badge badge-pending">◉ Backend Hardening Pending</span>
+        <span class="status-badge badge-online">◉ TITAN™ Online</span>
+        <span class="status-badge badge-active">◉ SENTINEL™ Governor Active</span>
+      </div>
+
+      <!-- OPERATOR GUIDE: START HERE -->
+      <div class="output-card operator-guide-card">
         <div class="card-header">
-          <span class="card-title">System Overview: ENLIL™</span>
+          <span class="card-title">▶ START HERE — Operator Guide</span>
         </div>
         <div class="card-content">
-          <p><strong>ENLIL™</strong> is a prototype security-governance console designed for audit-led operation and structured oversight workflows. It operates on a Zero-Trust architecture through the synergy of dual subsystems:</p>
-          <p>It functions through the synergy of dual AI engines:</p>
-          <ul>
-            <li><strong>SENTINEL™ (Active Defense):</strong> The shield. Manages perimeter defense, real-time posture shifts, policy enforcement (e.g., Two-Person Rule), and automated system lockdowns.</li>
-            <li><strong>TITAN™ (Tactical Intelligence):</strong> The brain. Provides deep behavioral analysis, strategic decision stress-testing, and advanced red-team simulations.</li>
-          </ul>
-          <p>ENLIL™ supports structured oversight workflows via policy-driven access control while preparing operator readiness against sophisticated threats. Powered by GRACE-X AI™.</p>
+          <div class="guide-section">
+            <h4 class="guide-heading">What is ENLIL™?</h4>
+            <p>ENLIL™ is a <strong>prototype security-governance console</strong> designed for audit-led operation and structured oversight workflows. It runs entirely in your browser — no backend required.</p>
+          </div>
+
+          <div class="guide-grid">
+            <div class="guide-item">
+              <div class="guide-item-icon" style="color: var(--blue-glow)">🛡</div>
+              <div>
+                <strong>SENTINEL™</strong> — The Governor<br>
+                <span class="guide-desc">Routes all commands, enforces policies, manages access control, handles lockdowns, and maintains the audit log chain.</span>
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-item-icon" style="color: var(--amber)">🧠</div>
+              <div>
+                <strong>TITAN™</strong> — The Analyst<br>
+                <span class="guide-desc">Performs threat analysis, decision stress-testing, red team simulations, and deep behavioral assessment. Internal-only — invoked via SENTINEL.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-section">
+            <h4 class="guide-heading">What should I do first?</h4>
+            <ol class="guide-steps">
+              <li>Explore the <strong>tabs on the left</strong> — each opens a different module (Threat Scan, Compliance, Red Team, etc.)</li>
+              <li>Click any <strong>Demo Command</strong> button below to see the system in action</li>
+              <li>Or type a command directly into the <strong>command bar</strong> at the top</li>
+              <li>Click the <strong>TITAN</strong> mode button (left panel) to open the TITAN™ Command Center</li>
+              <li>Press <strong>[H]</strong> on your keyboard to open the full system help overlay</li>
+            </ol>
+          </div>
+
+          <div class="guide-section">
+            <h4 class="guide-heading">What do the Audit/Export buttons do?</h4>
+            <p>Go to the <strong>Logs</strong> tab (left panel) to view, export, or audit-verify the full chain of actions taken during this session. All actions are recorded automatically.</p>
+          </div>
+
+          <div class="guide-section">
+            <h4 class="guide-heading">Demo Mode vs Production</h4>
+            <p><strong>Current status: DEMO MODE.</strong> All data is stored locally in your browser. Threat scans, compliance checks, and red team scenarios use built-in sample data. No external calls are made.</p>
+            <p class="guide-note">Future production hardening will add: encrypted backend storage, real-time threat feeds, multi-operator sessions, and hardware key authentication.</p>
+          </div>
         </div>
       </div>
 
+      <!-- QUICK DEMO COMMANDS -->
+      <div class="output-card" style="border-left: 4px solid var(--amber);">
+        <div class="card-header">
+          <span class="card-title">⚡ Quick Demo Commands — Click to Run</span>
+        </div>
+        <div class="card-content">
+          <div class="demo-grid">
+            <div class="demo-grid-section">
+              <span class="demo-category">Security Scans</span>
+              <button class="demo-btn-inline" onclick="App.runDemo('threat scan prompt injection')">🔍 Threat Scan: Prompt Injection</button>
+              <button class="demo-btn-inline" onclick="App.runDemo('system integrity check')">🔐 System Integrity Check</button>
+              <button class="demo-btn-inline" onclick="App.runDemo('compliance check data handling')">📋 Compliance Check: Data Handling</button>
+            </div>
+            <div class="demo-grid-section">
+              <span class="demo-category">Advanced Analysis</span>
+              <button class="demo-btn-inline" onclick="App.runDemo('decision stress test rollout plan')">🧪 Decision Stress Test: Rollout Plan</button>
+              <button class="demo-btn-inline" onclick="App.runDemo('red team scenario 03')">🎯 Red Team Scenario #03</button>
+            </div>
+            <div class="demo-grid-section">
+              <span class="demo-category">System Actions</span>
+              <button class="demo-btn-inline" onclick="App.runDemo('export audit')">📦 Export Audit Logs</button>
+              <button class="demo-btn-inline" onclick="window.open('titan.html','_blank','width=1400,height=900')">🖥 Open TITAN™ Dashboard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SYSTEM STATUS -->
       <div class="output-card posture-${health.posture.toLowerCase()}">
         <div class="card-header">
           <span class="card-title">System Status: ${getPostureEmoji(health.posture)} ${health.posture}</span>
@@ -307,32 +381,7 @@ const App = (function () {
           <p><strong>Sentinel Integrity:</strong> ${health.log_chain_verified ? 'VERIFIED' : 'FAILED'}</p>
           <p><strong>Titan Pulse:</strong> ${health.initialized ? 'ACTIVE' : 'OFFLINE'}</p>
           <p><strong>Policy Layer:</strong> ${health.policy_pack_loaded ? 'SECURE' : 'UNPROTECTED'}</p>
-        </div>
-      </div>
-
-      <div class="training-grid">
-        <div class="training-card">
-          <div class="training-card-header"><span class="training-type">SENTINEL</span></div>
-          <div class="training-card-title">Active Defense</div>
-          <div class="training-card-summary">Enforces Zero-Trust routing and real-time posture management with automated lockdown capabilities.</div>
-        </div>
-        <div class="training-card">
-          <div class="training-card-header"><span class="training-type">TITAN</span></div>
-          <div class="training-card-title">Tactical Analysis</div>
-          <div class="training-card-summary">Deep behavioral analysis, red-team simulations, and decision stress-testing for complex environments.</div>
-        </div>
-        <div class="training-card">
-          <div class="training-card-header"><span class="training-type">TRAINING</span></div>
-          <div class="training-card-title">Operator Readiness</div>
-          <div class="training-card-summary">Integrated tactical simulations and core security doctrine modules to sharpen defensive responses.</div>
-        </div>
-      </div>
-
-      <div class="output-card" style="margin-top: 20px;">
-        <div class="card-header"><span class="card-title">Operational Statistics</span></div>
-        <div class="card-content">
           <p><strong>Total Event Entries:</strong> ${stats.total_entries}</p>
-          <p><strong>Core Version:</strong> ${health.version || '1.0.0-PRO'}</p>
           <p><strong>Session State:</strong> ${health.authenticated ? 'AUTHENTICATED [ADMIN]' : 'RESTRICTED'}</p>
         </div>
       </div>
@@ -608,22 +657,42 @@ const App = (function () {
   // Demo Commands
   function setupDemoCommands() {
     const demoCommands = [
-      { text: 'Run Threat Scan: prompt injection indicators', command: 'threat scan prompt injection' },
-      { text: 'System Integrity Check', command: 'system integrity check' },
-      { text: 'Compliance Check: data handling', command: 'compliance check data handling' },
-      { text: 'Decision Stress Test: rollout plan', command: 'decision stress test rollout plan' },
-      { text: 'Run Red Team Scenario #03', command: 'red team scenario 03' },
-      { text: 'Lockdown', command: 'lockdown emergency' }
+      { text: '🔍 Threat Scan: prompt injection', command: 'threat scan prompt injection' },
+      { text: '🔐 System Integrity Check', command: 'system integrity check' },
+      { text: '📋 Compliance Check: data handling', command: 'compliance check data handling' },
+      { text: '🧪 Stress Test: rollout plan', command: 'decision stress test rollout plan' },
+      { text: '🎯 Red Team Scenario #03', command: 'red team scenario 03' },
+      { text: '📦 Export Audit Logs', command: 'export audit' },
+      { text: '🖥 Open TITAN™ Dashboard', command: 'open titan' }
     ];
 
     const demoContainer = document.getElementById('demo-commands');
     if (!demoContainer) return;
+
+    // Add label
+    const label = document.createElement('div');
+    label.className = 'demo-commands-label';
+    label.textContent = '⚡ QUICK COMMANDS';
+    demoContainer.appendChild(label);
 
     demoCommands.forEach(({ text, command }) => {
       const btn = document.createElement('button');
       btn.className = 'demo-btn';
       btn.textContent = text;
       btn.addEventListener('click', () => {
+        if (command === 'open titan') {
+          window.open('titan.html', '_blank', 'width=1400,height=900,menubar=no,toolbar=no');
+          return;
+        }
+        if (command === 'export audit') {
+          // Switch to logs tab and trigger export
+          switchTab('logs');
+          setTimeout(() => {
+            const exportBtn = document.getElementById('export-logs-btn');
+            if (exportBtn) exportBtn.click();
+          }, 300);
+          return;
+        }
         const commandInput = document.getElementById('command-input');
         if (commandInput) {
           commandInput.value = command;
@@ -632,6 +701,23 @@ const App = (function () {
       });
       demoContainer.appendChild(btn);
     });
+  }
+
+  // Expose runDemo for inline onclick handlers in overview
+  function runDemo(command) {
+    if (command === 'export audit') {
+      switchTab('logs');
+      setTimeout(() => {
+        const exportBtn = document.getElementById('export-logs-btn');
+        if (exportBtn) exportBtn.click();
+      }, 300);
+      return;
+    }
+    const commandInput = document.getElementById('command-input');
+    if (commandInput) {
+      commandInput.value = command;
+      handleRouteCommand();
+    }
   }
 
   // Output Cards
