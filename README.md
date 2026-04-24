@@ -1,31 +1,125 @@
-## ENLIL™ — GRACE-X AI™ Security Console
+# ENLIL™ v1.0 — GRACE-X AI™ Security Console
 
-ENLIL™ is a prototype security-governance console powered by GRACE-X AI™, featuring SENTINEL™ (security governor) and TITAN™ (tactical threat assessment nucleus).
-
-Designed for audit-led operation and structured oversight workflows.
-
-**Run:** Open `index.html` in a browser (or via a local HTTP server for full functionality).
-
-### 🔑 Authentication Access
-The following credentials grant **OPERATOR** level access to the security console:
-
-- **Default PIN:** `0000`
-- **Override Key:** `SENTINEL_OVERRIDE`
-
-> [!NOTE]
-> **Resilience Mode (v1.1 Patch)**: The system now includes embedded fallback data to support direct opening via the `file://` protocol. If the browser blocks network requests for JSON data, the system will automatically switch to internal defaults.
-
-### Deploy on Render (Web Service)
-
-- **Build Command:** `npm install` (or `npm run build`)
-- **Start Command:** `npm start`
-
-The app is served via `serve` on Render's `PORT`. For a static-only deploy, you can instead create a **Static Site** on Render with Publish Directory `.` and no build command.
-
-See [README_TITAN_SENTINEL.md](README_TITAN_SENTINEL.md) for full documentation, UI guide, and test checklist.
+> **Enterprise-grade AI governance and security audit prototype.**
 
 ---
 
+## What Is ENLIL™?
+
+ENLIL™ is a prototype **security-governance console** for AI systems. It demonstrates real-time threat assessment, policy enforcement, audit logging, and operator oversight — all running locally in your browser with zero backend dependencies.
+
+**SENTINEL™** is the active defense engine — routing commands through policy checks, managing security posture, and enforcing lockdown protocols.
+
+**TITAN™** is the tactical intelligence engine — performing deep threat scans, adversarial reasoning, compliance checks, red-team simulations, and decision stress tests.
+
+---
+
+## Quick Start
+
+```bash
+# Clone the repo
+git clone https://github.com/ElDiablo7/ELIL-v1.0.git
+cd ELIL-v1.0
+
+# Serve locally (any static server works)
+npx http-server . -p 8088
+
+# Open in browser
+http://localhost:8088/index.html
+```
+
+Or simply open `index.html` directly in your browser.
+
+---
+
+## Demo Mode
+
+This build runs in **Demo Mode** by default. This means:
+
+- ✅ Auto-authenticated (no login required)
+- ✅ All features accessible immediately
+- ✅ Audit logs stored in browser localStorage
+- ✅ No network calls, no external dependencies
+- ⚠️ Not production-hardened (see `SECURITY_NOTES.md`)
+
+To toggle demo mode, edit `assets/data/config.default.json`:
+
+```json
+{ "system": { "DEMO_MODE": true } }
+```
+
+---
+
+## Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `threat scan prompt injection` | Scan for prompt injection attacks |
+| `system integrity check` | Verify system health |
+| `compliance check data handling` | Check data handling compliance |
+| `decision stress test rollout plan` | Stress test deployment decisions |
+| `red team scenario 03` | Run red team attack simulation |
+| `export audit` | Export audit logs |
+| `open titan` | Open TITAN dashboard |
+| `help` | Show help overlay |
+
+---
+
+## Project Structure
+
+```
+├── index.html          # Main console
+├── titan.html          # TITAN dashboard
+├── assets/
+│   ├── css/titan.css   # All styles
+│   ├── js/             # App modules (app, sentinel, titan, logs, etc.)
+│   └── data/           # Config, threat taxonomy, policies
+├── docs/               # Additional documentation
+└── *.md                # Project documentation files
+```
+
+---
+
+## Documentation
+
+| File | Purpose |
+|------|---------|
+| `USER_MANUAL.md` | Operator instructions (non-technical) |
+| `DEVELOPER_HANDOVER.md` | Technical architecture & function reference |
+| `SECURITY_NOTES.md` | Current security assessment |
+| `BACKEND_HARDENING_PLAN.md` | Production backend roadmap |
+| `CHANGELOG_ENLIL_PATCH_2.md` | Changes in this build |
+| `TEST_REPORT_PHASE_3.md` | Phase 3-5 test results |
+| `FINAL_AUDIT_REPORT.md` | Project completion audit |
+| `MANIFEST.md` | Complete file inventory |
+
+---
+
+## Limitations
+
+- **No real authentication** — Demo mode uses auto-auth. See `SECURITY_NOTES.md`.
+- **Client-side only** — All logic runs in the browser. No server-side enforcement.
+- **localStorage audit** — Logs can be cleared by the user. Not forensic-grade.
+- **Simulated AI** — TITAN/SENTINEL are rule-based simulators, not connected to a real AI model.
+
+---
+
+## What's Next
+
+See `BACKEND_HARDENING_PLAN.md` for the production roadmap:
+
+1. Express/Node backend with JWT auth
+2. Server-side audit storage (PostgreSQL/S3)
+3. Role-based access control
+4. Cryptographic log signing
+5. HTTPS enforcement
+
+---
+
+## Legal
+
 **Copyright © Zachary Charles Anthony Crockett. All rights reserved.**
+
 GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™, The Eye™ and related module names are claimed trademarks of Zachary Charles Anthony Crockett.
-™ indicates claimed trademark rights; ® must only be used after formal registration.
+
+Unauthorized reproduction, distribution, or deployment of this system without express written consent is prohibited.

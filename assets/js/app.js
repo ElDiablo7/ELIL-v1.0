@@ -57,10 +57,17 @@ const App = (function () {
     updateStatusPanel();
     updateLogsDisplay();
 
-    // Skip security modal for bypass
-    // showSecurityModal();
-    authenticated = true;
-    updateUI();
+    // Determine auth mode from config
+    const isDemoMode = await getDemoMode();
+    if (isDemoMode) {
+      // DEMO MODE: auto-authenticate, no modal
+      authenticated = true;
+      updateUI();
+      console.log('ENLIL\u2122 running in DEMO MODE — auto-authenticated.');
+    } else {
+      // PRODUCTION MODE: show security modal, require auth
+      showSecurityModal();
+    }
 
     // Log boot event
     if (typeof Logs !== 'undefined') {
@@ -68,12 +75,26 @@ const App = (function () {
         actor_role: 'SYSTEM',
         action: 'APP_BOOT',
         posture: 'GREEN',
-        payload: { modules: moduleStatus, mode: 'demo-local' },
+        payload: { modules: moduleStatus, mode: isDemoMode ? 'demo-local' : 'production', demo_mode: isDemoMode },
         classification: 'INTERNAL'
       });
     }
 
     console.log('ENLIL\u2122 initialized. Module status:', moduleStatus);
+  }
+
+  // Config helper: check if DEMO_MODE is enabled
+  async function getDemoMode() {
+    try {
+      const response = await fetch('./assets/data/config.default.json');
+      if (response.ok) {
+        const cfg = await response.json();
+        return cfg?.system?.DEMO_MODE !== false; // Default to true if missing
+      }
+    } catch (e) {
+      // file:// protocol or fetch failure — default to demo mode
+    }
+    return true; // Safe default: demo mode
   }
 
   // Security Modal
@@ -199,6 +220,25 @@ const App = (function () {
         window.open('titan.html', '_blank', 'width=1400,height=900,menubar=no,toolbar=no');
       });
     }
+
+    // Mobile nav toggle
+    const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+    const leftPanel = document.querySelector('.left-panel');
+    if (mobileNavToggle && leftPanel) {
+      mobileNavToggle.addEventListener('click', () => {
+        leftPanel.classList.toggle('mobile-open');
+        mobileNavToggle.textContent = leftPanel.classList.contains('mobile-open') ? '✕' : '☰';
+      });
+      // Close nav when clicking a tab on mobile
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          if (window.innerWidth <= 768) {
+            leftPanel.classList.remove('mobile-open');
+            mobileNavToggle.textContent = '☰';
+          }
+        });
+      });
+    }
     // Event emitters
     Utils.EventEmitter.on('sentinel:posture_changed', (data) => {
       updateStatusPanel();
@@ -241,33 +281,38 @@ const App = (function () {
       }
     });
 
-    // Show/hide tab content
+    // Elements to manage
     const outputConsole = document.getElementById('output-console');
-    const tabContents = document.querySelectorAll('.tab-content');
+    const logsTab = document.getElementById('tab-logs');
+    const demoCommands = document.getElementById('demo-commands');
+    const lockdownSwitch = document.querySelector('.lockdown-switch');
+    const commandHelper = document.querySelector('.command-helper-text');
 
-    // Hide all tab-specific content areas
-    tabContents.forEach(content => {
+    // Hide all tab-specific content areas first
+    document.querySelectorAll('.tab-content').forEach(content => {
       content.style.display = 'none';
     });
 
-    // Show output console for most tabs (it's the main display area)
-    if (outputConsole) {
-      if (tabId === 'logs') {
-        // Hide main console, show logs tab
-        outputConsole.style.display = 'none';
-        const logsTab = document.getElementById('tab-logs');
-        if (logsTab) {
-          logsTab.style.display = 'block';
-        }
-      } else {
-        // Show main console, hide logs tab
+    if (tabId === 'logs') {
+      // Logs tab: hide main console/demo area, show logs tab
+      if (outputConsole) outputConsole.style.display = 'none';
+      if (demoCommands) demoCommands.style.display = 'none';
+      if (lockdownSwitch) lockdownSwitch.style.display = 'none';
+      if (commandHelper) commandHelper.style.display = 'none';
+      if (logsTab) {
+        logsTab.style.display = 'block';
+        logsTab.classList.remove('hidden');
+      }
+    } else {
+      // All other tabs: show main console and surrounding elements
+      if (outputConsole) {
         outputConsole.style.display = 'flex';
         outputConsole.style.flexDirection = 'column';
-        const logsTab = document.getElementById('tab-logs');
-        if (logsTab) {
-          logsTab.style.display = 'none';
-        }
       }
+      if (demoCommands) demoCommands.style.display = '';
+      if (lockdownSwitch) lockdownSwitch.style.display = '';
+      if (commandHelper) commandHelper.style.display = '';
+      if (logsTab) logsTab.style.display = 'none';
     }
 
     // Load tab-specific content

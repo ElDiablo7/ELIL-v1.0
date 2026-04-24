@@ -1,245 +1,145 @@
-# ENLIL™ v1.0 — Operator Manual
+# ENLIL™ v1.0 — User Manual
 
-> **System:** ENLIL™ — GRACE-X AI™ Security Console  
-> **Version:** 1.0.0 (Demo / Prototype)  
-> **Author:** Zachary Charles Anthony Crockett  
-> **Last Updated:** 2026-04-24
-
----
-
-## Table of Contents
-
-1. [Quick Start](#quick-start)
-2. [What is ENLIL™?](#what-is-enlil)
-3. [System Architecture](#system-architecture)
-4. [Screen Guide](#screen-guide)
-5. [Full Command Reference](#full-command-reference)
-6. [Authentication](#authentication)
-7. [Posture Levels](#posture-levels)
-8. [Demo Commands — What to Try](#demo-commands--what-to-try)
-9. [Logs, Audit & Export](#logs-audit--export)
-10. [TITAN™ Command Center](#titan-command-center)
-11. [Keyboard Shortcuts](#keyboard-shortcuts)
-12. [Troubleshooting](#troubleshooting)
-13. [Current Limitations (Demo Mode)](#current-limitations-demo-mode)
-14. [Next Hardening Steps](#next-hardening-steps)
+> **For:** Operators, Demo Viewers, Non-Technical Users  
+> **Build:** ENLIL™ v1.0 Patch 2  
+> **Author:** Zachary Charles Anthony Crockett
 
 ---
 
-## Quick Start
+## What Is ENLIL™?
 
-### Option A — Open Directly (Simplest)
+ENLIL™ is a **prototype security-governance console** that demonstrates how AI systems can be monitored, constrained, and audited in real time. It runs entirely in your browser — no backend server, no cloud connection, no data leaves your machine.
 
-1. Double-click `index.html` in your file explorer
-2. Your browser opens the ENLIL™ Security Console
-3. Click **Acknowledge** on the security modal
-4. You're in — start clicking commands or tabs
+It has two AI engines:
 
-> **Note:** Some browsers may restrict `file://` protocol features. If data fails to load, use Option B.
-
-### Option B — Local HTTP Server (Recommended)
-
-```bash
-# If you have Python installed:
-python -m http.server 8080
-
-# OR if you have Node.js:
-npm install
-npm start
-```
-
-Then open: **http://localhost:8080** (or the port shown)
-
-### Option C — Deploy on Render
-
-1. Push the repo to GitHub
-2. Create a **Web Service** on Render
-3. **Build Command:** `npm install`
-4. **Start Command:** `npm start`
-5. Render will serve the app on its assigned URL
+- **SENTINEL™** — The shield. Manages security posture, routes commands through policy checks, and enforces constraints like lockdown.
+- **TITAN™** — The brain. Performs deep threat analysis, stress testing, and red-team simulations when SENTINEL detects elevated risk.
 
 ---
 
-## What is ENLIL™?
+## How to Open
 
-**ENLIL™** is a prototype security-governance console. It provides a visual interface for:
+1. Open `index.html` in your web browser (Chrome, Edge, or Firefox recommended).
+2. If a security modal appears, click **Acknowledge** to proceed.
+3. You'll see the main SENTINEL console with the Overview tab active.
 
-- Running threat scans on system inputs
-- Verifying compliance against security policies
-- Performing decision stress-tests on operational plans
-- Running red team adversarial simulations
-- Training operators on security doctrine
-- Auditing all actions via an append-only log chain
-
-**Current Status:** Demo Mode. All processing happens locally in your browser. No external services are called.
+> **Note:** If running from a local file (`file://` protocol), some features like config loading may use fallback defaults. For full functionality, serve via a local HTTP server:
+> ```
+> npx http-server . -p 8088
+> ```
 
 ---
 
-## System Architecture
+## Screen Layout
 
-ENLIL™ operates through two core engines:
-
-### SENTINEL™ — The Governor
-- **What it does:** Routes all commands, enforces policies, manages access control, controls system lockdowns, and maintains the audit log chain.
-- **User interaction:** Every command you type or click passes through SENTINEL first. It validates the request against the active Policy Pack before allowing execution.
-
-### TITAN™ — The Analyst
-- **What it does:** Performs deep threat analysis, decision stress-testing, red team simulations, and behavioral assessment.
-- **User interaction:** You don't invoke TITAN directly. SENTINEL delegates tasks to TITAN when threat analysis is required. TITAN operates at `TITAN_INTERNAL_ONLY` classification.
-
-### GRACE-X AI™
-- The overarching AI platform powering both engines. Voice commands (when enabled) are handled by the GRACE-X AI™ Voice module.
+| Area | Location | Purpose |
+|------|----------|---------|
+| **Left Panel** | Left side | Mode selector (SENTINEL/TITAN), tab navigation |
+| **Center Panel** | Middle | Command input, output console, demo commands |
+| **Right Panel** | Right side | Security posture, current status, policy pack |
 
 ---
 
-## Screen Guide
+## Using Commands
 
-### Main Console (`index.html`)
+### Typing Commands
 
-| Area | Location | What It Does |
-|------|----------|--------------|
-| **Command Bar** | Top of center panel | Type commands here and press Enter. Shows placeholder examples. |
-| **Quick Command Buttons** | Below command bar | Pre-built buttons that execute common demo commands with one click. |
-| **Left Panel — Tabs** | Left sidebar | Navigate between modules: Overview, Threat Scan, System Integrity, Compliance, Decision Stress, Red Team, Logs, Policy, Training. |
-| **Left Panel — Mode** | Top of left sidebar | Toggle between SENTINEL (default) and TITAN (opens Command Center). |
-| **Center Panel — Output** | Main content area | Shows results from commands and module views. Scrollable. |
-| **Right Panel — Status** | Right sidebar | Shows current posture (GREEN/AMBER/RED/BLACK), auth status, policy pack, and recent events. |
-| **Right Panel — Policy Pack** | Right sidebar dropdown | Select a different policy pack to change enforcement rules. |
-| **Emergency Lockdown** | Center panel toggle | Activates full system lockdown. Requires PIN to unlock. |
-| **Help Overlay** | Press [H] key | Full system help guide with commands, postures, and troubleshooting. |
-| **Legal Footer** | Bottom of page | Copyright and trademark notice. |
+1. Click the command input box at the top (shows placeholder text with examples).
+2. Type a command.
+3. Press **Enter** or click **ROUTE VIA SENTINEL**.
 
-### TITAN™ Command Center (`titan.html`)
+### Available Commands
 
-| Area | Location | What It Does |
-|------|----------|--------------|
-| **Agent Roster** | Left panel | Lists AI agents: TITAN Core, RECON, NEXUS, SHIELD, GRACE. Click to select. |
-| **Embedded Browser** | Center top | Internal browser for TITAN operations. |
-| **Local Terminal** | Center bottom | Command-line terminal emulator. Type `help` for commands. |
-| **Agent Chat** | Right panel | Chat interface for communicating with the selected agent. |
-
----
-
-## Full Command Reference
-
-All commands are typed into the **Command Bar** at the top of the main console and routed via SENTINEL™.
-
-### Threat Scan
 | Command | What It Does |
-|---------|--------------|
-| `threat scan prompt injection` | Scans for prompt injection attack patterns |
-| `threat scan [any text]` | Scans provided text for threat taxonomy matches |
+|---------|-------------|
+| `threat scan prompt injection` | Run a prompt injection threat scan |
+| `system integrity check` | Check system health and integrity |
+| `compliance check data handling` | Verify data handling compliance |
+| `decision stress test rollout plan` | Stress test a deployment decision |
+| `red team scenario 03` | Run a red team attack simulation |
+| `export audit` | Switch to Logs tab and trigger export |
+| `open titan` | Open the TITAN dashboard in a new window |
+| `help` | Open the help overlay |
 
-### System Integrity
-| Command | What It Does |
-|---------|--------------|
-| `system integrity check` | Verifies log chain integrity, policy config, and system health |
+### Quick Demo Buttons
 
-### Compliance
-| Command | What It Does |
-|---------|--------------|
-| `compliance check data handling` | Checks data handling practices against active policy |
-| `compliance check [action]` | Evaluates any action string against the Policy Pack |
-
-### Decision Stress Test
-| Command | What It Does |
-|---------|--------------|
-| `decision stress test rollout plan` | Stress-tests a rollout plan for failure modes |
-| `decision stress test [plan description]` | Analyzes any plan for edge cases and vulnerabilities |
-
-### Red Team
-| Command | What It Does |
-|---------|--------------|
-| `red team scenario 03` | Runs Red Team Scenario #03 (demo) |
-| `red team scenario auth_bypass` | Simulates authentication bypass attack |
-| `red team scenario data_exfil` | Simulates data exfiltration attempt |
-
-### System Control
-| Command | What It Does |
-|---------|--------------|
-| `lockdown emergency` | Activates emergency system lockdown |
-| `export audit` | Exports full audit log as JSON (via Logs tab) |
-| `open titan` | Opens the TITAN™ Command Center dashboard |
+On the Overview tab, you'll find **Quick Demo Commands** buttons that run these commands with one click.
 
 ---
 
-## Authentication
+## Understanding the Output
 
-| Credential | Value | Access Level |
-|------------|-------|-------------|
-| Default PIN | `0000` | OPERATOR |
-| Override Key | `SENTINEL_OVERRIDE` | ADMIN (full access) |
+Each command produces an **output card** showing:
 
-In the current demo build, authentication is auto-bypassed on load. The auth system is fully implemented but disabled for ease of demo access.
+- **Title** — "COMMAND ROUTED VIA TITAN" or "COMMAND ROUTED VIA SENTINEL"
+- **Summary** — Brief analysis result
+- **Risk Score** — 0 (safe) to 100 (critical)
+- **Findings** — Number of issues detected
+- **Recommended Controls** — Suggested security measures
+- **Posture** — Current security posture after the command
 
----
+### Security Posture Colors
 
-## Posture Levels
-
-SENTINEL™ manages a 4-tier posture system:
-
-| Posture | Meaning | Trigger |
-|---------|---------|---------|
-| 🟢 **GREEN** | Normal operations | Default state |
-| 🟡 **AMBER** | Elevated monitoring | Medium-risk command detected |
-| 🔴 **RED** | Critical threat detected | High-risk scan result or policy violation |
-| ⚫ **BLACK** | Total system lockdown | Manual lockdown or critical breach |
-
-Posture changes are automatic based on command risk scores. You can also trigger lockdown manually via the **Emergency Lockdown** toggle.
+| Color | Meaning |
+|-------|---------|
+| 🟢 **GREEN** | Normal operations, no significant threats |
+| 🟡 **AMBER** | Elevated risk, monitoring recommended |
+| 🔴 **RED** | High risk, immediate action required |
+| ⬛ **BLACK** | Critical, system lockdown recommended |
 
 ---
 
-## Demo Commands — What to Try
+## Emergency Lockdown
 
-New to the system? Try these in order:
+The **EMERGENCY LOCKDOWN** toggle is in the center panel. When activated:
 
-1. **Click "Overview" tab** → Read the Operator Guide
-2. **Click "🔍 Threat Scan: Prompt Injection"** → Watch SENTINEL route the command and TITAN produce findings
-3. **Click "🔐 System Integrity Check"** → See the full system health report
-4. **Click "Logs" tab** → View all recorded actions
-5. **Click "📦 Export Audit Logs"** → Download the session log
-6. **Click "🖥 Open TITAN™ Dashboard"** → Explore the full Command Center
-7. **Type your own command** → Try `compliance check unauthorized data transfer`
+- All commands are blocked
+- Posture changes to RED
+- A PIN is required to unlock (`0000` in demo mode)
+- The event is logged in the audit chain
 
 ---
 
-## Logs, Audit & Export
-
-Every action in ENLIL™ is automatically recorded in an append-only log chain with hash verification.
+## Audit Logs
 
 ### Viewing Logs
-- Click the **Logs** tab in the left panel
-- The right panel also shows the **Last 10 Events** at all times
+
+1. Click **Logs** in the left sidebar.
+2. You'll see the audit warning banner (explaining localStorage limits).
+3. Use the **filter dropdown** to show logs from specific modules (SYSTEM, SENTINEL, TITAN, OPERATOR).
 
 ### Exporting Logs
-- Click **Export Logs** on the Logs tab → downloads all log entries as JSON
-- Click **Audit Export** → downloads with hash chain verification data included
 
-### Log Integrity
-- Each log entry is chained to the previous one via SHA-256 hash
-- The **Integrity Flags** section in the right panel shows chain verification status
-- Any tampering with log entries will break the chain and flag a verification failure
+| Button | What It Does |
+|--------|-------------|
+| **Export JSON** | Downloads the full log chain as a JSON file |
+| **Export TXT** | Downloads a human-readable text summary |
+| **Full Audit Export** | Downloads logs + system config snapshot |
+| **Clear Logs** | Clears all logs (asks for confirmation first) |
+
+### Important Note
+
+> ⚠ Logs are stored in your browser's localStorage. They are **not** tamper-proof forensic evidence. The hash chain provides integrity checking for demo purposes only. Production deployment requires server-side immutable storage.
 
 ---
 
-## TITAN™ Command Center
+## Status Badges
 
-The TITAN™ Command Center is a separate dashboard (`titan.html`) designed for advanced operations.
+At the top of the Overview panel, colored badges show current system state:
 
-### How to Open
-- Click the **TITAN** button in the left panel mode selector
-- Or click **"🖥 Open TITAN™ Dashboard"** in the demo commands
-- Or navigate directly to `titan.html`
+| Badge | Meaning |
+|-------|---------|
+| 🟡 **Demo Mode Active** | Running in demo mode, not production |
+| 🔵 **Local Audit Storage** | Logs stored in browser, not server |
+| 🔵 **Backend Hardening Pending** | No production backend yet |
+| 🟢 **TITAN™ Online** | TITAN threat engine is loaded |
+| 🟢 **SENTINEL™ Governor Active** | SENTINEL policy governor is running |
 
-### Terminal Commands (in TITAN OS)
-| Command | What It Does |
-|---------|--------------|
-| `help` | Lists available commands |
-| `status` | Shows system status |
-| `agents` | Lists active AI agents |
-| `scan` | Runs a basic scan |
-| `clear` | Clears the terminal |
-| `dir` | Shows simulated directory listing |
+---
+
+## TITAN Dashboard
+
+Click the **TITAN** button in the Mode selector (left panel) to open the TITAN dashboard in a separate window. This provides a dedicated threat analysis view.
 
 ---
 
@@ -247,9 +147,9 @@ The TITAN™ Command Center is a separate dashboard (`titan.html`) designed for 
 
 | Key | Action |
 |-----|--------|
-| `H` | Toggle the System Help overlay |
-| `Escape` | Close any open overlay or modal |
-| `Enter` | Submit the current command |
+| **H** | Toggle help overlay |
+| **Escape** | Close help overlay or modals |
+| **Enter** | Submit command |
 
 ---
 
@@ -257,44 +157,24 @@ The TITAN™ Command Center is a separate dashboard (`titan.html`) designed for 
 
 | Problem | Solution |
 |---------|----------|
-| Page is blank | Make sure `index.html` is in the same folder as the `assets/` directory |
-| Data won't load | Use a local HTTP server instead of opening via `file://` protocol |
-| TITAN button does nothing | Browser may be blocking popups — allow popups for `localhost` |
-| Command says "Authentication required" | Refresh the page — auth auto-bypasses on load |
-| Logs say "Chain Broken" | This is expected if you clear localStorage — it resets the chain |
-| Console shows 404 for favicon | Cosmetic only — doesn't affect functionality |
-| Posture won't reset to GREEN | Refresh the page to reset session state |
+| Page won't load | Check browser console (F12) for errors |
+| TITAN button doesn't open | Allow popups for this site |
+| Commands return errors | Check that you're not in lockdown mode |
+| Old content showing | Hard refresh: Ctrl+Shift+R |
+| Left panel missing (mobile) | Tap the ☰ button in the top-left |
 
 ---
 
-## Current Limitations (Demo Mode)
+## What This Is NOT
 
-| Limitation | Details |
-|------------|---------|
-| **Local storage only** | All data is in browser `localStorage`. Clearing browser data erases everything. |
-| **No backend** | No server-side processing, database, or persistent storage. |
-| **Simulated results** | Threat scans, compliance checks, and red team results use pre-built sample data. |
-| **Single operator** | No multi-user sessions or role-based access control between operators. |
-| **No real threat feeds** | All threat data comes from local `threat_taxonomy.json`. |
-| **No encryption at rest** | localStorage is not encrypted. |
-| **Voice commands limited** | Require browser microphone permission and may not work on all browsers. |
+- This is **NOT** a production security system.
+- This is **NOT** connected to any real AI model.
+- This is **NOT** storing logs in a tamper-proof way.
+- This **IS** a prototype demonstrating the governance architecture.
 
----
-
-## Next Hardening Steps
-
-These are planned improvements for production readiness:
-
-| Phase | Feature | Description |
-|-------|---------|-------------|
-| **2.1** | Encrypted Backend | Server-side data persistence with encrypted audit storage |
-| **2.2** | Real-time Threat Feeds | Integration with external threat intelligence APIs |
-| **2.3** | Multi-Operator Sessions | Role-based access control with hardware key authentication |
-| **2.4** | Formal Audit Chain | Cryptographically signed, export-ready audit reports |
-| **2.5** | CI/CD Pipeline | Automated testing and deployment pipeline |
-| **2.6** | Penetration Testing | Third-party security audit of the codebase |
+For production deployment requirements, see `SECURITY_NOTES.md` and `BACKEND_HARDENING_PLAN.md`.
 
 ---
 
 **Copyright © Zachary Charles Anthony Crockett. All rights reserved.**  
-GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™, The Eye™ and related module names are claimed trademarks of Zachary Charles Anthony Crockett.
+GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™ are claimed trademarks.

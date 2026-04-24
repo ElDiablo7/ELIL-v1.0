@@ -45,7 +45,7 @@ const Sentinel = (function () {
   // Load configuration
   async function loadConfig() {
     const DEFAULT_FALLBACK_CONFIG = {
-      system: { name: "ENLIL\u2122 \u2014 GRACE-X AI\u2122 TITAN\u2122 + SENTINEL\u2122", version: "1.0.0", mode: "SENTINEL", titan_locked: true },
+      system: { name: "ENLIL\u2122 \u2014 GRACE-X AI\u2122 TITAN\u2122 + SENTINEL\u2122", version: "1.0.0", mode: "SENTINEL", titan_locked: true, DEMO_MODE: true },
       authentication: { default_pin: "0000", max_attempts: 3, lockout_duration: 300, session_timeout: 3600 },
       logging: { enabled: true, max_entries: 10000, export_format: "json", hash_algorithm: "sha256" },
       policy: { default_pack: "baseline_internal", auto_load: true },

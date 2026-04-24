@@ -626,6 +626,21 @@ const Titan = (function () {
     return [...new Set(controls)];
   }
 
+  function calculateRiskFromFindings(findings) {
+    if (!findings || findings.length === 0) return 0;
+
+    let score = 0;
+    findings.forEach(f => {
+      if (f.severity === 'CRITICAL') score += 25;
+      else if (f.severity === 'HIGH') score += 15;
+      else if (f.severity === 'MEDIUM') score += 8;
+      else if (f.severity === 'LOW') score += 3;
+      else score += 1;
+    });
+
+    return Math.min(score, 100);
+  }
+
   // Output
 
   function formatResult(data) {

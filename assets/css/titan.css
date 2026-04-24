@@ -29,6 +29,7 @@
   --text-primary: #f0f0f5;
   --text-secondary: #9494a3;
   --glass-bg: rgba(26, 26, 36, 0.7);
+  --surface-glass: rgba(26, 26, 36, 0.85);
   --glass-border: rgba(0, 210, 255, 0.2);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
 }
@@ -405,6 +406,36 @@ body::after {
   background: var(--blue-dim);
   border-color: var(--blue-glow);
   color: var(--blue-bright);
+  box-shadow: 0 0 12px rgba(0, 210, 255, 0.2);
+}
+
+.demo-btn:active {
+  transform: translateY(1px);
+}
+
+.demo-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+}
+
+/* Button variants */
+.btn-danger {
+  border-color: var(--red) !important;
+  color: var(--red) !important;
+}
+.btn-danger:hover {
+  background: rgba(255, 51, 102, 0.15) !important;
+  box-shadow: 0 0 12px rgba(255, 51, 102, 0.2) !important;
+}
+
+.btn-export {
+  border-color: var(--green) !important;
+  color: var(--green) !important;
+}
+.btn-export:hover {
+  background: rgba(0, 255, 170, 0.1) !important;
+  box-shadow: 0 0 12px rgba(0, 255, 170, 0.2) !important;
 }
 
 /* Grace-X Voice Hub */
@@ -859,9 +890,10 @@ body::after {
   pointer-events: none;
 }
 
-/* Adjust top padding for content if needed */
+/* Adjust top padding for content */
 body {
   padding-top: 20px;
+  padding-bottom: 50px; /* Room for legal footer */
 }
 
 .warning-text {
@@ -911,7 +943,7 @@ body {
 }
 
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 /* Scrollbar styling */
@@ -970,7 +1002,95 @@ body {
     grid-template-columns: 1fr;
   }
   .left-panel {
-    display: none;
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    z-index: 9000;
+    transition: left 0.3s ease;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.8);
+  }
+  .left-panel.mobile-open {
+    left: 0;
+  }
+  .center-panel {
+    padding: 16px;
+  }
+  .command-box {
+    flex-direction: column;
+  }
+  .route-btn {
+    width: 100%;
+    text-align: center;
+  }
+  .command-input {
+    font-size: 14px;
+  }
+  .lockdown-switch {
+    padding: 14px;
+  }
+  .lockdown-switch label {
+    font-size: 11px;
+  }
+  .output-console {
+    min-height: 300px;
+    max-height: none;
+  }
+  .help-content {
+    padding: 24px;
+  }
+  .help-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .modal-content {
+    padding: 30px;
+    margin: 20px;
+  }
+  .modal-content h1 {
+    font-size: 22px;
+  }
+  .grace-hub {
+    bottom: 70px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+  }
+  .legal-footer {
+    padding: 6px 12px;
+  }
+  .legal-footer p {
+    font-size: 8px;
+  }
+  .government-banner {
+    font-size: 8px;
+    padding: 3px 0;
+  }
+}
+
+/* Mobile nav toggle */
+.mobile-nav-toggle {
+  display: none;
+  position: fixed;
+  top: 24px;
+  left: 12px;
+  z-index: 9500;
+  width: 36px;
+  height: 36px;
+  background: var(--steel-medium);
+  border: 1px solid var(--blue-glow);
+  border-radius: 6px;
+  color: var(--blue-glow);
+  font-size: 18px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav-toggle {
+    display: flex;
   }
 }
 
