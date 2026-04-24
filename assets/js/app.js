@@ -11,7 +11,7 @@ const App = (function () {
 
   // Initialize application
   async function init() {
-    console.log('Initializing TITAN + SENTINEL Security Suite...');
+    console.log('Initializing ENLIL\u2122 TITAN\u2122 + SENTINEL\u2122 Security Console...');
 
     // Initialize modules in sequence to prevent race conditions
     try {
@@ -286,16 +286,16 @@ const App = (function () {
     console.innerHTML = `
       <div class="output-card" style="border-left: 4px solid var(--blue-glow);">
         <div class="card-header">
-          <span class="card-title">System Overview: ENLIL</span>
+          <span class="card-title">System Overview: ENLIL™</span>
         </div>
         <div class="card-content">
-          <p><strong>Enterprise Level Intelligence & Logistics (ENLIL)</strong> is a high-governance security enforcement and tactical training suite operating on a Zero-Trust architecture.</p>
+          <p><strong>ENLIL™</strong> is a prototype security-governance console designed for audit-led operation and structured oversight workflows. It operates on a Zero-Trust architecture through the synergy of dual subsystems:</p>
           <p>It functions through the synergy of dual AI engines:</p>
           <ul>
-            <li><strong>SENTINEL (Active Defense):</strong> The shield. Manages perimeter defense, real-time posture shifts, policy enforcement (e.g., Two-Person Rule), and automated system lockdowns.</li>
-            <li><strong>TITAN (Tactical Intelligence):</strong> The brain. Provides deep behavioral analysis, strategic decision stress-testing, and advanced red-team simulations.</li>
+            <li><strong>SENTINEL™ (Active Defense):</strong> The shield. Manages perimeter defense, real-time posture shifts, policy enforcement (e.g., Two-Person Rule), and automated system lockdowns.</li>
+            <li><strong>TITAN™ (Tactical Intelligence):</strong> The brain. Provides deep behavioral analysis, strategic decision stress-testing, and advanced red-team simulations.</li>
           </ul>
-          <p>ENLIL governs system access via strict cryptographically verified policies while continuously sharpening operator readiness against sophisticated, state-level threats.</p>
+          <p>ENLIL™ supports structured oversight workflows via policy-driven access control while preparing operator readiness against sophisticated threats. Powered by GRACE-X AI™.</p>
         </div>
       </div>
 

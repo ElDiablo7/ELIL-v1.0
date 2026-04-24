@@ -1,5 +1,5 @@
 /**
- * GRACE-X Voice Core (TITAN Integration)
+ * GRACE-X AI™ Voice Core (ENLIL™ / TITAN™ Integration)
  * Handles Wake Word, Speech-to-Text, and Tactical TTS
  */
 

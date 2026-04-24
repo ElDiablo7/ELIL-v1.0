@@ -1,8 +1,8 @@
-# GRACE-X TITAN™ + SENTINEL™ Security Overlay
+# ENLIL™ — GRACE-X AI™ TITAN™ + SENTINEL™ Security Console
 
 ## Overview
 
-TITAN + SENTINEL is a hardened, offline-first internal security overlay for the GRACE-X ecosystem. The system consists of:
+ENLIL™ is a prototype security-governance console featuring TITAN™ + SENTINEL™, designed for audit-led operation and structured oversight workflows within the GRACE-X AI™ ecosystem. The system consists of:
 
 - **Sentinel™**: Security governor that authenticates, authorizes, routes requests, enforces policies, and logs everything
 - **TITAN™**: Tactical Internal Threat Assessment Nucleus that performs deep threat analysis (TITAN_INTERNAL_ONLY - cannot be invoked directly by users)
@@ -175,7 +175,7 @@ Restrictive policy overlay for child safety (LOCKED by default). Maximum restric
 - External connectors stubbed with warnings
 - Works completely offline
 
-### Immutable Logging
+### Append-Only Logging
 - Append-only log stream
 - Hash chain verification
 - Cannot delete or modify logs
@@ -245,4 +245,10 @@ Restrictive policy overlay for child safety (LOCKED by default). Maximum restric
 
 ## Version
 
-Version 1.0.0 - Initial Release
+Version 1.0.0 — Initial Release
+
+---
+
+**Copyright © Zachary Charles Anthony Crockett. All rights reserved.**
+GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™, The Eye™ and related module names are claimed trademarks of Zachary Charles Anthony Crockett.
+™ indicates claimed trademark rights; ® must only be used after formal registration.

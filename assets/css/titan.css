@@ -973,3 +973,32 @@ body {
     display: none;
   }
 }
+
+/* Legal Footer */
+.legal-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(15, 15, 18, 0.95);
+  border-top: 1px solid rgba(0, 210, 255, 0.15);
+  padding: 8px 24px;
+  text-align: center;
+  z-index: 9999;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.legal-footer p {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  color: var(--silver-dim);
+  line-height: 1.6;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.legal-footer p:first-child {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
