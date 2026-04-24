@@ -219,29 +219,18 @@ const App = (function () {
       titanBtn.addEventListener('click', () => {
         window.open('titan.html', '_blank', 'width=1400,height=900,menubar=no,toolbar=no');
       });
-    }
-
-    // New Mode Buttons (Locked)
-    const lockedButtons = ['mode-guardian', 'mode-forge', 'mode-venus'];
-    lockedButtons.forEach(id => {
-      const btn = document.getElementById(id);
+    }// New Mode Buttons (Enabled)
+    const modulePages = {
+      guardian: 'guardian.html',
+      forge: 'forge.html',
+      venus: 'venus.html',
+      titan: 'titan.html'
+    };
+    Object.entries(modulePages).forEach(([id, page]) => {
+      const btn = document.getElementById(`mode-${id}`);
       if (btn) {
         btn.addEventListener('click', () => {
-          const moduleName = id.split('-')[1].toUpperCase();
-          addOutputCard({
-            title: `ACCESS DENIED: ${moduleName}\u2122`,
-            content: `Internal module ${moduleName}\u2122 is currently RESTRICTED. This operation requires Level 5 Clearance or a hardware-encrypted override key.`,
-            posture: 'AMBER'
-          });
-          if (typeof Logs !== 'undefined') {
-            Logs.append({
-              actor_role: 'OPERATOR',
-              action: 'UNAUTHORIZED_MODULE_ACCESS',
-              posture: 'AMBER',
-              payload: { module: moduleName },
-              classification: 'INTERNAL'
-            });
-          }
+          window.open(page, '_blank', 'width=1400,height=900,menubar=no,toolbar=no');
         });
       }
     });
