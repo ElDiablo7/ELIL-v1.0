@@ -952,46 +952,141 @@ const App = (function () {
 
   // Event Handlers
   function setupEventHandlers() {
-    // Export logs button
+    // Export logs button (JSON)
     const exportBtn = document.getElementById('export-logs-btn');
     if (exportBtn) {
       exportBtn.addEventListener('click', () => {
         Logs.export();
+        addOutputCard({ title: 'Audit Export', content: 'JSON audit log exported successfully.', posture: 'GREEN' });
       });
     }
 
-    // Audit export button
+    // Export logs button (TXT)
+    const exportTxtBtn = document.getElementById('export-logs-txt-btn');
+    if (exportTxtBtn) {
+      exportTxtBtn.addEventListener('click', () => {
+        exportLogsTxt();
+      });
+    }
+
+    // Audit export button (full snapshot)
     const auditBtn = document.getElementById('audit-export-btn');
     if (auditBtn) {
       auditBtn.addEventListener('click', () => {
-        Sentinel.auditExport();
+        try {
+          Sentinel.auditExport();
+          addOutputCard({ title: 'Full Audit Export', content: 'Audit log + config snapshot exported.', posture: 'GREEN' });
+        } catch (e) {
+          addOutputCard({ title: 'Audit Export Failed', content: e.message, posture: 'RED' });
+        }
+      });
+    }
+
+    // Clear logs button
+    const clearBtn = document.getElementById('clear-logs-btn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        if (confirm('Clear all audit logs? This action cannot be undone in demo mode.')) {
+          Logs.clear();
+          Logs.append({
+            actor_role: 'OPERATOR',
+            action: 'LOGS_CLEARED',
+            posture: 'GREEN',
+            payload: { mode: 'demo-local' },
+            classification: 'INTERNAL'
+          });
+          updateLogsDisplay();
+          addOutputCard({ title: 'Logs Cleared', content: 'Audit log chain has been reset.', posture: 'AMBER' });
+        }
+      });
+    }
+
+    // Audit filter by module
+    const auditFilter = document.getElementById('audit-filter-module');
+    if (auditFilter) {
+      auditFilter.addEventListener('change', () => {
+        updateLogsDisplay();
       });
     }
 
     // Policy pack selector
     const policySelect = document.getElementById('policy-pack-select');
     if (policySelect) {
-      const packs = Policy.getAvailablePolicyPacks();
-      packs.forEach(pack => {
-        const option = document.createElement('option');
-        option.value = pack.name;
-        option.textContent = pack.display_name + (pack.locked ? ' (LOCKED)' : '');
-        option.disabled = pack.locked;
-        policySelect.appendChild(option);
-      });
+      try {
+        const packs = Policy.getAvailablePolicyPacks();
+        packs.forEach(pack => {
+          const option = document.createElement('option');
+          option.value = pack.name;
+          option.textContent = pack.display_name + (pack.locked ? ' (LOCKED)' : '');
+          option.disabled = pack.locked;
+          policySelect.appendChild(option);
+        });
+      } catch (e) {
+        console.warn('Policy packs failed to load for selector:', e.message);
+      }
 
       policySelect.addEventListener('change', (e) => {
         if (e.target.value) {
-          Sentinel.loadPolicyPack(e.target.value);
-          updateStatusPanel();
-          addOutputCard({
-            title: 'Policy Pack Changed',
-            content: `Loaded policy pack: ${e.target.value}`,
-            posture: Sentinel.getCurrentPosture()
-          });
+          try {
+            Sentinel.loadPolicyPack(e.target.value);
+            updateStatusPanel();
+            addOutputCard({
+              title: 'Policy Pack Changed',
+              content: `Loaded policy pack: ${e.target.value}`,
+              posture: Sentinel.getCurrentPosture()
+            });
+          } catch (err) {
+            addOutputCard({ title: 'Policy Load Failed', content: err.message, posture: 'RED' });
+          }
         }
       });
     }
+  }
+
+  // TXT Export (Phase 4)
+  function exportLogsTxt() {
+    const logs = Logs.getAll();
+    let txt = '=== ENLIL™ AUDIT LOG EXPORT ===\n';
+    txt += `Generated: ${new Date().toISOString()}\n`;
+    txt += `Total Entries: ${logs.length}\n`;
+    txt += `Storage: Browser localStorage (demo mode)\n`;
+    txt += `Chain Verified: ${Logs.verify() ? 'YES' : 'NO'}\n`;
+    txt += '================================\n\n';
+
+    logs.forEach((entry, i) => {
+      txt += `[${i + 1}] ${new Date(entry.timestamp).toISOString()}\n`;
+      txt += `    Actor: ${entry.actor_role} | Action: ${entry.action}\n`;
+      txt += `    Posture: ${entry.posture} | Policy: ${entry.policy_pack}\n`;
+      txt += `    Classification: ${entry.classification}\n`;
+      if (Object.keys(entry.payload_summary).length > 0) {
+        txt += `    Payload: ${JSON.stringify(entry.payload_summary)}\n`;
+      }
+      txt += `    Hash: ${entry.hash_current}\n\n`;
+    });
+
+    txt += '=== END OF AUDIT LOG ===\n';
+    txt += 'NOTE: This is a demo-mode export. Hash chain provides integrity indication only.\n';
+    txt += 'Full cryptographic signing planned for production backend.\n';
+
+    const blob = new Blob([txt], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `enlil_audit_log_${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    Logs.append({
+      actor_role: 'OPERATOR',
+      action: 'AUDIT_EXPORT_TXT',
+      posture: 'GREEN',
+      payload: { entry_count: logs.length, format: 'TXT' },
+      classification: 'INTERNAL'
+    });
+
+    addOutputCard({ title: 'TXT Export', content: `Exported ${logs.length} audit entries as TXT.`, posture: 'GREEN' });
   }
 
   // Utility

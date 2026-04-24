@@ -90,11 +90,23 @@
       <div id="tab-decision-stress" class="tab-content hidden"></div>
       <div id="tab-red-team" class="tab-content hidden"></div>
       <div id="tab-logs" class="tab-content hidden">
-        <div id="logs-tab-content" class="output-console"></div>
-        <div class="logs-controls">
-          <button id="export-logs-btn" class="demo-btn">Export Logs</button>
-          <button id="audit-export-btn" class="demo-btn">Audit Export</button>
+        <div class="audit-warning-banner">
+          ⚠ Demo local audit log — stored in browser localStorage. Not forensic immutable storage. Hash/signature layer planned for backend hardening.
         </div>
+        <div class="audit-controls">
+          <select id="audit-filter-module" class="policy-select" style="width: auto; min-width: 140px;" title="Filter by module">
+            <option value="">All Modules</option>
+            <option value="SENTINEL">SENTINEL</option>
+            <option value="TITAN">TITAN</option>
+            <option value="SYSTEM">SYSTEM</option>
+            <option value="OPERATOR">OPERATOR</option>
+          </select>
+          <button id="export-logs-btn" class="demo-btn">📦 Export JSON</button>
+          <button id="export-logs-txt-btn" class="demo-btn">📄 Export TXT</button>
+          <button id="audit-export-btn" class="demo-btn">🔐 Full Audit Export</button>
+          <button id="clear-logs-btn" class="demo-btn" style="border-color: var(--red); color: var(--red);">🗑 Clear Logs</button>
+        </div>
+        <div id="logs-tab-content" class="output-console"></div>
       </div>
       <div id="tab-policy" class="tab-content hidden"></div>
       <div id="tab-training" class="tab-content hidden"></div>
