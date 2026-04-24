@@ -81,6 +81,10 @@ To toggle demo mode, edit `assets/data/config.default.json`:
 ├── docs/               # Additional documentation
 └── *.md                # Project documentation files
 ```
+├── guardian.html       # GUARDIAN module placeholder
+├── forge.html          # FORGE module placeholder
+├── venus.html          # VENUS module placeholder
+
 
 ---
 
