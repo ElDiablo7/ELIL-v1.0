@@ -929,11 +929,41 @@ const App = (function () {
       Logs.renderRecent(logsContainer, 10);
     }
 
-    // Also update logs tab if active
+    // Also update logs tab if active, with filter support
     if (currentTab === 'logs') {
       const logsTabContainer = document.getElementById('logs-tab-content');
       if (logsTabContainer) {
-        Logs.renderRecent(logsTabContainer, 50);
+        const filterModule = document.getElementById('audit-filter-module');
+        const filterValue = filterModule ? filterModule.value : '';
+        
+        if (filterValue) {
+          // Filtered view
+          const filtered = Logs.getFiltered({ actor_role: filterValue });
+          logsTabContainer.innerHTML = '';
+          if (filtered.length === 0) {
+            logsTabContainer.innerHTML = '<div class="log-entry empty">No entries for this filter</div>';
+          } else {
+            filtered.reverse().forEach(entry => {
+              const logEl = document.createElement('div');
+              logEl.className = `log-entry posture-${entry.posture.toLowerCase()}`;
+              const timeStr = Utils.formatTimestamp(entry.timestamp);
+              const timeAgo = Utils.formatTimeAgo(entry.timestamp);
+              logEl.innerHTML = `
+                <div class="log-header">
+                  <span class="log-time" title="${timeStr}">${timeAgo}</span>
+                  <span class="log-role">${entry.actor_role}</span>
+                  <span class="log-posture posture-badge posture-${entry.posture.toLowerCase()}">${entry.posture}</span>
+                </div>
+                <div class="log-action">${escapeHtml(entry.action)}</div>
+                <div class="log-policy">Policy: ${entry.policy_pack}</div>
+                <div class="log-hash" title="Hash: ${entry.hash_current}">${entry.hash_current.substring(0, 8)}...</div>
+              `;
+              logsTabContainer.appendChild(logEl);
+            });
+          }
+        } else {
+          Logs.renderRecent(logsTabContainer, 50);
+        }
       }
     }
   }

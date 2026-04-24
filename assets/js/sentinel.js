@@ -261,13 +261,23 @@ const Sentinel = (function () {
         risk_score: riskScore
       };
     } else {
-      // Handle directly without TITAN
+      // Handle directly without TITAN — provide helpful fallback
+      let response = 'Command processed by Sentinel';
+      if (intent === 'GENERAL_QUERY') {
+        response = `Command not recognized: "${sanitizedCommand.substring(0, 50)}". Try: threat scan [target], system integrity check, compliance check [action], decision stress test [plan], red team scenario [id], export audit, open titan, or help.`;
+      } else if (intent === 'POLICY_VIEW') {
+        response = 'Policy information loaded. See the Policy tab for details.';
+      } else if (intent === 'LOG_VIEW') {
+        response = 'Audit logs available. See the Logs tab for full details.';
+      } else if (intent === 'LOCKDOWN') {
+        response = 'Lockdown command received. Use the Emergency Lockdown toggle for manual control.';
+      }
       return {
         success: true,
         routed_via: 'SENTINEL',
         intent,
         risk_score: riskScore,
-        response: 'Command processed by Sentinel'
+        response
       };
     }
   }

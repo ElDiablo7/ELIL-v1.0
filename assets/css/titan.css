@@ -1221,3 +1221,111 @@ body {
     justify-content: center;
   }
 }
+
+/* ===================== */
+/* PHASE 3: ERROR OVERLAY */
+/* ===================== */
+
+.error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 10000;
+  padding-top: 80px;
+}
+
+.error-overlay-content {
+  background: var(--surface-glass);
+  border: 1px solid var(--amber);
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(255, 187, 0, 0.15);
+}
+
+.error-overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 187, 0, 0.2);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  color: var(--amber);
+  letter-spacing: 1px;
+}
+
+.error-overlay-close {
+  background: transparent;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.error-overlay-close:hover {
+  background: rgba(255, 187, 0, 0.15);
+}
+
+.error-overlay-body {
+  padding: 16px 20px;
+}
+
+.error-overlay-msg {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.error-overlay-note {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: var(--silver-dim);
+  font-style: italic;
+}
+
+/* ========================= */
+/* PHASE 4: AUDIT VIEWER     */
+/* ========================= */
+
+.audit-warning-banner {
+  background: rgba(255, 187, 0, 0.08);
+  border: 1px solid rgba(255, 187, 0, 0.25);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: var(--amber);
+  line-height: 1.5;
+}
+
+.audit-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0 14px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 12px;
+}
+
+.audit-controls .demo-btn {
+  font-size: 11px;
+  padding: 6px 12px;
+}
