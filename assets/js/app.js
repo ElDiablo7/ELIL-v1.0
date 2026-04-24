@@ -224,6 +224,7 @@ const App = (function () {
       guardian: 'guardian.html',
       forge: 'forge.html',
       venus: 'venus.html',
+      laser: 'laser.html',
       titan: 'titan.html'
     };
     Object.entries(modulePages).forEach(([id, page]) => {
