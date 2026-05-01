@@ -1,0 +1,62 @@
+[
+  {
+    "name": "SENTINEL",
+    "codename": "The Governor",
+    "status": "active",
+    "description": "Security governance overlay. Enforces policy, manages access, routes commands through audit chain.",
+    "production_ready": true,
+    "risk_level": "low",
+    "route": "/api/command",
+    "required_role": "OPERATOR"
+  },
+  {
+    "name": "TITAN",
+    "codename": "The Nucleus",
+    "status": "active",
+    "description": "Tactical risk analysis engine. Performs threat assessment, adversarial reasoning, and risk scoring.",
+    "production_ready": true,
+    "risk_level": "low",
+    "route": "/api/command",
+    "required_role": "OPERATOR"
+  },
+  {
+    "name": "GUARDIAN",
+    "codename": "The Shield",
+    "status": "roadmap",
+    "description": "Defensive perimeter oversight and vulnerability shielding. Currently a placeholder — no active defensive telemetry connected.",
+    "production_ready": false,
+    "risk_level": "medium",
+    "route": "/guardian.html",
+    "required_role": "ADMIN"
+  },
+  {
+    "name": "FORGE",
+    "codename": "The Smith",
+    "status": "roadmap",
+    "description": "Logic synthesis and structural integrity maintenance. Currently a placeholder — no active orchestration logic connected.",
+    "production_ready": false,
+    "risk_level": "medium",
+    "route": "/forge.html",
+    "required_role": "ADMIN"
+  },
+  {
+    "name": "VENUS",
+    "codename": "The Scout",
+    "status": "roadmap",
+    "description": "External intelligence reconnaissance. Currently a placeholder — no active OSINT connectors. All recon must be ethical and permission-based.",
+    "production_ready": false,
+    "risk_level": "high",
+    "route": "/venus.html",
+    "required_role": "ADMIN"
+  },
+  {
+    "name": "LASER",
+    "codename": "Override Protocol",
+    "status": "restricted",
+    "description": "High-privilege override protocol. Locked unless explicit OWNER approval is granted. Requires production safety flag.",
+    "production_ready": false,
+    "risk_level": "critical",
+    "route": "/laser.html",
+    "required_role": "OWNER"
+  }
+]

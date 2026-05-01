@@ -1,9 +1,25 @@
 {
-  "name": "enlil-v1.0",
+  "name": "enlil-v1",
   "version": "1.0.0",
+  "description": "ENLIL™ — GRACE-X AI™ Sovereign AI Governance & Security Console",
   "private": true,
+  "main": "server.js",
   "scripts": {
-    "build": "echo 'Static site - no build'",
-    "start": "npx serve -s . -l ${PORT:-3000}"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node tests/run.js",
+    "smoke": "node tests/smoke.js",
+    "verify:audit": "node scripts/verify-audit.js",
+    "lint": "echo 'Lint pass — no external linter configured'"
+  },
+  "keywords": ["security", "governance", "ai", "sentinel", "titan"],
+  "author": "Zachary Charles Anthony Crockett",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0"
   }
 }

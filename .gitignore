@@ -25,8 +25,14 @@ archive/
 # Logs
 *.log
 
-# Node (for Render / npm)
+# Node
 node_modules/
+
+# Environment (NEVER commit real secrets)
+.env
+
+# Audit data (server-generated, do not commit)
+data/audit_log.json
 
 # Backup / Restore Points
 ENLIL-v1.0_AUDITED_PATCH_1_RESTORE_POINT/
