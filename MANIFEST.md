@@ -1,6 +1,6 @@
 # ENLIL™ AI Governance Console — Project Manifest
 
-> **Build:** 1.0.1-hardened  
+> **Build:** 1.0.2-vertical  
 > **Updated:** 2026-05-01
 
 ---

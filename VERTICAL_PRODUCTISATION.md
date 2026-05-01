@@ -1,7 +1,7 @@
 # ENLIL™ AI Governance Console — Vertical Productisation
 
 > **Document:** Commercial Vertical Strategy  
-> **Build:** 1.0.1-hardened  
+> **Build:** 1.0.2-vertical  
 > **Author:** Zachary Charles Anthony Crockett
 
 ---

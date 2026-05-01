@@ -1,4 +1,4 @@
-# ENLIL™ v1.0 — Test Plan
+# ENLIL™ AI Governance Console v1.0.2-vertical — Test Plan
 
 ## Test Framework
 Lightweight Node.js test runner (no external dependencies required).

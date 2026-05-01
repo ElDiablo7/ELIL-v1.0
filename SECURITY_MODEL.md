@@ -1,4 +1,4 @@
-# ENLIL™ v1.0 — Security Model
+# ENLIL™ AI Governance Console v1.0.2-vertical — Security Model
 
 ## Architecture Overview
 
