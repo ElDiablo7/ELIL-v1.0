@@ -29,6 +29,7 @@
 | `server/services/audit.js` | Tamper-evident audit logging (SHA-256 + HMAC) |
 | `server/services/sentinel.js` | SENTINEL™ server-side policy engine |
 | `server/services/titan.js` | TITAN™ server-side risk engine |
+| `server/services/vertical.js` | Vertical Policy Service (runtime switching, 5 packs) |
 
 ## Documentation
 
@@ -55,7 +56,7 @@
 
 | File | Purpose |
 |------|---------|
-| `tests/run.js` | 32 automated tests |
+| `tests/run.js` | 40 automated tests |
 | `tests/smoke.js` | Quick smoke test |
 | `scripts/verify-audit.js` | Standalone audit chain verification |
 
@@ -92,9 +93,9 @@ Legacy pre-backend documentation preserved for reference. These documents descri
 
 ---
 
-**Total server services:** 4  
+**Total server services:** 5  
 **Total frontend modules:** 11  
 **Total HTML pages:** 6  
-**Total documentation files:** 17  
-**Total automated tests:** 32  
+**Total documentation files:** 19  
+**Total automated tests:** 40  
 **Total vertical policy packs:** 5

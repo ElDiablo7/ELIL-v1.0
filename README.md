@@ -121,7 +121,7 @@ Browser ──HTTP──▶ Express Server (ENLIL™ AI Governance Console)
 ## Testing
 
 ```bash
-# Run 32 automated tests (requires server running)
+# Run 40 automated tests (requires server running)
 npm test
 
 # Quick smoke test
@@ -166,6 +166,42 @@ npm run verify:audit
 | XSS/SQL injection/shell injection detection | ✅ |
 | 40 automated tests, all passing | ✅ |
 | Compliance mapping to 5 frameworks | ✅ |
+
+---
+
+## Vertical Governance Mode
+
+ENLIL™ supports **vertical policy packs** — sector-specific governance configurations that tailor SENTINEL™ policy enforcement, risk thresholds, and compliance alignment for different industries.
+
+### What Are Vertical Packs?
+
+Vertical packs are JSON-based policy configurations that define restricted actions, compliance frameworks, escalation rules, and two-person rule requirements for a specific industry. They are loaded at runtime and enforced by the SENTINEL™ engine.
+
+### Available Verticals
+
+| Key | Name | Focus |
+|---|---|---|
+| `ai_agency` | AI Agency Governance | Prompt injection, model misuse, client audit trails |
+| `legal_professional` | Legal / Professional Services | Privilege, confidentiality, regulatory readiness |
+| `construction_siteops` | Construction / SiteOps | Safety-critical oversight, incident accountability |
+| `film_production` | Film Production Safety | On-set compliance, IP protection, content governance |
+| `public_sector` | Public Sector Pilot | EU AI Act alignment, transparency, two-person rule |
+
+### How the Active Vertical Affects SENTINEL™
+
+- All SENTINEL™ decisions include `vertical`, `policyPackName`, `policyFocus`, and `matchedVerticalRules` fields
+- Vertical-restricted actions elevate severity from LOW → MEDIUM and trigger escalation
+- Two-person rule markers are included when enabled by the active vertical
+- Only ADMIN and OWNER roles can change the active vertical
+
+### What Is Logged to Audit
+
+- Every vertical change is recorded as a `VERTICAL_CHANGE` event in the tamper-evident audit chain
+- The audit entry includes the previous and new vertical key, the actor, and a timestamp
+
+### Limitation
+
+> Vertical packs are **rule/config based governance profiles**, not independently certified compliance engines. They configure the SENTINEL™ policy engine for sector-appropriate behaviour but do not constitute formal compliance certification for any regulatory framework.
 
 ---
 

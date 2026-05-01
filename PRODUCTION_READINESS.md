@@ -42,7 +42,7 @@
 | Input Validation | 8/10 | Size limits, type checking, malformed JSON |
 | Secret Management | 8/10 | Env-based, startup validation; HSM not integrated |
 | Error Handling | 9/10 | Consistent format, production stack traces suppressed |
-| Test Coverage | 8/10 | 32 tests covering critical paths |
+| Test Coverage | 8/10 | 40 tests covering critical paths (incl. 8 vertical governance) |
 | Documentation | 9/10 | Legally safe, no overclaims |
 | Deployment | 8/10 | Render-ready, Docker documented |
 | Infrastructure | 5/10 | No HTTPS, no database, no WAF |
@@ -55,7 +55,7 @@ The product can be demonstrated to investors with these truthful statements:
 - "The audit chain is tamper-evident with cryptographic verification"
 - "The architecture is mapped to NIST AI RMF, EU AI Act, ISO 42001, and SOC 2 controls"
 - "Production mode refuses to start without properly configured secrets"
-- "32 automated tests verify security behaviour"
+- "40 automated tests verify security behaviour including vertical governance"
 - "Additional modules are on the roadmap for defensive telemetry and AI integration"
 
 ## What NOT to Claim
@@ -66,6 +66,20 @@ The product can be demonstrated to investors with these truthful statements:
 - Do not claim TITAN uses AI/ML (it uses rule-based analysis)
 - Do not use "tamper-proof" (use "tamper-evident")
 - Do not claim "military-grade" or "unhackable"
+
+## Remaining Blockers Before Full Enterprise Production
+
+| Blocker | Detail |
+|---|---|
+| Independent penetration test | Not yet commissioned |
+| PostgreSQL audit storage | Currently file-based; append-only database required |
+| MFA (TOTP/WebAuthn) | Single-factor only; TOTP architecture ready |
+| HTTPS/TLS deployment | Requires reverse proxy (nginx, Cloudflare, or cloud load balancer) |
+| bcrypt/Argon2 password hashing | Currently SHA-256 with salt; upgrade recommended |
+| Session revocation / token blacklist | JWT logout is advisory only; blacklist not implemented |
+| External compliance review | No independent audit or certification completed |
+
+---
 
 ## Production Deployment Checklist
 
