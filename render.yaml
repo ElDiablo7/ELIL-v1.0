@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: enlil-v1
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ENLIL_MODE
+        value: demo
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: AUDIT_SECRET
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: AUDIT_LOG_MODE
+        value: file
+      - key: TITAN_PROVIDER
+        value: rule-based

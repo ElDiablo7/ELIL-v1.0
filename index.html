@@ -262,6 +262,13 @@
   <script src="assets/js/logs.js?v=4"></script>
   <script src="assets/js/verification.js?v=4"></script>
   <script src="assets/js/app.js?v=4"></script>
+  <script src="assets/js/api_client.js?v=1"></script>
+  <script>
+    // Initialize API client when DOM is ready
+    if (typeof EnlilAPI !== 'undefined') {
+      EnlilAPI.init();
+    }
+  </script>
 
   <!-- Legal Footer -->
   <footer class="legal-footer">
