@@ -1,8 +1,8 @@
 'use strict';
 
 /**
- * ENLIL™ v1.0 — Production Server
- * Backend-governed security console with Express
+ * ENLIL™ AI Governance Console — Production Server
+ * Backend-governed AI governance, risk and audit platform
  * Copyright © Zachary Charles Anthony Crockett. All rights reserved.
  */
 
@@ -164,8 +164,8 @@ app.get('/api/health', (req, res) => {
   const response = {
     ok: true,
     status: 'operational',
-    version: '1.0.0-hardened',
-    product: 'ENLIL™',
+    version: '1.0.1-hardened',
+    product: 'ENLIL™ AI Governance Console',
     mode: ENLIL_MODE,
     timestamp: new Date().toISOString(),
     modules: modulesSummary
@@ -384,10 +384,10 @@ app.use((err, req, res, _next) => {
 // ---------------------
 app.listen(PORT, () => {
   console.log('');
-  console.log('╔══════════════════════════════════════════╗');
-  console.log('║  ENLIL™ v1.0 — Production Server        ║');
-  console.log('║  GRACE-X AI™ Security Console            ║');
-  console.log('╚══════════════════════════════════════════╝');
+  console.log('╔══════════════════════════════════════════════════╗');
+  console.log('║  ENLIL™ AI Governance Console v1.0.1-hardened    ║');
+  console.log('║  GRACE-X AI™ — Governance · Risk · Audit         ║');
+  console.log('╚══════════════════════════════════════════════════╝');
   console.log(`  Mode:    ${ENLIL_MODE.toUpperCase()}`);
   console.log(`  Port:    ${PORT}`);
   console.log(`  Env:     ${NODE_ENV}`);

@@ -1,4 +1,48 @@
-# ENLIL™ v1.0 — Changelog
+# ENLIL™ AI Governance Console — Changelog
+
+## [1.0.1-vertical] — 2026-05-01
+
+### Vertical Productisation Pass — AI Governance Console
+
+#### Product Branding
+- Rebranded to **ENLIL™ AI Governance Console** across all visible surfaces
+- Updated `package.json` name to `enlil-ai-governance-console`, version `1.0.1`
+- Updated health endpoint to return `version: 1.0.1-hardened`, `product: ENLIL™ AI Governance Console`
+- Updated server startup banner with new product name
+- Updated `index.html` title, meta description, and UI text to reflect governance/risk/audit positioning
+- Updated audit log warning banner to reflect server-side hash chain (not localStorage)
+
+#### Audit Verification Fix
+- Fixed `scripts/verify-audit.js` to load `.env` via dotenv (matching server behaviour)
+- Audit verify script now correctly skips HMAC verification when no `AUDIT_SECRET` is set (with clear warning)
+- When `AUDIT_SECRET` IS set, script verifies both hash chain AND HMAC signatures
+- Backend `/api/audit/verify` and `npm run verify:audit` now produce consistent results
+
+#### Vertical Policy Packs
+- Created `assets/data/vertical_packs.json` with 5 vertical policy configurations:
+  - **AI Agency** — prompt injection, model misuse, client audit trails
+  - **Legal / Professional Services** — privilege, confidentiality, regulatory readiness
+  - **Construction / SiteOps** — safety-critical oversight, incident accountability
+  - **Film Production Safety** — on-set compliance, IP protection, content governance
+  - **Public Sector Pilot** — EU AI Act alignment, transparency, two-person rule
+
+#### Documentation
+- Created `VERTICAL_PRODUCTISATION.md` — commercial vertical strategy
+- Rewrote `README.md` — AI governance console branding, accurate feature descriptions
+- Rewrote `USER_MANUAL.md` — removed browser-only/no-backend claims, reflects backend architecture
+- Rewrote `FINAL_STATUS.md` — removed contradictory "client-side only" claims
+- Rewrote `MANIFEST.md` — reflects current server/frontend/test structure
+- Updated `PRODUCTION_READINESS.md` — v1.0.1-hardened branding
+- Updated `.env.example` — comprehensive instructions for all environment variables
+- Archived 10 legacy pre-backend docs to `docs/legacy/`
+- Removed `ENLIL-v1.0_PATCH_2_PHASED_FINISH.zip` development artefact
+
+#### Test Suite
+- Updated test version check to verify exact `1.0.1-hardened` string
+- Updated test suite banner to match product name
+- All 32 tests pass with new version string
+
+---
 
 ## [1.0.1-hardened] — 2026-05-01
 

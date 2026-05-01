@@ -1,0 +1,196 @@
+{
+  "ai_agency": {
+    "name": "AI Agency Governance",
+    "vertical": "ai_agency",
+    "version": "1.0",
+    "description": "Policy configuration for AI agencies, development studios, and SaaS AI providers. Focuses on prompt injection prevention, model misuse detection, and client audit trails.",
+    "posture_thresholds": {
+      "GREEN": 0,
+      "AMBER": 25,
+      "RED": 50,
+      "BLACK": 75
+    },
+    "allowed_actions": [
+      "threat_scan",
+      "system_integrity_check",
+      "compliance_check",
+      "decision_stress_test",
+      "red_team_scenario",
+      "view_logs",
+      "policy_view"
+    ],
+    "restricted_actions": [
+      "direct_titan_access",
+      "policy_modification",
+      "log_deletion",
+      "system_config_change"
+    ],
+    "compliance_frameworks": ["NIST AI RMF", "EU AI Act", "ISO 42001"],
+    "escalation_rules": {
+      "high_risk": "immediate_admin_notification",
+      "integrity_breach": "lockdown_and_audit",
+      "policy_violation": "log_and_alert"
+    },
+    "two_person_rule": {
+      "enabled": false,
+      "actions": []
+    }
+  },
+  "legal_professional": {
+    "name": "Legal / Professional Services",
+    "vertical": "legal_professional",
+    "version": "1.0",
+    "description": "Policy configuration for law firms, accounting firms, and professional services. Prioritises confidentiality, privilege protection, and regulatory audit readiness.",
+    "posture_thresholds": {
+      "GREEN": 0,
+      "AMBER": 20,
+      "RED": 45,
+      "BLACK": 70
+    },
+    "allowed_actions": [
+      "threat_scan",
+      "system_integrity_check",
+      "compliance_check",
+      "view_logs",
+      "policy_view"
+    ],
+    "restricted_actions": [
+      "direct_titan_access",
+      "policy_modification",
+      "log_deletion",
+      "system_config_change",
+      "decision_stress_test",
+      "red_team_scenario"
+    ],
+    "compliance_frameworks": ["SOC 2", "NIST AI RMF", "ISO 42001"],
+    "escalation_rules": {
+      "high_risk": "immediate_lockdown_and_audit",
+      "integrity_breach": "lockdown_audit_and_escalate",
+      "policy_violation": "log_alert_and_escalate"
+    },
+    "two_person_rule": {
+      "enabled": true,
+      "actions": ["audit_export", "policy_modification", "log_deletion"]
+    }
+  },
+  "construction_siteops": {
+    "name": "Construction / SiteOps",
+    "vertical": "construction_siteops",
+    "version": "1.0",
+    "description": "Policy configuration for construction firms, engineering consultancies, and site operations. Emphasises safety-critical decision oversight and incident accountability.",
+    "posture_thresholds": {
+      "GREEN": 0,
+      "AMBER": 20,
+      "RED": 40,
+      "BLACK": 65
+    },
+    "allowed_actions": [
+      "threat_scan",
+      "system_integrity_check",
+      "compliance_check",
+      "view_logs",
+      "policy_view"
+    ],
+    "restricted_actions": [
+      "direct_titan_access",
+      "policy_modification",
+      "log_deletion",
+      "system_config_change",
+      "red_team_scenario"
+    ],
+    "compliance_frameworks": ["ISO 45001", "NIST AI RMF"],
+    "escalation_rules": {
+      "high_risk": "immediate_lockdown_and_audit",
+      "integrity_breach": "lockdown_audit_and_escalate",
+      "policy_violation": "log_and_alert",
+      "safety_critical": "immediate_halt_and_review"
+    },
+    "two_person_rule": {
+      "enabled": true,
+      "actions": ["system_config_change", "policy_modification", "lockdown_override"]
+    }
+  },
+  "film_production": {
+    "name": "Film Production Safety",
+    "vertical": "film_production",
+    "version": "1.0",
+    "description": "Policy configuration for film studios, production companies, and VFX houses. Covers on-set safety compliance, AI content governance, and IP protection.",
+    "posture_thresholds": {
+      "GREEN": 0,
+      "AMBER": 25,
+      "RED": 50,
+      "BLACK": 75
+    },
+    "allowed_actions": [
+      "threat_scan",
+      "system_integrity_check",
+      "compliance_check",
+      "view_logs",
+      "policy_view"
+    ],
+    "restricted_actions": [
+      "direct_titan_access",
+      "policy_modification",
+      "log_deletion",
+      "system_config_change",
+      "red_team_scenario"
+    ],
+    "compliance_frameworks": ["EU AI Act", "ISO 42001"],
+    "escalation_rules": {
+      "high_risk": "immediate_admin_notification",
+      "integrity_breach": "lockdown_and_audit",
+      "policy_violation": "log_and_alert",
+      "ip_risk": "lockdown_and_legal_review"
+    },
+    "two_person_rule": {
+      "enabled": false,
+      "actions": []
+    }
+  },
+  "public_sector": {
+    "name": "Public Sector Pilot",
+    "vertical": "public_sector",
+    "version": "1.0",
+    "description": "Policy configuration for government agencies, local authorities, and public bodies. Strict transparency, two-person rule, and EU AI Act alignment.",
+    "posture_thresholds": {
+      "GREEN": 0,
+      "AMBER": 15,
+      "RED": 35,
+      "BLACK": 60
+    },
+    "allowed_actions": [
+      "threat_scan",
+      "system_integrity_check",
+      "compliance_check",
+      "decision_stress_test",
+      "view_logs",
+      "policy_view"
+    ],
+    "restricted_actions": [
+      "direct_titan_access",
+      "policy_modification",
+      "log_deletion",
+      "system_config_change",
+      "red_team_scenario",
+      "audit_export"
+    ],
+    "compliance_frameworks": ["EU AI Act", "NIST AI RMF", "ISO 42001", "SOC 2"],
+    "escalation_rules": {
+      "high_risk": "immediate_lockdown_and_audit",
+      "integrity_breach": "lockdown_audit_and_escalate",
+      "policy_violation": "log_alert_and_escalate",
+      "any_anomaly": "log_and_review"
+    },
+    "two_person_rule": {
+      "enabled": true,
+      "actions": [
+        "policy_modification",
+        "lockdown_override",
+        "audit_export",
+        "system_config_change",
+        "sensitive_data_access",
+        "direct_titan_access"
+      ]
+    }
+  }
+}

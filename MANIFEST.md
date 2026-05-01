@@ -1,6 +1,7 @@
-# ENLIL™ v1.0 — Project Manifest
+# ENLIL™ AI Governance Console — Project Manifest
 
-> **Updated:** 2026-04-24 (Patch 2 Phased Finish)
+> **Build:** 1.0.1-hardened  
+> **Updated:** 2026-05-01
 
 ---
 
@@ -8,77 +9,92 @@
 
 | File | Type | Purpose |
 |------|------|---------|
+| `server.js` | JS | Express backend (security middleware, routing, error handling) |
 | `index.html` | HTML | Main SENTINEL console entry point |
 | `titan.html` | HTML | TITAN dashboard (popup window) |
+| `guardian.html` | HTML | GUARDIAN module (roadmap placeholder) |
+| `forge.html` | HTML | FORGE module (roadmap placeholder) |
+| `venus.html` | HTML | VENUS module (roadmap placeholder) |
+| `laser.html` | HTML | LASER module (restricted placeholder) |
 | `package.json` | JSON | npm project metadata |
-| `.gitignore` | Config | Git ignore rules |
+| `.env.example` | Config | Environment variable template with instructions |
+| `render.yaml` | Config | Render deployment configuration |
+
+## Server (`server/`)
+
+| File | Purpose |
+|------|---------|
+| `server/middleware/auth.js` | JWT verification, RBAC enforcement |
+| `server/services/auth.js` | Authentication service (demo/production mode) |
+| `server/services/audit.js` | Tamper-evident audit logging (SHA-256 + HMAC) |
+| `server/services/sentinel.js` | SENTINEL™ server-side policy engine |
+| `server/services/titan.js` | TITAN™ server-side risk engine |
 
 ## Documentation
 
 | File | Purpose |
 |------|---------|
-| `README.md` | Project overview, quick start, commands |
-| `USER_MANUAL.md` | Operator instructions (non-technical) |
+| `README.md` | Product overview, quick start, API reference |
+| `USER_MANUAL.md` | Operator instructions |
 | `DEVELOPER_HANDOVER.md` | Technical architecture & function reference |
-| `SECURITY_NOTES.md` | Security assessment & auth limitations |
-| `BACKEND_HARDENING_PLAN.md` | Production backend roadmap |
-| `CHANGELOG_ENLIL_PATCH_2.md` | Patch 2 change log |
+| `DEPLOYMENT_GUIDE.md` | Local + production deployment instructions |
+| `SECURITY_MODEL.md` | 6-layer security architecture |
+| `COMPLIANCE_MAPPING.md` | NIST AI RMF, EU AI Act, ISO 42001, SOC 2 alignment |
+| `INVESTOR_TECHNICAL_SUMMARY.md` | Investor-safe technical overview |
+| `VERTICAL_PRODUCTISATION.md` | Commercial vertical strategy |
+| `PRODUCTION_READINESS.md` | Production readiness assessment |
+| `FINAL_STATUS.md` | Current build status and classification |
+| `TEST_PLAN.md` | Complete test coverage documentation |
+| `CHANGELOG.md` | Full change history |
+| `RELEASE_NOTES.md` | Release summary |
+| `ENLIL_V1_PRODUCTION_HARDENING_REPORT.md` | Production hardening report |
 | `MANIFEST.md` | This file — project inventory |
-| `TEST_REPORT_PHASE_3.md` | Phase 3-5 test results |
-| `FINAL_AUDIT_REPORT.md` | Project completion audit |
-| `FINAL_STATUS.md` | Project completion summary |
-| `SMOKE_TEST_CHECKLIST.md` | Post-patch verification checklist |
-| `AUDIT_LOG_PHASE_0.md` | Baseline issues (Phase 0) |
-| `README_TITAN_SENTINEL.md` | Legacy technical README |
+| `VERSION.md` | Current version number |
 
-## JavaScript Modules (`assets/js/`)
+## Tests & Scripts
+
+| File | Purpose |
+|------|---------|
+| `tests/run.js` | 32 automated tests |
+| `tests/smoke.js` | Quick smoke test |
+| `scripts/verify-audit.js` | Standalone audit chain verification |
+
+## Frontend (`assets/js/`)
 
 | File | Module | Purpose |
 |------|--------|---------|
 | `app.js` | `App` | Main controller, UI, tab switching, event handling |
-| `sentinel.js` | `Sentinel` | Policy governor, command routing, auth |
-| `titan.js` | `Titan` | Threat analysis, risk scoring, red team |
+| `api_client.js` | `EnlilAPI` | Backend API bridge (auto health monitoring) |
+| `sentinel.js` | `Sentinel` | Client-side policy governor (offline fallback) |
+| `titan.js` | `Titan` | Client-side threat analysis (offline fallback) |
 | `policy.js` | `Policy` | Policy pack management |
-| `logs.js` | `Logs` | Audit chain logging, export, verification |
+| `logs.js` | `Logs` | Client-side audit chain logging |
 | `training.js` | `Training` | Training scenarios and simulations |
-| `utils.js` | `Utils` | Shared utilities (EventEmitter, Storage, formatters) |
-| `core_access.js` | `CoreAccess` | Core access control patterns |
+| `utils.js` | `Utils` | Shared utilities (EventEmitter, Storage) |
+| `core_access.js` | `CoreAccess` | Core access control |
 | `grace_x_voice.js` | `GraceX_Voice` | Voice interface (optional, stub) |
-| `verification.js` | `Verification` | Hash verification (optional, advisory) |
+| `verification.js` | `Verification` | Hash verification (optional) |
 
-## CSS (`assets/css/`)
-
-| File | Purpose |
-|------|---------|
-| `titan.css` | All styles — layout, components, responsive, animations |
-
-## Data & Config (`assets/data/`)
+## Data & Config
 
 | File | Purpose |
 |------|---------|
-| `config.default.json` | Default system configuration (DEMO_MODE, auth, logging) |
-| `threat_taxonomy.json` | TITAN threat pattern database |
-| `red_team_scenarios.json` | Red team scenario definitions |
-| `policy_packs/` | Directory of policy pack JSON files |
-| `training/` | Directory of training scenario data |
+| `config/modules.json` | Module manifest with status labels |
+| `assets/data/config.default.json` | Default system configuration |
+| `assets/data/threat_taxonomy.json` | TITAN threat pattern database |
+| `assets/data/redteam_scenarios.json` | Red team scenario definitions |
+| `assets/data/policy_packs.json` | Built-in policy pack definitions |
+| `assets/data/vertical_packs.json` | Vertical-specific policy packs (5 verticals) |
 
-## Assets (`assets/`)
+## Archive (`docs/legacy/`)
 
-| Directory | Contents |
-|-----------|----------|
-| `assets/img/` | Icons, logos (if present) |
-| `assets/audio/` | Audio files (if present) |
-
-## Backup (excluded from git)
-
-| Directory | Purpose |
-|-----------|---------|
-| `ENLIL-v1.0_AUDITED_PATCH_1_RESTORE_POINT/` | Pre-patch backup (gitignored) |
+Legacy pre-backend documentation preserved for reference. These documents describe the original browser-only prototype and are **not current**.
 
 ---
 
-**Total JS modules:** 10  
-**Total CSS files:** 1  
-**Total HTML pages:** 2  
-**Total documentation files:** 11  
-**Total data/config files:** 3+ (plus policy pack & training directories)
+**Total server services:** 4  
+**Total frontend modules:** 11  
+**Total HTML pages:** 6  
+**Total documentation files:** 17  
+**Total automated tests:** 32  
+**Total vertical policy packs:** 5

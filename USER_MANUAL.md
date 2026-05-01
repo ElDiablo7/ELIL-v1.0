@@ -1,34 +1,53 @@
-# ENLIL™ v1.0 — User Manual
+# ENLIL™ AI Governance Console — User Manual
 
-> **For:** Operators, Demo Viewers, Non-Technical Users  
-> **Build:** ENLIL™ v1.0 Patch 2  
+> **For:** Operators, Demo Viewers, Administrators  
+> **Build:** 1.0.1-hardened  
 > **Author:** Zachary Charles Anthony Crockett
 
 ---
 
 ## What Is ENLIL™?
 
-ENLIL™ is a **prototype security-governance console** that demonstrates how AI systems can be monitored, constrained, and audited in real time. It runs entirely in your browser — no backend server, no cloud connection, no data leaves your machine.
+ENLIL™ is an **AI governance, risk and audit console** that provides real-time threat assessment, policy enforcement, tamper-evident audit logging, and operator oversight. All security decisions are enforced server-side via a Node.js/Express backend.
 
-It has five integrated AI modules:
-- **SENTINEL™** — The Governor. Manages posture, routes all commands, and enforces policy.
-- **TITAN™** — The Nucleus. Performs deep threat analysis and tactical reasoning.
-- **GUARDIAN™** — The Shield. Oversees defensive perimeters and logic shielding.
-- **FORGE™** — The Smith. Maintains logic synthesis and core structural integrity.
-- **VENUS™** — The Scout. Reconnaissance of external intelligence and instruction vectors.
+It has six integrated modules:
+- **SENTINEL™** — The Governor. Manages posture, routes all commands, and enforces policy. *(Active)*
+- **TITAN™** — The Nucleus. Performs deep threat analysis and tactical reasoning. *(Active)*
+- **GUARDIAN™** — The Shield. Oversees defensive perimeters and logic shielding. *(Roadmap)*
+- **FORGE™** — The Smith. Maintains logic synthesis and core structural integrity. *(Roadmap)*
+- **VENUS™** — The Scout. Reconnaissance of external intelligence and instruction vectors. *(Roadmap)*
+- **LASER™** — Override Protocol. High-privilege override protocol. *(Restricted)*
 
 ---
 
-## How to Open
+## How to Start
 
-1. Open `index.html` in your web browser (Chrome, Edge, or Firefox recommended).
-2. If a security modal appears, click **Acknowledge** to proceed.
-3. You'll see the main SENTINEL console with the Overview tab active.
+```bash
+# 1. Install dependencies
+npm install
 
-> **Note:** If running from a local file (`file://` protocol), some features like config loading may use fallback defaults. For full functionality, serve via a local HTTP server:
-> ```
-> npx http-server . -p 8088
-> ```
+# 2. Copy environment config (optional for demo)
+cp .env.example .env
+
+# 3. Start the server
+npm start
+
+# 4. Open in browser
+# http://localhost:3000
+```
+
+### Demo Credentials
+
+When `ENLIL_MODE=demo` (default), use these credentials:
+
+| Username | Password | Role |
+|---|---|---|
+| owner | enlil-owner-2026 | OWNER |
+| admin | enlil-admin-2026 | ADMIN |
+| operator | enlil-operator | OPERATOR |
+| viewer | enlil-viewer | VIEWER |
+
+> **Note:** Demo credentials are blocked in production mode (`ENLIL_MODE=production`).
 
 ---
 
@@ -36,9 +55,9 @@ It has five integrated AI modules:
 
 | Area | Location | Purpose |
 |------|----------|---------|
-| **Left Panel** | Left side | Mode selector (SENTINEL/TITAN), tab navigation |
+| **Left Panel** | Left side | Mode selector (SENTINEL/TITAN/GUARDIAN/FORGE/VENUS/LASER), tab navigation |
 | **Center Panel** | Middle | Command input, output console, demo commands |
-| **Right Panel** | Right side | Security posture, current status, policy pack |
+| **Right Panel** | Right side | Security posture, current status, policy pack, recent events |
 
 ---
 
@@ -46,9 +65,10 @@ It has five integrated AI modules:
 
 ### Typing Commands
 
-1. Click the command input box at the top (shows placeholder text with examples).
-2. Type a command.
-3. Press **Enter** or click **ROUTE VIA SENTINEL**.
+1. Log in with valid credentials.
+2. Click the command input box at the top.
+3. Type a command and press **Enter** or click **Route via Sentinel**.
+4. All commands are routed through the backend SENTINEL™ policy engine and TITAN™ risk engine.
 
 ### Available Commands
 
@@ -63,21 +83,16 @@ It has five integrated AI modules:
 | `open titan` | Open the TITAN dashboard in a new window |
 | `help` | Open the help overlay |
 
-### Quick Demo Buttons
-
-On the Overview tab, you'll find **Quick Demo Commands** buttons that run these commands with one click.
-
 ---
 
 ## Understanding the Output
 
 Each command produces an **output card** showing:
 
-- **Title** — "COMMAND ROUTED VIA TITAN" or "COMMAND ROUTED VIA SENTINEL"
-- **Summary** — Brief analysis result
-- **Risk Score** — 0 (safe) to 100 (critical)
-- **Findings** — Number of issues detected
-- **Recommended Controls** — Suggested security measures
+- **SENTINEL™ Decision** — ALLOW / BLOCK / REVIEW with severity level
+- **TITAN™ Risk Score** — 0 (LOW) to 100 (CRITICAL)
+- **Risk Level** — LOW (0–24) · MEDIUM (25–49) · HIGH (50–74) · CRITICAL (75–100)
+- **Categories** — Risk categories detected
 - **Posture** — Current security posture after the command
 
 ### Security Posture Colors
@@ -91,14 +106,14 @@ Each command produces an **output card** showing:
 
 ---
 
-## Emergency Lockdown
+## Role-Based Access
 
-The **EMERGENCY LOCKDOWN** toggle is in the center panel. When activated:
-
-- All commands are blocked
-- Posture changes to RED
-- A PIN is required to unlock (`0000` in demo mode)
-- The event is logged in the audit chain
+| Role | Level | What You Can Do |
+|------|-------|----------------|
+| OWNER | 4 | Full access including audit export and LASER |
+| ADMIN | 3 | Commands, audit view, policy management |
+| OPERATOR | 2 | Approved commands, limited log access |
+| VIEWER | 1 | Read-only (health and module status only) |
 
 ---
 
@@ -107,40 +122,26 @@ The **EMERGENCY LOCKDOWN** toggle is in the center panel. When activated:
 ### Viewing Logs
 
 1. Click **Logs** in the left sidebar.
-2. You'll see the audit warning banner (explaining localStorage limits).
-3. Use the **filter dropdown** to show logs from specific modules (SYSTEM, SENTINEL, TITAN, OPERATOR).
+2. Use the **filter dropdown** to show logs from specific modules.
+3. All audit entries include a cryptographic hash chain linking each entry to the previous one.
 
-### Exporting Logs
+### About the Audit Chain
 
-| Button | What It Does |
-|--------|-------------|
-| **Export JSON** | Downloads the full log chain as a JSON file |
-| **Export TXT** | Downloads a human-readable text summary |
-| **Full Audit Export** | Downloads logs + system config snapshot |
-| **Clear Logs** | Clears all logs (asks for confirmation first) |
+The audit system uses a **tamper-evident SHA-256 hash chain with HMAC signatures**:
+- Each entry is linked to the previous entry via hash
+- HMAC signatures detect modification attempts
+- Verify integrity with `npm run verify:audit` or via `/api/audit/verify`
 
-### Important Note
-
-> ⚠ Logs are stored in your browser's localStorage. They are **not** tamper-proof forensic evidence. The hash chain provides integrity checking for demo purposes only. Production deployment requires server-side immutable storage.
+> **Note:** Audit storage is currently file-based (`data/audit_log.json`). Production deployment should use PostgreSQL or S3 with append-only storage for forensic-grade immutability.
 
 ---
 
-## Status Badges
+## Emergency Lockdown
 
-At the top of the Overview panel, colored badges show current system state:
-
-| Badge | Meaning |
-|-------|---------|
-| 🟡 **Demo Mode Active** | Running in demo mode, not production |
-| 🔵 **Local Audit Storage** | Logs stored in browser, not server |
-| 🔵 **Backend Hardening Pending** | No production backend yet |
-| 🟢 **Online** | Core Module is Online (SENTINEL, TITAN, GUARDIAN, FORGE, or VENUS) |
-
----
-
-## TITAN Dashboard
-
-Click the **TITAN** button in the Mode selector (left panel) to open the TITAN dashboard in a separate window. This provides a dedicated threat analysis view.
+The **EMERGENCY LOCKDOWN** toggle is in the center panel. When activated:
+- All commands are blocked
+- Posture changes to RED
+- The event is logged in the audit chain
 
 ---
 
@@ -158,7 +159,8 @@ Click the **TITAN** button in the Mode selector (left panel) to open the TITAN d
 
 | Problem | Solution |
 |---------|----------|
-| Page won't load | Check browser console (F12) for errors |
+| Page won't load | Ensure server is running (`npm start`) |
+| Login fails | Check credentials match demo mode accounts |
 | TITAN button doesn't open | Allow popups for this site |
 | Commands return errors | Check that you're not in lockdown mode |
 | Old content showing | Hard refresh: Ctrl+Shift+R |
@@ -166,16 +168,5 @@ Click the **TITAN** button in the Mode selector (left panel) to open the TITAN d
 
 ---
 
-## What This Is NOT
-
-- This is **NOT** a production security system.
-- This is **NOT** connected to any real AI model.
-- This is **NOT** storing logs in a tamper-proof way.
-- This **IS** a prototype demonstrating the governance architecture.
-
-For production deployment requirements, see `SECURITY_NOTES.md` and `BACKEND_HARDENING_PLAN.md`.
-
----
-
 **Copyright © Zachary Charles Anthony Crockett. All rights reserved.**  
-GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™, GUARDIAN™, FORGE™, VENUS™ are claimed trademarks.
+GRACE-X AI™, ENLIL™, TITAN™, SENTINEL™, GUARDIAN™, FORGE™, VENUS™, LASER™ are claimed trademarks.

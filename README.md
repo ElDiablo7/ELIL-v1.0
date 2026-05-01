@@ -1,21 +1,21 @@
-# ENLIL™ v1.0 — GRACE-X AI™ Security Console
+# ENLIL™ AI Governance Console
 
-> **Production-hardened AI governance and security console.**
-> **Build:** 1.0.0-hardened | Backend-Governed Architecture
+> **AI governance, risk and audit platform — backend-governed architecture.**  
+> **Build:** 1.0.1-hardened | **Product:** ENLIL™ AI Governance Console
 
 ---
 
 ## What Is ENLIL™?
 
-ENLIL™ is a **sovereign AI governance and security console** that provides real-time threat assessment, policy enforcement, tamper-evident audit logging, and operator oversight. The system enforces all security decisions server-side via a Node.js/Express backend.
+ENLIL™ is an **AI governance, risk and audit console** built for organisations that need real-time threat assessment, policy enforcement, tamper-evident audit logging, and operator oversight of AI systems. All security decisions are enforced server-side via a Node.js/Express backend.
 
-The core architecture consists of six integrated modules:
+The platform consists of six integrated modules:
 
-- **SENTINEL™** — The Governor: Manages posture, routes all commands, and enforces policy. *(Active)*
-- **TITAN™** — The Nucleus: Performs deep threat analysis and tactical reasoning. *(Active)*
-- **GUARDIAN™** — The Shield: Oversees defensive perimeters and logic shielding. *(Roadmap)*
-- **FORGE™** — The Smith: Maintains logic synthesis and core structural integrity. *(Roadmap)*
-- **VENUS™** — The Scout: Reconnaissance of external intelligence and instruction vectors. *(Roadmap)*
+- **SENTINEL™** — The Governor: Manages posture, routes all commands, enforces policy. *(Active)*
+- **TITAN™** — The Nucleus: Performs deep threat analysis and risk scoring. *(Active)*
+- **GUARDIAN™** — The Shield: Defensive perimeters and logic shielding. *(Roadmap)*
+- **FORGE™** — The Smith: Logic synthesis and structural integrity. *(Roadmap)*
+- **VENUS™** — The Scout: External intelligence reconnaissance. *(Roadmap)*
 - **LASER™** — Override Protocol: High-privilege override protocol. *(Restricted)*
 
 ---
@@ -46,17 +46,19 @@ npm start
 | operator | enlil-operator | OPERATOR |
 | viewer | enlil-viewer | VIEWER |
 
+> Demo credentials are blocked in production mode (`ENLIL_MODE=production`).
+
 ---
 
 ## Architecture
 
 ```
-Browser ──HTTP──▶ Express Server
-                    ├── Auth Middleware (JWT)
+Browser ──HTTP──▶ Express Server (ENLIL™ AI Governance Console)
+                    ├── Auth Middleware (JWT, 4-role RBAC)
                     ├── Rate Limiter (60/min API, 10/15min login)
                     ├── SENTINEL™ Policy Engine (server-side)
-                    ├── TITAN™ Risk Engine (server-side)
-                    ├── Audit Service (hash chain + HMAC)
+                    ├── TITAN™ Risk Engine (server-side, 0–100 scoring)
+                    ├── Audit Service (SHA-256 hash chain + HMAC)
                     └── Static UI Serving
 ```
 
@@ -64,7 +66,7 @@ Browser ──HTTP──▶ Express Server
 
 | Endpoint | Method | Auth | Purpose |
 |---|---|---|---|
-| `/api/health` | GET | No | System status and module overview |
+| `/api/health` | GET | No | System status, version, module overview |
 | `/api/modules` | GET | No | Module manifest with status labels |
 | `/api/auth/login` | POST | No | JWT authentication |
 | `/api/auth/logout` | POST | Yes | Session termination |
@@ -84,15 +86,15 @@ Browser ──HTTP──▶ Express Server
 │   └── services/
 │       ├── auth.js            # Authentication service
 │       ├── audit.js           # Tamper-evident audit logging
-│       ├── sentinel.js        # SENTINEL policy engine
-│       └── titan.js           # TITAN risk engine
+│       ├── sentinel.js        # SENTINEL™ policy engine
+│       └── titan.js           # TITAN™ risk engine
 ├── config/modules.json        # Module manifest
-├── index.html                 # Main SENTINEL console UI
+├── index.html                 # Main console UI
 ├── titan.html                 # TITAN dashboard UI
-├── guardian.html              # GUARDIAN module (placeholder)
-├── forge.html                 # FORGE module (placeholder)
-├── venus.html                 # VENUS module (placeholder)
-├── laser.html                 # LASER module (placeholder)
+├── guardian.html              # GUARDIAN module (roadmap placeholder)
+├── forge.html                 # FORGE module (roadmap placeholder)
+├── venus.html                 # VENUS module (roadmap placeholder)
+├── laser.html                 # LASER module (restricted placeholder)
 ├── assets/
 │   ├── css/titan.css          # All styles
 │   ├── js/                    # Frontend modules
@@ -103,11 +105,11 @@ Browser ──HTTP──▶ Express Server
 │   │   ├── logs.js            # Client-side audit chain
 │   │   ├── policy.js          # Policy engine
 │   │   └── utils.js           # Shared utilities
-│   └── data/                  # Config, threat taxonomy, policies
+│   └── data/                  # Config, threat taxonomy, policy packs
 ├── tests/
 │   ├── run.js                 # 32 automated tests
 │   └── smoke.js               # Quick smoke test
-├── scripts/verify-audit.js    # Audit chain verification
+├── scripts/verify-audit.js    # Standalone audit chain verification
 └── docs/                      # Documentation
 ```
 
@@ -131,7 +133,7 @@ npm run verify:audit
 ## Documentation
 
 | File | Purpose |
-|------|---------|
+|------|---------| 
 | `SECURITY_MODEL.md` | 6-layer security architecture |
 | `COMPLIANCE_MAPPING.md` | NIST AI RMF, EU AI Act, ISO 42001, SOC 2 alignment |
 | `INVESTOR_TECHNICAL_SUMMARY.md` | Investor-safe technical overview |
@@ -142,20 +144,23 @@ npm run verify:audit
 | `PRODUCTION_READINESS.md` | Production readiness assessment |
 | `USER_MANUAL.md` | Operator instructions |
 | `DEVELOPER_HANDOVER.md` | Technical architecture reference |
+| `VERTICAL_PRODUCTISATION.md` | Commercial vertical strategy |
 
 ---
 
-## Security Hardening (v1.0.0-hardened)
+## Security Hardening (v1.0.1-hardened)
 
 | Feature | Status |
 |---|---|
 | Express server with helmet/CORS/rate-limiting | ✅ |
 | JWT authentication with 4-role RBAC | ✅ |
-| Server-side SENTINEL policy enforcement | ✅ |
-| Server-side TITAN risk analysis | ✅ |
+| Server-side SENTINEL™ policy enforcement | ✅ |
+| Server-side TITAN™ risk analysis (aligned risk bands) | ✅ |
 | Tamper-evident SHA-256 hash chain + HMAC audit | ✅ |
 | Demo/production mode separation | ✅ |
-| Removed hardcoded bypasses from production | ✅ |
+| Production startup refuses weak/missing secrets | ✅ |
+| Demo credentials blocked in production mode | ✅ |
+| XSS/SQL injection/shell injection detection | ✅ |
 | 32 automated tests, all passing | ✅ |
 | Compliance mapping to 5 frameworks | ✅ |
 
@@ -163,11 +168,13 @@ npm run verify:audit
 
 ## Limitations
 
-- **Production-hardened prototype** — designed for further enterprise hardening
+- **Production-hardened MVP** — suitable for investor demos and controlled pilots
 - **Not independently pen-tested** or certified under any compliance framework
 - **TITAN uses rule-based analysis** — LLM provider abstraction is stubbed for future
-- **GUARDIAN, FORGE, VENUS, LASER** are roadmap placeholders
+- **GUARDIAN, FORGE, VENUS, LASER** are roadmap placeholders (not functional)
 - **File-based audit storage** — PostgreSQL planned for production
+- **SHA-256 password hashing** — bcrypt upgrade recommended
+- **No MFA** — TOTP architecture ready for next phase
 
 ---
 

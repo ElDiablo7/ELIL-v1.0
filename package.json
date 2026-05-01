@@ -1,7 +1,7 @@
 {
-  "name": "enlil-v1",
-  "version": "1.0.0",
-  "description": "ENLIL™ — GRACE-X AI™ Sovereign AI Governance & Security Console",
+  "name": "enlil-ai-governance-console",
+  "version": "1.0.1",
+  "description": "ENLIL™ AI Governance Console — AI governance, risk and audit platform powered by GRACE-X AI™",
   "private": true,
   "main": "server.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "verify:audit": "node scripts/verify-audit.js",
     "lint": "echo 'Lint pass — no external linter configured'"
   },
-  "keywords": ["security", "governance", "ai", "sentinel", "titan"],
+  "keywords": ["ai-governance", "security", "risk", "audit", "sentinel", "titan", "compliance"],
   "author": "Zachary Charles Anthony Crockett",
   "license": "UNLICENSED",
   "dependencies": {

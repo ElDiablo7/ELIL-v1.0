@@ -1,8 +1,8 @@
-# ENLIL™ v1.0 — Production Readiness Assessment
+# ENLIL™ AI Governance Console — Production Readiness Assessment
 
 ## Overall Status: ENTERPRISE PILOT READY (with documented limitations)
 
-> ENLIL™ v1.0 is a **production-hardened MVP** suitable for investor demonstrations, controlled enterprise pilots, and further security review. It is **not** a fully certified enterprise security product.
+> ENLIL™ AI Governance Console v1.0.1-hardened is a **production-hardened MVP** suitable for investor demonstrations, controlled enterprise pilots, and further security review. It is **not** a fully certified enterprise security product.
 
 ---
 

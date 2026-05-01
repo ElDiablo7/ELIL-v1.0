@@ -90,7 +90,7 @@ function requestRaw(method, path, rawBody, headers = {}) {
 
 async function runTests() {
   console.log('\n╔══════════════════════════════════════════════════╗');
-  console.log('║  ENLIL™ v1.0 — Production Hardening Test Suite   ║');
+  console.log('║  ENLIL™ AI Governance Console — Test Suite       ║');
   console.log('╚══════════════════════════════════════════════════╝\n');
 
   // ===== HEALTH ENDPOINT =====
@@ -102,7 +102,7 @@ async function runTests() {
     log(r.status === 200 && r.body.status === 'operational' ? 'PASS' : 'FAIL',
       'Health endpoint returns 200', `status=${r.body.status}`);
     log(r.body.mode ? 'PASS' : 'FAIL', 'Health returns mode', r.body.mode);
-    log(r.body.version ? 'PASS' : 'FAIL', 'Health returns version', r.body.version);
+    log(r.body.version === '1.0.1-hardened' ? 'PASS' : 'FAIL', 'Health returns version', r.body.version);
   } catch (e) {
     log('FAIL', 'Health endpoint', e.message);
   }
