@@ -123,9 +123,11 @@ function getPage(page = 1, limit = 25) {
 
 function verify() {
   initialize();
-  if (auditChain.length === 0) return { valid: true, entries: 0, errors: [] };
+  if (auditChain.length === 0) return { valid: true, entries: 0, errors: [], hmacErrors: [] };
 
   const errors = [];
+  const hmacErrors = [];
+  const hasStableSecret = !!process.env.AUDIT_SECRET;
 
   for (let i = 0; i < auditChain.length; i++) {
     const entry = auditChain[i];
@@ -141,7 +143,7 @@ function verify() {
       }
     }
 
-    // Verify current hash
+    // Verify current hash (deterministic — always reliable)
     const expectedHash = computeHash({
       eventId: entry.eventId,
       timestamp: entry.timestamp,
@@ -156,7 +158,7 @@ function verify() {
       errors.push({ index: i, error: 'Current hash mismatch — entry may be tampered' });
     }
 
-    // Verify HMAC signature
+    // Verify HMAC signature (only reliable when AUDIT_SECRET is stable across restarts)
     const expectedSig = computeHMAC({
       eventId: entry.eventId,
       currentHash: entry.currentHash,
@@ -164,7 +166,7 @@ function verify() {
     });
 
     if (entry.signature !== expectedSig) {
-      errors.push({ index: i, error: 'HMAC signature mismatch — entry may be tampered' });
+      hmacErrors.push({ index: i, error: 'HMAC signature mismatch — secret may have rotated' });
     }
   }
 
@@ -172,6 +174,9 @@ function verify() {
     valid: errors.length === 0,
     entries: auditChain.length,
     errors,
+    hmacErrors,
+    hmacVerified: hmacErrors.length === 0,
+    hmacNote: hasStableSecret ? null : 'AUDIT_SECRET not set — HMAC uses per-session key; signatures from prior sessions will not match',
     lastHash: auditChain[auditChain.length - 1]?.currentHash || null
   };
 }

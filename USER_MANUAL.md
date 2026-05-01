@@ -1,7 +1,7 @@
 # ENLIL™ AI Governance Console — User Manual
 
 > **For:** Operators, Demo Viewers, Administrators  
-> **Build:** 1.0.1-hardened  
+> **Build:** 1.0.2-vertical  
 > **Author:** Zachary Charles Anthony Crockett
 
 ---

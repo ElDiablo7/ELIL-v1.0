@@ -1253,6 +1253,100 @@ const App = (function () {
     setTimeout(() => { if (overlay) overlay.style.display = 'none'; }, 8000);
   }
 
+  // --- Vertical Governance Mode Management ---
+
+  async function loadVerticals() {
+    try {
+      const response = await fetch('/api/verticals');
+      if (!response.ok) return;
+      const data = await response.json();
+      if (!data.ok || !data.verticals) return;
+
+      const select = document.getElementById('vertical-select');
+      if (!select) return;
+
+      select.innerHTML = '';
+      for (const [key, pack] of Object.entries(data.verticals)) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = pack.name;
+        if (key === data.active) option.selected = true;
+        select.appendChild(option);
+      }
+
+      select.addEventListener('change', handleVerticalChange);
+      updateVerticalDetails(data.active);
+    } catch (e) {
+      console.warn('[UI] Failed to load verticals:', e.message);
+    }
+  }
+
+  async function handleVerticalChange(e) {
+    const key = e.target.value;
+    if (!key) return;
+
+    try {
+      const token = typeof EnlilAPI !== 'undefined' ? EnlilAPI.getToken?.() : null;
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const response = await fetch('/api/verticals/active', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ vertical: key })
+      });
+
+      const data = await response.json();
+      if (data.ok) {
+        updateVerticalDetails(data.current);
+        addOutputCard({
+          title: 'Governance Mode Changed',
+          content: `Active vertical changed to: ${data.name} (${data.previous} → ${data.current})`,
+          posture: 'GREEN'
+        });
+      } else {
+        // Revert dropdown
+        updateVerticalDetails(null);
+        addOutputCard({
+          title: 'Governance Mode Change Failed',
+          content: data.error || 'Insufficient permissions. Admin or Owner role required.',
+          posture: 'AMBER'
+        });
+      }
+    } catch (e) {
+      console.error('[UI] Failed to change vertical:', e.message);
+    }
+  }
+
+  async function updateVerticalDetails(key) {
+    try {
+      const response = await fetch('/api/verticals/active');
+      if (!response.ok) return;
+      const data = await response.json();
+      if (!data.ok || !data.vertical) return;
+
+      const v = data.vertical;
+      const nameEl = document.getElementById('vertical-name');
+      const focusEl = document.getElementById('vertical-focus');
+      const complianceEl = document.getElementById('vertical-compliance');
+      const twoPersonEl = document.getElementById('vertical-two-person');
+
+      if (nameEl) nameEl.textContent = v.name || '—';
+      if (focusEl) focusEl.textContent = v.description ? v.description.substring(0, 120) + (v.description.length > 120 ? '...' : '') : '—';
+      if (complianceEl) complianceEl.textContent = (v.compliance_frameworks || []).join(', ') || '—';
+      if (twoPersonEl) twoPersonEl.textContent = v.two_person_rule?.enabled ? '✅ Enabled' : '❌ Disabled';
+
+      // Update dropdown selection
+      const select = document.getElementById('vertical-select');
+      if (select && v.key) select.value = v.key;
+    } catch (e) {
+      console.warn('[UI] Failed to update vertical details:', e.message);
+    }
+  }
+
+  // Initialize verticals after main init
+  setTimeout(loadVerticals, 500);
+
   // Public API
   return {
     init,
@@ -1260,7 +1354,9 @@ const App = (function () {
     addOutputCard,
     updateStatusPanel,
     updateLogsDisplay,
-    runDemo
+    runDemo,
+    loadVerticals,
+    updateVerticalDetails
   };
 })();
 

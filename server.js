@@ -19,6 +19,7 @@ const auditService = require('./server/services/audit');
 const sentinelService = require('./server/services/sentinel');
 const titanService = require('./server/services/titan');
 const authService = require('./server/services/auth');
+const verticalService = require('./server/services/vertical');
 
 // --- Config ---
 const PORT = process.env.PORT || 3000;
@@ -164,7 +165,7 @@ app.get('/api/health', (req, res) => {
   const response = {
     ok: true,
     status: 'operational',
-    version: '1.0.1-hardened',
+    version: '1.0.2-vertical',
     product: 'ENLIL™ AI Governance Console',
     mode: ENLIL_MODE,
     timestamp: new Date().toISOString(),
@@ -253,6 +254,52 @@ app.post('/api/auth/logout', authMiddleware, (req, res) => {
   res.json({ success: true, message: 'Logged out' });
 });
 
+// Vertical policy routes — public list, auth for active
+app.get('/api/verticals', (req, res) => {
+  const packs = verticalService.getAll();
+  const activeKey = verticalService.getActiveKey();
+  res.json({ ok: true, verticals: packs, active: activeKey });
+});
+
+app.get('/api/verticals/active', (req, res) => {
+  const active = verticalService.getActive();
+  res.json({ ok: true, vertical: active });
+});
+
+app.post('/api/verticals/active', authMiddleware, requireRole('ADMIN', 'OWNER'), (req, res) => {
+  const { vertical } = req.body;
+  if (!vertical || typeof vertical !== 'string') {
+    return res.status(400).json({ ok: false, error: 'Vertical key is required', requestId: req.requestId });
+  }
+
+  const result = verticalService.setActive(vertical.trim());
+  if (!result.success) {
+    return res.status(400).json({ ok: false, error: result.error, requestId: req.requestId });
+  }
+
+  // Log vertical change to audit
+  auditService.append({
+    actor: req.user.username,
+    role: req.user.role,
+    action: 'VERTICAL_CHANGE',
+    command: `${result.previous} -> ${result.current}`,
+    classification: 'INTERNAL',
+    policyDecision: 'ALLOWED',
+    titanRiskScore: 0,
+    result: 'SUCCESS',
+    mode: ENLIL_MODE,
+    requestId: req.requestId,
+    sourceIp: crypto.createHash('sha256').update(req.ip || '').digest('hex').substring(0, 16)
+  });
+
+  res.json({
+    ok: true,
+    previous: result.previous,
+    current: result.current,
+    name: result.name
+  });
+});
+
 // Command route — authenticated
 app.post('/api/command', authMiddleware, (req, res) => {
   const { command } = req.body;
@@ -303,7 +350,11 @@ app.post('/api/command', authMiddleware, (req, res) => {
       decision: finalAction,
       severity: sentinelResult.severity || null,
       policyCategory: sentinelResult.policyCategory || null,
-      reason: sentinelResult.reason || null
+      reason: sentinelResult.reason || null,
+      vertical: sentinelResult.vertical || null,
+      policyPackName: sentinelResult.policyPackName || null,
+      policyFocus: sentinelResult.policyFocus || null,
+      matchedVerticalRules: sentinelResult.matchedVerticalRules || []
     },
     titan: {
       risk_score: titanResult.risk_score,
@@ -314,7 +365,8 @@ app.post('/api/command', authMiddleware, (req, res) => {
       recommended_action: titanResult.recommended_action,
       human_approval_required: titanResult.human_approval_required,
       should_block: titanResult.should_block,
-      confidence: titanResult.confidence
+      confidence: titanResult.confidence,
+      vertical_context: titanResult.vertical_context || null
     },
     posture: sentinelResult.posture,
     timestamp: new Date().toISOString()
@@ -385,7 +437,7 @@ app.use((err, req, res, _next) => {
 app.listen(PORT, () => {
   console.log('');
   console.log('╔══════════════════════════════════════════════════╗');
-  console.log('║  ENLIL™ AI Governance Console v1.0.1-hardened    ║');
+  console.log('║  ENLIL™ AI Governance Console v1.0.2-vertical    ║');
   console.log('║  GRACE-X AI™ — Governance · Risk · Audit         ║');
   console.log('╚══════════════════════════════════════════════════╝');
   console.log(`  Mode:    ${ENLIL_MODE.toUpperCase()}`);

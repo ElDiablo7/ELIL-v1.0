@@ -3,10 +3,12 @@
 /**
  * ENLIL™ SENTINEL™ Policy Engine — Server-Side
  * Command classification, role enforcement, policy evaluation
+ * Vertical-aware: includes active vertical context in all decisions
  */
 
 const fs = require('fs');
 const path = require('path');
+const verticalService = require('./vertical');
 
 // Load policy packs
 let policyPacks = {};
@@ -64,12 +66,31 @@ function classifyIntent(command) {
   return { intent: 'GENERAL_QUERY', category: 'safe_informational', riskBase: 0 };
 }
 
+/**
+ * Build the vertical context block included in every SENTINEL response.
+ */
+function buildVerticalContext(category) {
+  const activePack = verticalService.getActive();
+  const verticalRules = verticalService.getVerticalRules(category);
+
+  return {
+    vertical: activePack.key || verticalService.DEFAULT_VERTICAL,
+    policyPackName: activePack.name || 'Unknown',
+    policyFocus: activePack.description || '',
+    matchedVerticalRules: verticalRules.matchedRules || [],
+    complianceFrameworks: verticalRules.complianceFrameworks || [],
+    verticalRestricted: verticalRules.restricted || false,
+    twoPersonRequired: verticalRules.twoPersonRequired || false
+  };
+}
+
 function evaluate(command, role, mode) {
   const cmd = command.toLowerCase();
 
   // Check for prohibited patterns
   for (const pattern of PROHIBITED_PATTERNS) {
     if (cmd.includes(pattern)) {
+      const verticalContext = buildVerticalContext('blocked');
       return {
         blocked: true,
         decision: 'BLOCK',
@@ -80,13 +101,17 @@ function evaluate(command, role, mode) {
         reason: `Prohibited pattern detected: command contains dangerous content`,
         policyCategory: 'DANGEROUS_COMMAND',
         posture: 'RED',
-        escalated: false
+        escalated: false,
+        ...verticalContext
       };
     }
   }
 
   // Classify intent
   const { intent, category, riskBase } = classifyIntent(command);
+
+  // Get vertical context for this category
+  const verticalContext = buildVerticalContext(category);
 
   // Check role permissions
   const allowedCategories = ROLE_PERMISSIONS[role] || [];
@@ -103,7 +128,8 @@ function evaluate(command, role, mode) {
       reason: `Role ${role} does not have permission for ${category} actions`,
       policyCategory: 'ROLE_RESTRICTION',
       posture: 'AMBER',
-      escalated: false
+      escalated: false,
+      ...verticalContext
     };
   }
 
@@ -120,13 +146,14 @@ function evaluate(command, role, mode) {
         reason: 'Critical override requires OWNER role in production mode',
         policyCategory: 'CRITICAL_OVERRIDE',
         posture: 'RED',
-        escalated: true
+        escalated: true,
+        ...verticalContext
       };
     }
   }
 
-  // Determine escalation
-  const escalated = riskBase >= 25 || category === 'admin_action' || category === 'red_team_simulation';
+  // Determine escalation — vertical restriction adds escalation
+  const escalated = riskBase >= 25 || category === 'admin_action' || category === 'red_team_simulation' || verticalContext.verticalRestricted;
 
   // Determine posture
   let posture = 'GREEN';
@@ -142,6 +169,11 @@ function evaluate(command, role, mode) {
   }
   if (riskBase >= 50) severity = 'HIGH';
 
+  // Vertical restriction elevates severity
+  if (verticalContext.verticalRestricted && severity === 'LOW') {
+    severity = 'MEDIUM';
+  }
+
   return {
     blocked: false,
     decision,
@@ -152,7 +184,8 @@ function evaluate(command, role, mode) {
     reason: null,
     policyCategory: category.toUpperCase(),
     posture,
-    escalated
+    escalated,
+    ...verticalContext
   };
 }
 

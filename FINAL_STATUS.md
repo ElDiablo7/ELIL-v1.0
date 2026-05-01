@@ -1,6 +1,6 @@
 # ENLIL™ AI Governance Console — Final Status
 
-> **Build:** 1.0.1-hardened  
+> **Build:** 1.0.2-vertical  
 > **Date:** 2026-05-01  
 > **Author:** Zachary Charles Anthony Crockett
 
@@ -14,7 +14,7 @@
 
 ## Current Architecture
 
-ENLIL™ v1.0.1 is a **backend-governed** AI governance, risk and audit platform:
+ENLIL™ v1.0.2 is a **backend-governed** AI governance, risk and audit platform:
 
 | Component | Status | Description |
 |---|---|---|
@@ -23,6 +23,7 @@ ENLIL™ v1.0.1 is a **backend-governed** AI governance, risk and audit platform
 | SENTINEL™ Policy Engine | ✅ Active | Server-side command classification and policy enforcement |
 | TITAN™ Risk Engine | ✅ Active | Server-side risk scoring with aligned risk bands |
 | Audit Service | ✅ Active | Tamper-evident SHA-256 hash chain with HMAC signatures |
+| Vertical Policy Service | ✅ Active | Runtime vertical governance with 5 policy packs |
 | Frontend Console | ✅ Active | Professional dark sci-fi UI with backend API bridge |
 | GUARDIAN™ | ⏳ Roadmap | Defensive telemetry (placeholder) |
 | FORGE™ | ⏳ Roadmap | Logic synthesis (placeholder) |
@@ -39,7 +40,7 @@ ENLIL™ v1.0.1 is a **backend-governed** AI governance, risk and audit platform
 - ✅ XSS/SQL injection/shell command detection
 - ✅ Rate limiting (60/min API, 10/15min login)
 - ✅ Tamper-evident audit chain (SHA-256 + HMAC)
-- ✅ 32 automated tests passing
+- ✅ 40 automated tests passing (including 8 vertical governance tests)
 
 ## Is This Demo-Ready?
 

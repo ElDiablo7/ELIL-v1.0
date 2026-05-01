@@ -2,7 +2,7 @@
 
 ## Overall Status: ENTERPRISE PILOT READY (with documented limitations)
 
-> ENLIL™ AI Governance Console v1.0.1-hardened is a **production-hardened MVP** suitable for investor demonstrations, controlled enterprise pilots, and further security review. It is **not** a fully certified enterprise security product.
+> ENLIL™ AI Governance Console v1.0.2-vertical is a **production-hardened MVP** suitable for investor demonstrations, controlled enterprise pilots, and further security review. It is **not** a fully certified enterprise security product.
 
 ---
 
@@ -21,7 +21,8 @@
 | Input Validation | ✅ Ready | Body size limits, malformed JSON handling |
 | UI/UX | ✅ Ready | Professional sci-fi console |
 | Documentation | ✅ Ready | Full doc pack with legally safe language |
-| Testing | ✅ Ready | 32 automated + smoke + audit verification |
+| Testing | ✅ Ready | 40 automated + smoke + audit verification |
+| Vertical Governance | ✅ Ready | 5 vertical packs, runtime switching, audit-logged |
 | Error Handling | ✅ Ready | Consistent format, no stack trace leaks |
 | TLS/HTTPS | ⚠️ Deployment | Requires reverse proxy (Cloudflare/nginx) |
 | Database Storage | ⚠️ Planned | Currently file-based audit persistence |

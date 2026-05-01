@@ -102,7 +102,7 @@ async function runTests() {
     log(r.status === 200 && r.body.status === 'operational' ? 'PASS' : 'FAIL',
       'Health endpoint returns 200', `status=${r.body.status}`);
     log(r.body.mode ? 'PASS' : 'FAIL', 'Health returns mode', r.body.mode);
-    log(r.body.version === '1.0.1-hardened' ? 'PASS' : 'FAIL', 'Health returns version', r.body.version);
+    log(r.body.version === '1.0.2-vertical' ? 'PASS' : 'FAIL', 'Health returns version', r.body.version);
   } catch (e) {
     log('FAIL', 'Health endpoint', e.message);
   }
@@ -373,6 +373,79 @@ async function runTests() {
     log(r.status === 404 && r.body.ok === false ? 'PASS' : 'FAIL', '404 returns proper error format', `ok=${r.body.ok}`);
   } catch (e) {
     log('FAIL', '404 format test', e.message);
+  }
+
+  // ===== VERTICAL POLICY PACKS =====
+  console.log('\n  --- Vertical Policy Packs ---');
+
+  // 33. Vertical packs load successfully
+  try {
+    const r = await request('GET', '/api/verticals');
+    const keys = Object.keys(r.body.verticals || {});
+    log(r.status === 200 && keys.length === 5 ? 'PASS' : 'FAIL', 'Vertical packs load (5 packs)', `count=${keys.length}`);
+  } catch (e) {
+    log('FAIL', 'Vertical packs load', e.message);
+  }
+
+  // 34. Default vertical is ai_agency
+  try {
+    const r = await request('GET', '/api/verticals/active');
+    log(r.status === 200 && r.body.vertical?.key === 'ai_agency' ? 'PASS' : 'FAIL', 'Default vertical is ai_agency', r.body.vertical?.key);
+  } catch (e) {
+    log('FAIL', 'Default vertical', e.message);
+  }
+
+  // 35. Admin can change active vertical (reuse ownerToken as admin-equivalent)
+  try {
+    const r = await request('POST', '/api/verticals/active', { vertical: 'legal_professional' }, { 'Authorization': `Bearer ${ownerToken}` });
+    log(r.status === 200 && r.body.ok && r.body.current === 'legal_professional' ? 'PASS' : 'FAIL', 'Owner can change to legal_professional', `current=${r.body.current}`);
+  } catch (e) {
+    log('FAIL', 'Owner change vertical', e.message);
+  }
+
+  // 36. Owner can change to another vertical
+  try {
+    const r = await request('POST', '/api/verticals/active', { vertical: 'public_sector' }, { 'Authorization': `Bearer ${ownerToken}` });
+    log(r.status === 200 && r.body.ok && r.body.current === 'public_sector' ? 'PASS' : 'FAIL', 'Owner can change to public_sector', `current=${r.body.current}`);
+  } catch (e) {
+    log('FAIL', 'Owner change vertical 2', e.message);
+  }
+
+  // 37. Operator cannot change active vertical
+  try {
+    const r = await request('POST', '/api/verticals/active', { vertical: 'ai_agency' }, { 'Authorization': `Bearer ${operatorToken}` });
+    log(r.status === 403 ? 'PASS' : 'FAIL', 'Operator blocked from vertical change', `status=${r.status}`);
+  } catch (e) {
+    log('FAIL', 'Operator vertical block', e.message);
+  }
+
+  // 38. Invalid vertical key rejected
+  try {
+    const r = await request('POST', '/api/verticals/active', { vertical: 'nonexistent_vertical' }, { 'Authorization': `Bearer ${ownerToken}` });
+    log(r.status === 400 && r.body.ok === false ? 'PASS' : 'FAIL', 'Invalid vertical key rejected', `ok=${r.body.ok}`);
+  } catch (e) {
+    log('FAIL', 'Invalid vertical key', e.message);
+  }
+
+  // 39. SENTINEL output includes vertical data
+  try {
+    // Set back to ai_agency
+    await request('POST', '/api/verticals/active', { vertical: 'ai_agency' }, { 'Authorization': `Bearer ${ownerToken}` });
+    const r = await request('POST', '/api/command', { command: 'threat scan test' }, { 'Authorization': `Bearer ${ownerToken}` });
+    const sentinel = r.body.sentinel || {};
+    log(sentinel.vertical === 'ai_agency' && sentinel.policyPackName ? 'PASS' : 'FAIL',
+      'SENTINEL includes vertical context', `vertical=${sentinel.vertical}, pack=${sentinel.policyPackName}`);
+  } catch (e) {
+    log('FAIL', 'SENTINEL vertical context', e.message);
+  }
+
+  // 40. Audit logs vertical changes
+  try {
+    const r = await request('GET', '/api/audit?limit=100', null, { 'Authorization': `Bearer ${ownerToken}` });
+    const verticalEntries = (r.body.entries || []).filter(e => e.action === 'VERTICAL_CHANGE');
+    log(verticalEntries.length > 0 ? 'PASS' : 'FAIL', 'Audit logs vertical changes', `entries=${verticalEntries.length}`);
+  } catch (e) {
+    log('FAIL', 'Audit vertical changes', e.message);
   }
 
   // ===== SUMMARY =====

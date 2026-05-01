@@ -1,5 +1,49 @@
 # ENLIL™ AI Governance Console — Changelog
 
+## [1.0.2-vertical] — 2026-05-01
+
+### Runtime Vertical Governance — SENTINEL™ + TITAN™ Vertical Integration
+
+#### New Service: Vertical Policy Loader (`server/services/vertical.js`)
+- Loads and validates `assets/data/vertical_packs.json` on startup
+- Manages active vertical state with runtime switching
+- Provides vertical rule matching for SENTINEL™ integration
+- Fails safely if file is missing or malformed
+- Default vertical: `ai_agency`
+
+#### New API Endpoints
+- `GET /api/verticals` — Returns all 5 vertical packs with active indicator
+- `GET /api/verticals/active` — Returns full active vertical configuration
+- `POST /api/verticals/active` — Admin/Owner can set active vertical (audit-logged)
+
+#### SENTINEL™ Vertical Integration
+- All SENTINEL decisions now include `vertical`, `policyPackName`, `policyFocus`, and `matchedVerticalRules`
+- Vertical restrictions elevate severity from LOW to MEDIUM
+- Vertical-restricted actions trigger escalation
+- Two-person rule markers included when applicable
+
+#### TITAN™ Vertical Context
+- Risk responses include `vertical_context` with active vertical name and compliance frameworks
+- Provider remains rule-based (no overclaim of intelligence)
+
+#### UI Updates
+- Added "Active Governance Mode" section in right panel
+- Vertical selector dropdown with all 5 packs
+- Live display of vertical name, focus, compliance frameworks, and two-person rule status
+- Governance mode change produces output card with transition details
+
+#### Test Suite Expansion
+- 8 new tests (33–40) covering vertical loading, RBAC, invalid key rejection, SENTINEL context, audit logging
+- Tests reuse existing login tokens to respect rate limits
+- All 40 tests passing (32 original + 8 new)
+
+#### Version Updates
+- `package.json` version: `1.0.2`
+- Health endpoint: `1.0.2-vertical`
+- Server banner: `v1.0.2-vertical`
+
+---
+
 ## [1.0.1-vertical] — 2026-05-01
 
 ### Vertical Productisation Pass — AI Governance Console

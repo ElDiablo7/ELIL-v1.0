@@ -3,7 +3,10 @@
 /**
  * ENLIL™ TITAN™ Risk Engine — Server-Side
  * Structured risk analysis with provider abstraction for future LLM integration
+ * Vertical-aware: includes active vertical context in risk responses
  */
+
+const verticalService = require('./vertical');
 
 // Risk categories
 const RISK_CATEGORIES = {
@@ -83,6 +86,9 @@ class RuleBasedProvider extends RiskProvider {
     else if (totalScore >= 50) recommendedAction = 'REQUIRE_APPROVAL';
     else if (totalScore >= 25) recommendedAction = 'PROCEED_WITH_MONITORING';
 
+    // Add vertical context
+    const activePack = verticalService.getActive();
+
     return {
       risk_score: totalScore,
       risk_level: riskLevel,
@@ -93,7 +99,12 @@ class RuleBasedProvider extends RiskProvider {
       human_approval_required: totalScore >= 50,
       should_block: totalScore >= 75,
       confidence: detectedCategories.length > 0 ? Math.min(50 + detectedCategories.length * 10, 95) : 50,
-      provider: 'rule-based'
+      provider: 'rule-based',
+      vertical_context: {
+        vertical: activePack.key || 'ai_agency',
+        policyPackName: activePack.name || 'Unknown',
+        complianceFrameworks: activePack.compliance_frameworks || []
+      }
     };
   }
 }

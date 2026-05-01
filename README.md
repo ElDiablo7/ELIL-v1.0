@@ -1,7 +1,7 @@
 # ENLIL™ AI Governance Console
 
 > **AI governance, risk and audit platform — backend-governed architecture.**  
-> **Build:** 1.0.1-hardened | **Product:** ENLIL™ AI Governance Console
+> **Build:** 1.0.2-vertical | **Product:** ENLIL™ AI Governance Console
 
 ---
 
@@ -74,6 +74,9 @@ Browser ──HTTP──▶ Express Server (ENLIL™ AI Governance Console)
 | `/api/audit` | GET | ADMIN+ | Paginated audit log access |
 | `/api/audit/verify` | GET | ADMIN+ | Hash chain verification |
 | `/api/audit/export` | GET | OWNER | Full audit bundle export |
+| `/api/verticals` | GET | No | Available vertical policy packs |
+| `/api/verticals/active` | GET | No | Current active vertical |
+| `/api/verticals/active` | POST | ADMIN+ | Set active vertical (audit-logged) |
 
 ---
 
@@ -107,7 +110,7 @@ Browser ──HTTP──▶ Express Server (ENLIL™ AI Governance Console)
 │   │   └── utils.js           # Shared utilities
 │   └── data/                  # Config, threat taxonomy, policy packs
 ├── tests/
-│   ├── run.js                 # 32 automated tests
+│   ├── run.js                 # 40 automated tests
 │   └── smoke.js               # Quick smoke test
 ├── scripts/verify-audit.js    # Standalone audit chain verification
 └── docs/                      # Documentation
@@ -148,7 +151,7 @@ npm run verify:audit
 
 ---
 
-## Security Hardening (v1.0.1-hardened)
+## Security Hardening (v1.0.2-vertical)
 
 | Feature | Status |
 |---|---|
@@ -161,7 +164,7 @@ npm run verify:audit
 | Production startup refuses weak/missing secrets | ✅ |
 | Demo credentials blocked in production mode | ✅ |
 | XSS/SQL injection/shell injection detection | ✅ |
-| 32 automated tests, all passing | ✅ |
+| 40 automated tests, all passing | ✅ |
 | Compliance mapping to 5 frameworks | ✅ |
 
 ---
