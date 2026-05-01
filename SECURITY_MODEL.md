@@ -1,8 +1,10 @@
-# ENLIL™ AI Governance Console v1.0.2-vertical — Security Model
+# ENLIL™ AI Governance Console v1.0.3-rbac — Security Model
 
 ## Architecture Overview
 
-ENLIL™ implements a **multi-layer, backend-governed security architecture** designed to ensure that all AI governance decisions are enforced server-side, not client-side.
+ENLIL™ implements a **multi-layer, backend-governed security architecture** designed to ensure that authentication, authorization, policy enforcement, risk assessment, and audit logging are enforced server-side.
+
+The browser client is treated as an **untrusted display layer**. All security decisions are made by the backend through JWT authentication, role-based access control, SENTINEL™ policy evaluation, TITAN™ risk assessment, and tamper-evident audit logging.
 
 ## Security Layers
 
@@ -18,6 +20,8 @@ ENLIL™ implements a **multi-layer, backend-governed security architecture** de
 - **Password Hashing**: SHA-256 with server-side salt
 - **No Hardcoded Credentials**: Production mode requires environment-configured users
 - **Demo/Production Separation**: Demo accounts only active in demo mode
+
+> **Note on password hashing:** SHA-256 with server-side salt is acceptable for controlled MVP demonstration only. Production deployment should migrate to **bcrypt or Argon2** before live enterprise use.
 
 ### Layer 3: Authorization (Role-Based Access Control)
 | Role | Level | Permissions |
@@ -76,7 +80,50 @@ ENLIL™ implements a **multi-layer, backend-governed security architecture** de
 1. **PostgreSQL** — Append-only table with row-level security
 2. **S3 + Object Lock** — WORM (Write Once Read Many) storage
 3. **External SIEM** — Ship to Splunk, Datadog, or ELK stack
-4. **Blockchain** — Anchor hash chain to public blockchain for non-repudiation
+4. **External Timestamping / Optional Ledger Anchoring** — Anchor periodic audit hashes to an external timestamping or ledger service for additional non-repudiation
+
+### Layer 7: Vertical Policy Governance
+- Runtime-switchable industry vertical policy packs
+- 5 pre-configured verticals: AI Agency, Legal / Professional, Construction / SiteOps, Film Production, Public Sector
+- Vertical changes restricted to ADMIN and OWNER roles (RBAC-enforced)
+- Every vertical switch is audit-logged as a `VERTICAL_CHANGE` event with actor, previous, and new vertical
+- Active vertical injects context into SENTINEL™ decisions: `vertical`, `policyPackName`, `policyFocus`, `matchedVerticalRules`
+- TITAN™ risk responses include `vertical_context` with compliance frameworks for the active vertical
+- Vertical-restricted actions elevate SENTINEL™ severity from LOW → MEDIUM and trigger escalation
+- Two-person rule markers included when enabled by the active vertical (e.g. Public Sector)
+
+**Vertical Policy Pack Structure:**
+| Field | Purpose |
+|---|---|
+| `name` | Human-readable vertical name |
+| `key` | Machine identifier (e.g. `ai_agency`) |
+| `policyFocus` | Primary governance concern |
+| `restricted_actions` | Actions that trigger SENTINEL™ escalation |
+| `compliance_frameworks` | Applicable regulatory frameworks |
+| `two_person_rule` | Whether dual-approval is required |
+| `escalation_rules` | Severity and notification thresholds |
+
+> **Important:** Vertical packs are **rule/config-based governance profiles**, not independently certified compliance engines. They configure SENTINEL™ for sector-appropriate behaviour but do not constitute formal compliance certification for any regulatory framework.
+
+---
+
+## Command Category Permissions
+
+| Command Category | VIEWER | OPERATOR | ADMIN | OWNER |
+|---|---:|---:|---:|---:|
+| GENERAL_QUERY | ✅ | ✅ | ✅ | ✅ |
+| COMPLIANCE_CHECK | ✅ | ✅ | ✅ | ✅ |
+| RISK_SCAN | ❌ | ✅ | ✅ | ✅ |
+| THREAT_SCAN | ❌ | ✅ | ✅ | ✅ |
+| AUDIT_READ | ❌ | ❌ | ✅ | ✅ |
+| AUDIT_VERIFY | ❌ | ❌ | ✅ | ✅ |
+| POLICY_CHANGE | ❌ | ❌ | ✅ | ✅ |
+| VERTICAL_CHANGE | ❌ | ❌ | ✅ | ✅ |
+| LOCKDOWN | ❌ | ❌ | ✅ | ✅ |
+| EXPORT_REPORT | ❌ | ✅ | ✅ | ✅ |
+| SYSTEM_CONFIG | ❌ | ❌ | ❌ | ✅ |
+
+---
 
 ## Trust Boundaries
 
@@ -95,12 +142,24 @@ ENLIL™ implements a **multi-layer, backend-governed security architecture** de
 │  │ Security Enforcement Zone            │   │
 │  │ - JWT verification                   │   │
 │  │ - Role-based access control          │   │
+│  │ - Command category permissions       │   │
 │  │ - SENTINEL policy decisions          │   │
+│  │ - Vertical policy governance         │   │
 │  │ - TITAN risk analysis                │   │
 │  │ - Audit log ownership                │   │
 │  └──────────────────────────────────────┘   │
 └─────────────────────────────────────────────┘
 ```
+
+---
+
+## Security Classification
+
+This version is suitable for **investor demonstrations** and **controlled pilot environments**.
+
+It is **not yet certified for full enterprise production use**. Before live enterprise deployment, ENLIL™ requires independent penetration testing, HTTPS/TLS deployment, MFA, database-backed audit storage, stronger password hashing, and external compliance review.
+
+---
 
 ## What Is NOT Implemented (Honest Disclosure)
 - TLS/HTTPS (deployment responsibility)
@@ -110,14 +169,18 @@ ENLIL™ implements a **multi-layer, backend-governed security architecture** de
 - Real-time intrusion detection
 - Independent penetration testing
 - Security certification
+- bcrypt/Argon2 password hashing (currently SHA-256 with salt)
+- Session revocation / token blacklist (JWT logout is advisory)
+- Vertical packs are not independently certified compliance engines
 
 ## Recommended Production Hardening (Next Phase)
 1. Deploy behind HTTPS reverse proxy (nginx/Cloudflare)
-2. Migrate to bcrypt for password hashing
+2. Migrate to bcrypt/Argon2 for password hashing
 3. Add PostgreSQL for audit persistence
 4. Implement session blacklisting for logout
 5. Add TOTP-based MFA
 6. Commission independent penetration test
+7. External compliance review of vertical policy packs
 
 ---
 
