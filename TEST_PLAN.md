@@ -3,7 +3,7 @@
 ## Test Framework
 Lightweight Node.js test runner (no external dependencies required).
 
-## Automated Tests (`npm test`) — 32 Tests
+## Automated Tests (`npm test`) — 40 Tests
 
 ### Health Endpoint (5 tests)
 | # | Test | Expected | Category |
@@ -69,6 +69,18 @@ Lightweight Node.js test runner (no external dependencies required).
 | 31 | Request ID on error | `requestId` in body or header | Validation |
 | 32 | 404 returns proper format | `ok: false` with requestId | Validation |
 
+### Vertical Policy Packs (8 tests)
+| # | Test | Expected | Category |
+|---|---|---|---|
+| 33 | Vertical packs load (5 packs) | `count=5` | Vertical |
+| 34 | Default vertical is `ai_agency` | `key=ai_agency` | Vertical |
+| 35 | Owner can change to `legal_professional` | `current=legal_professional` | Vertical |
+| 36 | Owner can change to `public_sector` | `current=public_sector` | Vertical |
+| 37 | Operator blocked from vertical change | `status: 403` | Vertical |
+| 38 | Invalid vertical key rejected | `ok: false`, `status: 400` | Vertical |
+| 39 | SENTINEL includes vertical context | `vertical=ai_agency`, `policyPackName` present | Vertical |
+| 40 | Audit logs vertical changes | VERTICAL_CHANGE entries found | Vertical |
+
 ## Smoke Tests (`npm run smoke`)
 
 | # | Test | Expected |
@@ -91,9 +103,9 @@ Lightweight Node.js test runner (no external dependencies required).
 
 | Suite | Result |
 |---|---|
-| Automated Tests | **32 passed, 0 failed** |
+| Automated Tests | **40 passed, 0 failed** |
 | Smoke Test | **4/4 OK** |
-| Audit Verification | **All entries verified, chain intact** |
+| Audit Verification | **All 51 entries verified, chain intact** |
 
 ## Manual Test Checklist
 
