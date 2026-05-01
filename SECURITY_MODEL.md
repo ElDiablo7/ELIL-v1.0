@@ -26,16 +26,16 @@ The browser client is treated as an **untrusted display layer**. All security de
 ### Layer 3: Authorization (Role-Based Access Control)
 | Role | Level | Permissions |
 |------|-------|-------------|
-| OWNER | 4 | Full access including audit export and policy changes |
-| ADMIN | 3 | Commands, audit viewing, policy management |
-| OPERATOR | 2 | Approved commands, limited log access |
-| VIEWER | 1 | Read-only dashboard access |
+| OWNER | 4 | Full access including system configuration, audit export, policy changes, and critical overrides |
+| ADMIN | 3 | Approved commands, audit viewing, audit verification, policy management, vertical switching, lockdown, and report export |
+| OPERATOR | 2 | Approved operational commands and report export; no audit-read or policy-management access |
+| VIEWER | 1 | General queries and compliance checks only |
 
 ### Layer 4: SENTINEL™ Policy Engine
 - Server-side command classification
 - Prohibited pattern detection (SQL injection, shell commands, XSS)
 - Role-permission enforcement per command category
-- Critical override restricted to OWNER in production mode
+- Critical override restricted to OWNER in production mode and always audit-logged
 - Evaluates raw input BEFORE HTML sanitization
 
 **Policy Categories:**
