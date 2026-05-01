@@ -32,12 +32,36 @@ ENLIL™ implements a **multi-layer, backend-governed security architecture** de
 - Prohibited pattern detection (SQL injection, shell commands, XSS)
 - Role-permission enforcement per command category
 - Critical override restricted to OWNER in production mode
+- Evaluates raw input BEFORE HTML sanitization
+
+**Policy Categories:**
+| Category | Description | Severity |
+|---|---|---|
+| `DANGEROUS_COMMAND` | Shell injection, SQL injection, XSS, prototype pollution | CRITICAL |
+| `ROLE_RESTRICTION` | User role does not permit the requested action category | HIGH |
+| `CRITICAL_OVERRIDE` | Override/bypass attempt requiring OWNER approval | CRITICAL |
+| `SAFE_INFORMATIONAL` | Read-only queries, policy views, log views | LOW |
+| `GOVERNANCE_CHECK` | Integrity checks, compliance checks | LOW |
+| `THREAT_SCAN` | Threat analysis commands | LOW |
+| `RED_TEAM_SIMULATION` | Adversarial scenario testing | MEDIUM |
+| `ADMIN_ACTION` | Administrative operations (export, lockdown) | MEDIUM |
+
+**Decision Types:** `ALLOW`, `BLOCK`, `REVIEW`
 
 ### Layer 5: TITAN™ Risk Assessment
 - Server-side risk scoring (0-100)
 - 10 risk categories analyzed per command
-- Automatic escalation at score ≥60
-- Automatic blocking at score ≥80
+- SENTINEL™ block always overrides TITAN™ assessment
+
+**Risk Bands:**
+| Band | Score Range | Action |
+|---|---|---|
+| LOW | 0–24 | PROCEED |
+| MEDIUM | 25–49 | PROCEED_WITH_MONITORING |
+| HIGH | 50–74 | REQUIRE_APPROVAL (human review) |
+| CRITICAL | 75–100 | BLOCK_AND_REVIEW |
+
+> **Important:** TITAN™ is an internal risk scoring engine, not a final autonomous decision-maker. SENTINEL™ remains the enforcement authority.
 
 ### Layer 6: Audit Chain
 - Server-side append-only logging
@@ -45,6 +69,14 @@ ENLIL™ implements a **multi-layer, backend-governed security architecture** de
 - HMAC signatures for tamper detection
 - File-based persistence (upgradeable to database)
 - Independent verification script
+
+> **Note:** The audit chain is **tamper-evident**, not tamper-proof. An attacker with filesystem access could delete the log file, but cannot silently modify individual entries without breaking the hash chain. This is a demo-grade storage mechanism.
+
+**Production Audit Upgrade Path:**
+1. **PostgreSQL** — Append-only table with row-level security
+2. **S3 + Object Lock** — WORM (Write Once Read Many) storage
+3. **External SIEM** — Ship to Splunk, Datadog, or ELK stack
+4. **Blockchain** — Anchor hash chain to public blockchain for non-repudiation
 
 ## Trust Boundaries
 

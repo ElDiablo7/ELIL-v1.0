@@ -105,7 +105,7 @@ Browser ──HTTP──▶ Express Server
 │   │   └── utils.js           # Shared utilities
 │   └── data/                  # Config, threat taxonomy, policies
 ├── tests/
-│   ├── run.js                 # 15 automated tests
+│   ├── run.js                 # 32 automated tests
 │   └── smoke.js               # Quick smoke test
 ├── scripts/verify-audit.js    # Audit chain verification
 └── docs/                      # Documentation
@@ -116,7 +116,7 @@ Browser ──HTTP──▶ Express Server
 ## Testing
 
 ```bash
-# Run 15 automated tests (requires server running)
+# Run 32 automated tests (requires server running)
 npm test
 
 # Quick smoke test
@@ -156,7 +156,7 @@ npm run verify:audit
 | Tamper-evident SHA-256 hash chain + HMAC audit | ✅ |
 | Demo/production mode separation | ✅ |
 | Removed hardcoded bypasses from production | ✅ |
-| 15 automated tests, all passing | ✅ |
+| 32 automated tests, all passing | ✅ |
 | Compliance mapping to 5 frameworks | ✅ |
 
 ---

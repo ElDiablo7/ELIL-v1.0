@@ -3,21 +3,71 @@
 ## Test Framework
 Lightweight Node.js test runner (no external dependencies required).
 
-## Automated Tests (`npm test`)
+## Automated Tests (`npm test`) — 32 Tests
 
+### Health Endpoint (5 tests)
 | # | Test | Expected | Category |
 |---|---|---|---|
 | 1 | `GET /api/health` returns 200 | `status: operational` | Health |
 | 2 | Health returns `mode` field | `demo` or `production` | Health |
 | 3 | Health returns `version` field | String present | Health |
-| 4 | Invalid login returns 401 | `status: 401` | Auth |
-| 5 | Valid demo login returns token | JWT token present | Auth |
-| 6 | Audit endpoint requires auth | `status: 401` without token | Auth |
-| 7 | Empty command returns 400 | Input validation error | Command |
-| 8 | Threat scan command processes | `success: true`, TITAN score present | Command |
-| 9 | SENTINEL blocks prohibited command | `decision: BLOCKED` for `rm -rf /` | SENTINEL |
-| 10 | Audit hash chain verifies | `valid: true` | Audit |
-| 11 | Viewer role blocked from audit | `status: 403` | RBAC |
+| 4 | Health endpoint safe output | No passwords, paths, or internal data | Health |
+| 5 | Request ID header present | `X-Request-ID` header set | Health |
+
+### Authentication (7 tests)
+| # | Test | Expected | Category |
+|---|---|---|---|
+| 6 | Invalid login returns 401 | `status: 401` | Auth |
+| 7 | Valid demo login returns token | JWT token present, role=OWNER | Auth |
+| 8 | Viewer login succeeds | JWT token present, role=VIEWER | Auth |
+| 9 | Operator login succeeds | JWT token present, role=OPERATOR | Auth |
+| 10 | Missing token rejected | `status: 401` | Auth |
+| 11 | Malformed token rejected | `status: 401` | Auth |
+| 12 | Expired token rejected | `status: 401` with crafted expired JWT | Auth |
+
+### Role-Based Access Control (2 tests)
+| # | Test | Expected | Category |
+|---|---|---|---|
+| 13 | Viewer blocked from audit | `status: 403` | RBAC |
+| 14 | Operator blocked from audit | `status: 403` | RBAC |
+
+### Command Validation (5 tests)
+| # | Test | Expected | Category |
+|---|---|---|---|
+| 15 | Empty command returns 400 | Input validation error | Command |
+| 16 | Whitespace-only command returns 400 | Input validation error | Command |
+| 17 | Threat scan command processes | `success: true`, TITAN score present | Command |
+| 18 | TITAN risk score returned | Numeric score present | Command |
+| 19 | Audit event ID returned | UUID present | Command |
+
+### SENTINEL™ Policy Engine (4 tests)
+| # | Test | Expected | Category |
+|---|---|---|---|
+| 20 | Prohibited command blocked | `decision: BLOCKED` for `rm -rf /` | SENTINEL |
+| 21 | SQL injection blocked | `decision: BLOCKED` for `drop table` | SENTINEL |
+| 22 | XSS attempt blocked | `decision: BLOCKED` for `<script>` | SENTINEL |
+| 23 | Valid command allowed | `success: true` for compliance check | SENTINEL |
+
+### TITAN™ Risk Engine (3 tests)
+| # | Test | Expected | Category |
+|---|---|---|---|
+| 24 | LOW risk band (0–24) | Score 0–24, level=LOW | TITAN |
+| 25 | MEDIUM risk band (25–49) | Score 25–49, level=MEDIUM | TITAN |
+| 26 | HIGH risk band (50–74) | Score 50–74, level=HIGH | TITAN |
+
+### Audit Chain (3 tests)
+| # | Test | Expected | Category |
+|---|---|---|---|
+| 27 | Audit pagination works | Paginated entries returned | Audit |
+| 28 | Audit hash chain verifies | `valid: true` | Audit |
+| 29 | Mode clearly reported | `demo` or `production` | Audit |
+
+### API Validation (3 tests)
+| # | Test | Expected | Category |
+|---|---|---|---|
+| 30 | Malformed JSON rejected | `status: 400` | Validation |
+| 31 | Request ID on error | `requestId` in body or header | Validation |
+| 32 | 404 returns proper format | `ok: false` with requestId | Validation |
 
 ## Smoke Tests (`npm run smoke`)
 
@@ -36,6 +86,14 @@ Lightweight Node.js test runner (no external dependencies required).
 | 2 | Each entry links to previous hash | Chain unbroken |
 | 3 | Content hashes verify | No mismatches |
 | 4 | HMAC signatures verify | No mismatches |
+
+## Production Hardening Baseline (2026-05-01)
+
+| Suite | Result |
+|---|---|
+| Automated Tests | **32 passed, 0 failed** |
+| Smoke Test | **4/4 OK** |
+| Audit Verification | **All entries verified, chain intact** |
 
 ## Manual Test Checklist
 

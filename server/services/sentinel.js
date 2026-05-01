@@ -72,10 +72,13 @@ function evaluate(command, role, mode) {
     if (cmd.includes(pattern)) {
       return {
         blocked: true,
+        decision: 'BLOCK',
         intent: 'BLOCKED',
         classification: 'PROHIBITED',
         category: 'blocked',
-        reason: 'Prohibited pattern detected',
+        severity: 'CRITICAL',
+        reason: `Prohibited pattern detected: command contains dangerous content`,
+        policyCategory: 'DANGEROUS_COMMAND',
         posture: 'RED',
         escalated: false
       };
@@ -92,10 +95,13 @@ function evaluate(command, role, mode) {
   if (!hasPermission) {
     return {
       blocked: true,
+      decision: 'BLOCK',
       intent,
       classification: 'INTERNAL',
       category,
+      severity: 'HIGH',
       reason: `Role ${role} does not have permission for ${category} actions`,
+      policyCategory: 'ROLE_RESTRICTION',
       posture: 'AMBER',
       escalated: false
     };
@@ -106,10 +112,13 @@ function evaluate(command, role, mode) {
     if (mode === 'production' && role !== 'OWNER') {
       return {
         blocked: true,
+        decision: 'BLOCK',
         intent,
         classification: 'SECRET',
         category,
+        severity: 'CRITICAL',
         reason: 'Critical override requires OWNER role in production mode',
+        policyCategory: 'CRITICAL_OVERRIDE',
         posture: 'RED',
         escalated: true
       };
@@ -124,12 +133,24 @@ function evaluate(command, role, mode) {
   if (riskBase >= 50) posture = 'RED';
   else if (riskBase >= 25) posture = 'AMBER';
 
+  // Determine decision and severity
+  let decision = 'ALLOW';
+  let severity = 'LOW';
+  if (escalated) {
+    decision = 'REVIEW';
+    severity = 'MEDIUM';
+  }
+  if (riskBase >= 50) severity = 'HIGH';
+
   return {
     blocked: false,
+    decision,
     intent,
     classification: category === 'safe_informational' ? 'PUBLIC' : 'INTERNAL',
     category,
+    severity,
     reason: null,
+    policyCategory: category.toUpperCase(),
     posture,
     escalated
   };

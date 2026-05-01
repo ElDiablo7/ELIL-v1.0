@@ -9,6 +9,7 @@
 const crypto = require('crypto');
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
 const SESSION_SECRET = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+const JWT_EXPIRY_SECONDS = parseInt(process.env.JWT_EXPIRY_SECONDS, 10) || 3600; // 1 hour default
 
 // Roles hierarchy
 const ROLES = {
@@ -58,7 +59,7 @@ function createToken(payload) {
   const body = Buffer.from(JSON.stringify({
     ...payload,
     iat: Math.floor(Date.now() / 1000),
-    exp: Math.floor(Date.now() / 1000) + 3600 // 1 hour
+    exp: Math.floor(Date.now() / 1000) + JWT_EXPIRY_SECONDS
   })).toString('base64url');
   const signature = crypto.createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64url');
   return `${header}.${body}.${signature}`;
@@ -84,7 +85,36 @@ function verifyToken(token) {
 }
 
 function login(username, password, mode) {
-  const accounts = mode === 'demo' ? DEMO_ACCOUNTS : getProductionAccounts();
+  // PRODUCTION GUARD: Demo credentials cannot operate in production mode
+  if (mode === 'production') {
+    const prodAccounts = getProductionAccounts();
+    if (Object.keys(prodAccounts).length === 0) {
+      return { success: false, reason: 'No production accounts configured. Set ENLIL_USERS environment variable.' };
+    }
+    const account = prodAccounts[username];
+    if (!account) {
+      return { success: false, reason: 'Invalid credentials' };
+    }
+    const hashedInput = hashPassword(password);
+    if (hashedInput !== account.password) {
+      return { success: false, reason: 'Invalid credentials' };
+    }
+    const token = createToken({
+      username,
+      role: account.role,
+      displayName: account.displayName,
+      mode
+    });
+    return {
+      success: true,
+      token,
+      role: account.role,
+      displayName: account.displayName
+    };
+  }
+
+  // Demo mode: use preset accounts
+  const accounts = DEMO_ACCOUNTS;
   const account = accounts[username];
 
   if (!account) {
@@ -125,7 +155,9 @@ function hasRole(userRole, ...requiredRoles) {
 module.exports = {
   login,
   verifyToken,
+  createToken,
   hasPermission,
   hasRole,
-  ROLES
+  ROLES,
+  JWT_SECRET
 };

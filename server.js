@@ -26,6 +26,35 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const ENLIL_MODE = process.env.ENLIL_MODE || 'demo';
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(',');
 
+// --- Production Startup Validation ---
+if (ENLIL_MODE === 'production' || NODE_ENV === 'production') {
+  const jwtSecret = process.env.JWT_SECRET;
+  const auditSecret = process.env.AUDIT_SECRET;
+  const errors = [];
+
+  if (!jwtSecret || jwtSecret.length < 32) {
+    errors.push('JWT_SECRET must be set and at least 32 characters in production');
+  }
+  if (jwtSecret && /^change-this|^default|^secret$/i.test(jwtSecret)) {
+    errors.push('JWT_SECRET must not use a default/placeholder value in production');
+  }
+  if (!auditSecret || auditSecret.length < 32) {
+    errors.push('AUDIT_SECRET must be set and at least 32 characters in production');
+  }
+  if (auditSecret && /^change-this|^default|^secret$/i.test(auditSecret)) {
+    errors.push('AUDIT_SECRET must not use a default/placeholder value in production');
+  }
+
+  if (errors.length > 0) {
+    console.error('\n╔══════════════════════════════════════════════════════════╗');
+    console.error('║  ENLIL™ — PRODUCTION STARTUP BLOCKED                    ║');
+    console.error('╚══════════════════════════════════════════════════════════╝');
+    errors.forEach(e => console.error(`  ❌ ${e}`));
+    console.error('');
+    process.exit(1);
+  }
+}
+
 const app = express();
 
 // ---------------------
@@ -74,7 +103,20 @@ const authLimiter = rateLimit({
 });
 
 // Body parsing with size limits
-app.use(express.json({ limit: '16kb' }));
+app.use((req, res, next) => {
+  express.json({ limit: '16kb' })(req, res, (err) => {
+    if (err) {
+      if (err.type === 'entity.too.large') {
+        return res.status(413).json({ ok: false, error: 'Payload too large', requestId: req.requestId || null });
+      }
+      if (err.type === 'entity.parse.failed') {
+        return res.status(400).json({ ok: false, error: 'Malformed JSON', requestId: req.requestId || null });
+      }
+      return res.status(400).json({ ok: false, error: 'Invalid request body', requestId: req.requestId || null });
+    }
+    next();
+  });
+});
 app.use(express.urlencoded({ extended: false, limit: '16kb' }));
 
 // Request ID middleware
@@ -113,21 +155,28 @@ const { authMiddleware, requireRole } = require('./server/middleware/auth');
 // API Routes
 // ---------------------
 
-// Health check — public
+// Health check — public (safe output only — no uptime in production)
 app.get('/api/health', (req, res) => {
   const modules = require('./config/modules.json');
   const modulesSummary = {};
   modules.forEach(m => { modulesSummary[m.name] = m.status; });
 
-  res.json({
+  const response = {
+    ok: true,
     status: 'operational',
     version: '1.0.0-hardened',
     product: 'ENLIL™',
     mode: ENLIL_MODE,
     timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
     modules: modulesSummary
-  });
+  };
+
+  // Only expose uptime in non-production environments
+  if (NODE_ENV !== 'production') {
+    response.uptime = process.uptime();
+  }
+
+  res.json(response);
 });
 
 // Module status — public
@@ -139,8 +188,11 @@ app.get('/api/modules', (req, res) => {
 // Auth routes
 app.post('/api/auth/login', authLimiter, (req, res) => {
   const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password are required' });
+  if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
+    return res.status(400).json({ ok: false, error: 'Username and password are required', requestId: req.requestId });
+  }
+  if (username.length > 100 || password.length > 200) {
+    return res.status(400).json({ ok: false, error: 'Invalid credentials format', requestId: req.requestId });
   }
 
   const result = authService.login(username, password, ENLIL_MODE);
@@ -158,7 +210,7 @@ app.post('/api/auth/login', authLimiter, (req, res) => {
       requestId: req.requestId,
       sourceIp: crypto.createHash('sha256').update(req.ip || '').digest('hex').substring(0, 16)
     });
-    return res.status(401).json({ error: result.reason });
+    return res.status(401).json({ ok: false, error: result.reason, requestId: req.requestId });
   }
 
   auditService.append({
@@ -204,23 +256,26 @@ app.post('/api/auth/logout', authMiddleware, (req, res) => {
 // Command route — authenticated
 app.post('/api/command', authMiddleware, (req, res) => {
   const { command } = req.body;
-  if (!command || typeof command !== 'string' || command.length > 500) {
-    return res.status(400).json({ error: 'Invalid command. Must be a string under 500 characters.' });
+  if (!command || typeof command !== 'string' || command.trim().length === 0 || command.length > 500) {
+    return res.status(400).json({ ok: false, error: 'Invalid command. Must be a non-empty string under 500 characters.', requestId: req.requestId });
   }
 
-  const sanitizedCommand = command.trim().replace(/[<>]/g, '');
+  const trimmedCommand = command.trim();
 
-  // SENTINEL policy check
-  const sentinelResult = sentinelService.evaluate(sanitizedCommand, req.user.role, ENLIL_MODE);
+  // SENTINEL policy check — must evaluate BEFORE sanitization to detect XSS patterns
+  const sentinelResult = sentinelService.evaluate(trimmedCommand, req.user.role, ENLIL_MODE);
+
+  // Sanitize for storage/display (after SENTINEL has evaluated raw input)
+  const sanitizedCommand = trimmedCommand.replace(/[<>]/g, '');
 
   // TITAN risk analysis
   const titanResult = titanService.analyze(sanitizedCommand, sentinelResult.intent);
 
-  // Determine final action
+  // Determine final action — SENTINEL™ block always wins over TITAN™
   let finalAction = 'APPROVED';
   if (sentinelResult.blocked) {
     finalAction = 'BLOCKED';
-  } else if (titanResult.risk_score >= 80 || sentinelResult.escalated) {
+  } else if (titanResult.risk_score >= 75 || sentinelResult.escalated) {
     finalAction = 'ESCALATED';
   }
 
@@ -246,11 +301,14 @@ app.post('/api/command', authMiddleware, (req, res) => {
       intent: sentinelResult.intent,
       classification: sentinelResult.classification,
       decision: finalAction,
+      severity: sentinelResult.severity || null,
+      policyCategory: sentinelResult.policyCategory || null,
       reason: sentinelResult.reason || null
     },
     titan: {
       risk_score: titanResult.risk_score,
       risk_level: titanResult.risk_level,
+      risk_category: titanResult.risk_category || null,
       categories: titanResult.categories,
       reasoning: titanResult.reasoning,
       recommended_action: titanResult.recommended_action,
@@ -300,7 +358,7 @@ app.get('/api/audit/verify', authMiddleware, requireRole('ADMIN', 'OWNER'), (req
 
 // 404 for unknown API routes
 app.use('/api/*', (req, res) => {
-  res.status(404).json({ error: 'Endpoint not found' });
+  res.status(404).json({ ok: false, error: 'Endpoint not found', requestId: req.requestId });
 });
 
 // Fallback: serve index.html for non-API routes (SPA support)
@@ -315,6 +373,7 @@ app.use((err, req, res, _next) => {
   if (!isProduction) console.error(err.stack);
 
   res.status(err.status || 500).json({
+    ok: false,
     error: isProduction ? 'Internal server error' : err.message,
     requestId: req.requestId
   });

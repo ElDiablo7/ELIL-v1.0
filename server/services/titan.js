@@ -58,35 +58,40 @@ class RuleBasedProvider extends RiskProvider {
     // Cap at 100
     totalScore = Math.min(totalScore, 100);
 
-    // Determine risk level
-    let riskLevel = 'low';
-    if (totalScore >= 80) riskLevel = 'critical';
-    else if (totalScore >= 60) riskLevel = 'high';
-    else if (totalScore >= 30) riskLevel = 'medium';
+    // Determine risk level — aligned to ENLIL spec bands
+    // 0–24 LOW | 25–49 MEDIUM | 50–74 HIGH | 75–100 CRITICAL
+    let riskLevel = 'LOW';
+    if (totalScore >= 75) riskLevel = 'CRITICAL';
+    else if (totalScore >= 50) riskLevel = 'HIGH';
+    else if (totalScore >= 25) riskLevel = 'MEDIUM';
+
+    // Determine primary risk category
+    const riskCategory = detectedCategories.length > 0 ? detectedCategories[0] : 'NONE';
 
     // Reasoning
     let reasoning = `Analyzed command with ${detectedCategories.length} risk categories detected.`;
     if (detectedCategories.length > 0) {
       reasoning += ` Categories: ${detectedCategories.join(', ')}.`;
     }
-    if (totalScore >= 60) {
+    if (totalScore >= 50) {
       reasoning += ' This command requires elevated review.';
     }
 
-    // Recommended action
+    // Recommended action — aligned to risk bands
     let recommendedAction = 'PROCEED';
-    if (totalScore >= 80) recommendedAction = 'BLOCK_AND_REVIEW';
-    else if (totalScore >= 60) recommendedAction = 'REQUIRE_APPROVAL';
-    else if (totalScore >= 30) recommendedAction = 'PROCEED_WITH_MONITORING';
+    if (totalScore >= 75) recommendedAction = 'BLOCK_AND_REVIEW';
+    else if (totalScore >= 50) recommendedAction = 'REQUIRE_APPROVAL';
+    else if (totalScore >= 25) recommendedAction = 'PROCEED_WITH_MONITORING';
 
     return {
       risk_score: totalScore,
       risk_level: riskLevel,
+      risk_category: riskCategory,
       categories: detectedCategories,
       reasoning,
       recommended_action: recommendedAction,
-      human_approval_required: totalScore >= 60,
-      should_block: totalScore >= 80,
+      human_approval_required: totalScore >= 50,
+      should_block: totalScore >= 75,
       confidence: detectedCategories.length > 0 ? Math.min(50 + detectedCategories.length * 10, 95) : 50,
       provider: 'rule-based'
     };

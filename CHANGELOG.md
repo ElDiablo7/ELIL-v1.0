@@ -1,5 +1,58 @@
 # ENLIL™ v1.0 — Changelog
 
+## [1.0.1-hardened] — 2026-05-01
+
+### Production Hardening Pass — Enterprise Pilot Readiness
+
+#### Security Hardening
+- **Production startup validation**: Server refuses to start if `JWT_SECRET` or `AUDIT_SECRET` are missing or weak in production mode
+- **Demo credential isolation**: Demo credentials explicitly cannot authenticate in production mode (`ENLIL_MODE=production`)
+- **XSS detection ordering**: SENTINEL™ now evaluates raw command input BEFORE HTML sanitization, catching XSS patterns like `<script>` reliably
+- **Token exposure removed**: Frontend `getToken()` method removed from public API surface
+- **Health endpoint safe output**: `uptime` field hidden in production mode to prevent information leakage
+- **Malformed JSON handling**: Custom body parser returns structured `{ ok: false, error, requestId }` for parse failures and oversized payloads
+
+#### SENTINEL™ Policy Engine
+- Added structured decision format: `decision` field with `ALLOW` / `BLOCK` / `REVIEW` values
+- Added `severity` field: `LOW` / `MEDIUM` / `HIGH` / `CRITICAL`
+- Added `policyCategory` field for policy classification
+
+#### TITAN™ Risk Engine
+- Aligned risk bands to spec: 0–24 LOW, 25–49 MEDIUM, 50–74 HIGH, 75–100 CRITICAL
+- Added `risk_category` field to output
+- Updated threshold boundaries for `should_block` (75) and `human_approval_required` (50)
+- Risk levels now uppercase (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`)
+
+#### API Hardening
+- Consistent error format: `{ ok: false, error, requestId }` on all error responses
+- Added `ok: true` to health endpoint response
+- Added input length validation on login (username max 100, password max 200)
+- Whitespace-only commands now rejected
+- Request ID included in all error response bodies
+
+#### Test Expansion
+- Expanded from 15 to 32 automated tests
+- Added: expired token rejection, malformed token, missing token
+- Added: viewer audit block, operator audit block
+- Added: XSS detection, SQL injection detection
+- Added: TITAN LOW/MEDIUM/HIGH risk band verification
+- Added: malformed JSON rejection, request ID on errors, 404 format, health safety
+- Added: whitespace command rejection
+
+#### Files Changed
+- `server.js` — production startup validation, body parser, error format, SENTINEL ordering
+- `server/services/auth.js` — production demo guard, JWT_EXPIRY_SECONDS, exported createToken/JWT_SECRET
+- `server/services/sentinel.js` — structured decisions with severity/policyCategory
+- `server/services/titan.js` — aligned risk bands (0-24/25-49/50-74/75-100)
+- `assets/js/api_client.js` — removed getToken() exposure
+- `tests/run.js` — expanded to 32 tests
+- `CHANGELOG.md` — this entry
+- `SECURITY_MODEL.md` — updated policy categories
+- `TEST_PLAN.md` — updated test inventory
+- `PRODUCTION_READINESS.md` — updated readiness assessment
+
+---
+
 ## [1.0.0-hardened] — 2026-05-01
 
 ### Production Hardening Build

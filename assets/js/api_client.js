@@ -221,7 +221,7 @@ const EnlilAPI = (function () {
     getModules,
     isBackendAvailable: () => backendAvailable,
     isAuthenticated: () => !!token,
-    getCurrentUser: () => currentUser ? { ...currentUser } : null,
-    getToken: () => token
+    getCurrentUser: () => currentUser ? { ...currentUser } : null
+    // NOTE: Token is not exposed publicly. JWT is managed internally by the API client.
   };
 })();
